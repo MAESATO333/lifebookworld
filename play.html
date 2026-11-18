@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.38">
+<meta name="lifebook-version" content="v178.39">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.38 (2026-11-18) */ var LB_VER='v178.38';
+/* LIFE BOOK game version: v178.39 (2026-11-18) */ var LB_VER='v178.39';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21215,7 +21215,7 @@ setInterval(flPhListen,4000); setTimeout(flPhListen,1800);
 //  ・初めてのログインで、この端末とマイページに別の人生があるときは、聞かずに「長く見守ってきたほう」に必ず揃える。もう一方は「保管してある人生」に残す（消さない）。
 //  ・ログインしていない端末で、初めて「生まれる」を押したときは、ほかの端末で見守っていないか先にたずねる（別の人生が生まれないように）。
 const AC_UID='ac.uid', AC_REV='ac.rev', AC_BASE='ac.base', AC_AT='ac.at', AC_CHUNK=900000;
-let _acReloading=false, _acBusy=false, _acStarted=false, _acPullAt=0, _acLastErr='', _acKeeps=null, _acState='';
+let _acTab='life', _acReloading=false, _acBusy=false, _acStarted=false, _acPullAt=0, _acLastErr='', _acKeeps=null, _acState='';
 function acSkip(k){ return /^(firebase:|ac\.|lb\.|gw\.seen|mbx\.lastStrip$|hmiDeck$|hitotsu\.(fbreg|fbpush|pwaSet|dev|mvNo|news$|sky\.|nw\.|nwjp\.|stat|space\.))/.test(k); }
 function acLocal(){ const m={}; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&!acSkip(k)){ const v=localStorage.getItem(k); if(v!=null) m[k]=v; } } }catch(e){} return m; }
 function acHash(s){ let h=0x811c9dc5; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,0x01000193); } return (h>>>0).toString(36)+'.'+s.length; }
@@ -21366,25 +21366,58 @@ function acHTML(){ const srv=typeof fbStatusHTML==='function'?fbStatusHTML():'';
   <p class="tiny muted">ログインしなくても、今までどおり遊べます。預かるのは、ゲームの記録とログイン用のメールアドレスだけです。</p>`;
   const u=acUser(), how=(u.providerData||[]).some(p=>p.providerId==='google.com')?'Google':'メール';
   const P=typeof cur!=='undefined'&&cur&&cur.P?cur.P:null; const arc=(store.get(KEY_ARC,[])||[]).length; const at=acGet(AC_AT,0);
-  return `<h2>👤 マイページ</h2>
-  <div class="ac-card"><p><small>ログイン中（${how}）</small><br><b>${esc(u.email||'')}</b></p>
-  ${P?`<div class="ac-life"><small>マイページに保存されている人生</small><b class="ac-name">${esc(P.full)}</b><span>${esc(P.country.name)}${(()=>{ try{ const a=clock().age; return a!=null?' ・ '+Math.floor(a)+'歳':''; }catch(e){ return ''; } })()}</span>${typeof chnIdNum==='function'?`<span class="ac-cid">Channel 番号 <b>${esc(String(chnIdNum(P)))}</b></span>`:''}<small class="ac-same">この名前と番号が、ほかの端末でも同じなら、同じ人生です。</small></div>`:`<div class="ac-life ac-none"><b>まだ、この端末にも マイページにも 人生が入っていません。</b><small>いつも見守っている端末（Macなど）で、同じ方法でログインしてください。その人生が、ここにも出てきます。</small></div>`}
+  const T=[['life','🌱','人生'],['album','📷','アルバム'],['pet','🐾','ペット'],['shelf','📚','本棚'],['friends','👥','友だち']];
+  const tabs=`<div class="ac-tabs" role="tablist">${T.map(t=>`<button type="button" role="tab" class="ac-tab${_acTab===t[0]?' on':''}" aria-selected="${_acTab===t[0]}" data-actab="${t[0]}"><span aria-hidden="true">${t[1]}</span>${t[2]}</button>`).join('')}</div>`;
+  let pane=''; try{ pane=_acTab==='album'?acAlbumPane():_acTab==='pet'?acPetPane():_acTab==='shelf'?acShelfPane():_acTab==='friends'?acFriendsPane():''; }catch(e){ pane='<p class="tiny muted">うまく表示できませんでした。</p>'; }
+  return `<h2>👤 マイページ</h2>${tabs}${_acTab==='life'?`  <div class="ac-card"><p><small>ログイン中（${how}）</small><br><b>${esc(u.email||'')}</b></p>
+  ${P?`<div class="ac-life"><small>マイページに保存されている人生</small><b class="ac-name">${esc(P.full)}</b><span>${esc(P.country.name)}${(()=>{ try{ const a=clock().age; return a!=null?' ・ '+Math.floor(a)+'歳':''; }catch(e){ return ''; } })()}</span>${typeof chnIdNum==='function'?`<span class="ac-cid">Channel 番号 <b>${esc(String(chnIdNum(P)))}</b></span>`:''}${P.year?`<span class="ac-sub2">${esc(String(P.year))}年${esc(String(P.month))}月${esc(String(P.day))}日 生まれ${P.city?` ・ ${esc(P.city)}`:''}</span>`:''}<small class="ac-same">この名前と番号が、ほかの端末でも同じなら、同じ人生です。</small></div>`:`<div class="ac-life ac-none"><b>まだ、この端末にも マイページにも 人生が入っていません。</b><small>いつも見守っている端末（Macなど）で、同じ方法でログインしてください。その人生が、ここにも出てきます。</small></div>`}
   <p><small>思い出のLIFE BOOK</small><br><b>${arc}</b> 冊</p></div>
   <p class="ac-sync">${_acBusy?'☁️ 記録を合わせています…':_acLastErr?`⚠️ ${esc(_acLastErr)}`:`☁️ 記録はマイページに保存されています${at?`（${acAgo(at)}）`:''}`}</p>
   <p class="tiny muted">ほかの端末でも、同じ方法でログインすると、この人生の続きを見守れます。</p>
   <div id="acKeeps"></div>
   <div class="frd-btns"><button class="frd-b frd-sky" id="acNow" type="button">いま保存する</button><button class="frd-b" id="acOut" type="button">ログアウト</button></div>
-  <p class="frd-msg" id="acMsg" role="status"></p>`; }
+  <p class="frd-msg" id="acMsg" role="status"></p>`:pane+'<p class="frd-msg" id="acMsg" role="status"></p>'}`; }
 async function acKeepsFill(){ const box=document.getElementById('acKeeps'); if(!box||!acIn()) return;
   try{ if(!_acKeeps) _acKeeps=await acKeepList(); }catch(e){ return; } if(!_acKeeps.length){ box.innerHTML=''; return; }
   box.innerHTML=`<h3 class="ac-h3">保管してある人生</h3>`+_acKeeps.map(k=>`<div class="ac-keep"><span>${esc(k.nm||'人生')}<small>${esc(k.dev||'')}・${acAgo(k.at)}に保管しました</small></span><button class="frd-b" type="button" data-ackeep="${esc(k.id)}">この人生にもどす</button></div>`).join('')+`<p class="tiny muted">もどすと、すべての端末でその人生に入れかわり、いまの人生がここに保管されます。</p>`;
   box.querySelectorAll('[data-ackeep]').forEach(b=>b.onclick=async()=>{ if(b.dataset.sure!=='1'){ b.dataset.sure='1'; b.textContent='もう一度押すと、もどします'; return; } b.disabled=true; acMsg('もどしています…'); try{ await acRestore(b.dataset.ackeep); }catch(e){ acMsg(acErr(e)); } }); }
+
+// ---- マイページの欄（アルバム・ペット・本棚・友だち）：開いた欄だけ作る（軽くするため） ----
+function acRow(ic,name,n,unit,act,thumbs){ return `<div class="ac-row"><span class="ac-ic" aria-hidden="true">${ic}</span><span class="ac-rn">${name}<small>${n}${unit}</small></span>${act?`<button class="frd-b frd-pink ac-go" type="button" data-acgo="${act}">見る</button>`:''}</div>${thumbs||''}`; }
+function acAlbumPane(){ let h='';
+  try{ if(cur&&typeof albumPhotos==='function'){ const n=albumPhotos(cur.P,cur.L,Math.floor(clock().age),30).length; h+=acRow('📖','人生のアルバム',n,'枚','life'); } }catch(e){}
+  try{ if(typeof eaCollected==='function'){ const ids=eaCollected(); const th=ids.length?`<div class="ac-th">${ids.slice(-8).reverse().map(id=>`<img src="ea-photo/${encodeURIComponent(id)}.webp" alt="" loading="lazy" decoding="async">`).join('')}</div>`:''; h+=acRow('🌏','地球の名所の絵はがき',ids.length,'枚','earth',th); } }catch(e){}
+  try{ const a=JSON.parse(localStorage.getItem('hitotsu.machiAlbum')||'[]'); h+=acRow('🏙️','街ブラの写真',Array.isArray(a)?a.length:0,'枚',typeof machiBuraOpen==='function'?'machi':''); }catch(e){}
+  try{ const a=JSON.parse(localStorage.getItem('hitotsu.rideAlbum')||'[]'); h+=acRow('🚲','乗り物の写真',Array.isArray(a)?a.length:0,'枚',typeof ridesOpen==='function'?'ride':''); }catch(e){}
+  try{ const a=JSON.parse(localStorage.getItem('hitotsu.hsAlbum')||'[]'); h+=acRow('✈️','Higher Self の旅の写真',Array.isArray(a)?a.length:0,'枚',typeof hsTripOpen==='function'?'hs':''); }catch(e){}
+  try{ const a=JSON.parse(localStorage.getItem('hitotsu.gwAlbum')||'[]'); if(Array.isArray(a)&&a.length) h+=acRow('🌊','Gateway の写真',a.length,'枚',''); }catch(e){}
+  return `<p class="tiny muted">集めた写真と絵はがきです。「見る」で、それぞれのアルバムが開きます。</p>${h}`; }
+function acPetPane(){ const p=typeof mpGet==='function'?mpGet():null;
+  if(!p||!p.name) return `<p class="ac-empty">まだ「うちのペット」がいません。</p><button class="frd-b frd-pink ac-wide" type="button" data-acgo="pet">🐾 ペットのページを開く</button>`;
+  const k=(typeof MP_KIND!=='undefined'&&MP_KIND.find(x=>x[0]===p.kind))||null; const br=(typeof PB_ALL!=='undefined'&&PB_ALL[p.breed]&&PB_ALL[p.breed].name)||'';
+  const age=typeof mpAge==='function'?Math.floor(Math.min(mpAge(p),p.life||99)):null; const hum=typeof mpHuman==='function'?mpHuman(p):null; const gone=typeof mpGone==='function'&&mpGone(p);
+  let cnt=null; try{ cnt=typeof pmCounts==='function'?pmCounts(p):null; }catch(e){}
+  return `<div class="ac-life"><span class="ac-pe" aria-hidden="true">${k?k[2]:'🐾'}</span><b class="ac-name">${esc(p.name)}</b><span>${esc(br||(k?k[1]:''))}</span>${age!=null?`<span>${gone?'旅立ちました':age+'歳'}${hum&&!gone?`（人間でいうと ${hum}歳）`:''}</span>`:''}
+  ${cnt?`<span class="ac-sub2">友だちから 💗可愛い！ ${cnt.l||0} ・ 🎁ごはん ${cnt.f||0}</span>`:''}</div>
+  <button class="frd-b frd-pink ac-wide" type="button" data-acgo="pet">🐾 ペットのページを開く</button>`; }
+function acShelfPane(){ const arc=store.get(KEY_ARC,[])||[]; if(!arc.length) return '<p class="ac-empty">まだ、思い出のLIFE BOOK はありません。人生を見守り終えると、ここに並びます。</p>';
+  return `<p class="tiny muted">見守り終えた人生です。押すと、その人生のレポートが読めます。</p><div class="ac-list">${arc.map((a,i)=>{ let nm='人生', cn=''; try{ const P=makeBirth(a.seed,{ country:a.country||null, force:a.force||null }); nm=P.full; cn=P.country.name+(P.deathAge!=null?` ・ ${P.deathAge}歳まで`:''); }catch(e){}
+    return `<button type="button" class="ac-li" data-acarc="${i}"><b>📕 ${esc(nm)}</b><small>${esc(cn)}</small></button>`; }).join('')}</div>`; }
+function acFriendsPane(){ const L=(store.get(KEY_FRIEND,[])||[]).filter(f=>f&&f.id&&f.id!==myId());
+  const btn=`<button class="frd-b frd-pink ac-wide" type="button" data-acgo="invite">💗 友だちに紹介する</button>`;
+  if(!L.length) return `<p class="ac-empty">まだ、つながっている友だちはいません。</p>${btn}`;
+  return `<p class="tiny muted">つながっている友だち ${L.length}人</p><div class="ac-list">${L.map(f=>{ let ch=''; try{ if(f.s!=null){ const P=makeBirth(f.s,{ country:f.c||null, force:f.f||null }); ch=`Channel：${P.full}（${P.country.name}）`; } }catch(e){}
+    return `<div class="ac-li"><b>👤 ${esc(f.by||'なまえなし')}さん</b><small>${esc(ch)}</small></div>`; }).join('')}</div>${btn}`; }
+function acBindPanes(d){ d.querySelectorAll('[data-actab]').forEach(b=>b.onclick=()=>{ _acTab=b.dataset.actab; acOpen(); });
+  d.querySelectorAll('[data-acgo]').forEach(b=>b.onclick=()=>{ const g=b.dataset.acgo; acClose();
+    try{ if(g==='life'){ if(typeof goLife==='function') goLife(); } else if(g==='earth') eaOpenDialog(); else if(g==='machi') machiBuraOpen(); else if(g==='ride') ridesOpen(); else if(g==='hs') hsTripOpen(); else if(g==='pet') mpOpen(); else if(g==='invite'){ const o=document.querySelector('.fr-open'); if(o) o.click(); } }catch(e){ console.warn(e); } });
+  d.querySelectorAll('[data-acarc]').forEach(b=>b.onclick=()=>{ const a=(store.get(KEY_ARC,[])||[])[+b.dataset.acarc]; if(!a) return; acClose(); viewing={ seed:a.seed, country:a.country, force:a.force||null, choice:a.choice, bs:a.bs||null }; render(); window.scrollTo(0,0); }); }
 function acOpen(){ const d=acDlg(); d.innerHTML=`<div class="frd-in ac-in"><button class="frd-x" type="button" aria-label="閉じる">×</button>${acHTML()}</div>`; d.hidden=false; document.body.classList.add('frd-on');
   d.querySelector('.frd-x').onclick=acClose; const on=(id,f)=>{ const b=document.getElementById(id); if(b) b.onclick=f; };
   on('acG',acGoogle); on('acLogin',()=>acEmail('in')); on('acNew',()=>acEmail('new')); on('acForgot',acReset); on('acOut',acLogout);
   on('acNow',async()=>{ acMsg('保存しています…'); await acSync('now'); acMsg(_acLastErr?'うまく保存できませんでした':'保存しました'); });
   const r=document.getElementById('fbRetry'); if(r) r.onclick=()=>{ if(typeof fbStart==='function') fbStart(); setTimeout(acOpen,1500); };
-  acKeepsFill(); }
+  acBindPanes(d); acKeepsFill(); }
 function acDlgRefresh(){ const d=document.getElementById('acDlg'); if(d&&!d.hidden&&!d.querySelector('#acOk')&&!d.querySelector('#acEm:focus,#acPw:focus')){ const m=(document.getElementById('acMsg')||{}).textContent||''; acOpen(); if(m) acMsg(m); } acBtnSync(); }
 function acToast(t){ let e=document.getElementById('acToast'); if(!e){ e=document.createElement('div'); e.id='acToast'; e.className='ac-toast'; e.setAttribute('role','status'); document.body.appendChild(e); } e.textContent=t; e.hidden=false; clearTimeout(acToast._t); acToast._t=setTimeout(()=>{ e.hidden=true; },4000); }
 // 上の帯のボタン
@@ -21422,6 +21455,12 @@ function acStart(){ if(_acStarted) return; _acStarted=true; acBtnSync(); documen
 .ac-how{ background:#FFF6FA; border:2px solid #FFD6E1; border-radius:16px; padding:10px 12px; margin:8px 0 10px; } .ac-how-t{ margin:0 0 4px; font-weight:700; font-size:14px; } .ac-how ol{ margin:0; padding-left:1.3em; font-size:13px; line-height:1.6; } .ac-how li{ margin:4px 0; } .ac-how .tiny{ margin:6px 0 0; }
 .ac-in .frd-b{ background:#fff; color:#3A2A33; } .ac-in .frd-sky{ background:#D7EEFF; color:#13324A; } .ac-in .frd-pink{ background:#FF8FAB; color:#fff; } #acOut{ background:#fff; border:2px solid #FFB3C8; color:#D9467A; } .ac-in .frd-msg{ color:#2E7D5B; }
 .ac-life{ display:flex; flex-direction:column; gap:3px; background:#FFF6FA; border:2px solid #FFC2D0; border-radius:14px; padding:12px; margin:10px 0; text-align:center; } .ac-life small{ color:#8A7A84; font-size:12px; } .ac-name{ font-size:20px; color:#3A2A33; } .ac-life span{ font-size:14px; color:#3A2A33; } .ac-cid{ margin-top:4px; } .ac-cid b{ font-size:22px; letter-spacing:2px; color:#D9467A; } .ac-same{ margin-top:4px; } .ac-none b{ font-size:14px; line-height:1.6; }
+.ac-tabs{ display:flex; gap:4px; margin:4px -4px 10px; overflow-x:auto; scrollbar-width:none; } .ac-tabs::-webkit-scrollbar{ display:none; }
+.ac-tab{ flex:1 0 auto; display:flex; flex-direction:column; align-items:center; gap:1px; min-width:58px; padding:7px 4px; border-radius:12px; border:2px solid #FFD6E1; background:#fff; color:#8A5A6E; font:inherit; font-size:12px; font-weight:700; cursor:pointer; } .ac-tab span{ font-size:18px; line-height:1.1; } .ac-tab.on{ background:#FF8FAB; border-color:#FF8FAB; color:#fff; }
+.ac-row{ display:flex; align-items:center; gap:10px; padding:10px 4px; border-bottom:1px dashed #F3C6D4; } .ac-ic{ font-size:24px; width:32px; text-align:center; } .ac-rn{ flex:1; font-size:14px; font-weight:700; color:#3A2A33; line-height:1.4; } .ac-rn small{ display:block; font-weight:400; color:#8A7A84; font-size:12px; } .ac-in .ac-go{ width:auto; padding:9px 14px; font-size:13px; }
+.ac-th{ display:flex; gap:6px; overflow-x:auto; padding:2px 0 10px 42px; } .ac-th img{ width:64px; height:44px; object-fit:cover; border-radius:8px; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.15); flex:0 0 auto; background:#F4E8EE; }
+.ac-pe{ font-size:40px; line-height:1; } .ac-sub2{ font-size:12px!important; color:#8A7A84!important; } .ac-in .ac-wide{ margin:10px 0 4px; } .ac-empty{ text-align:center; font-size:14px; color:#6A5A64; margin:18px 0 8px; line-height:1.6; }
+.ac-list{ display:flex; flex-direction:column; gap:6px; max-height:46vh; overflow-y:auto; margin:6px 0; } .ac-li{ display:block; text-align:left; width:100%; font:inherit; padding:10px 12px; border-radius:12px; border:2px solid #FFE0E8; background:#fff; color:#3A2A33; } button.ac-li{ cursor:pointer; } .ac-li b{ font-size:14px; } .ac-li small{ display:block; color:#8A7A84; font-size:12px; margin-top:2px; }
 .ac-sync{ font-size:13px; margin:6px 0; } .ac-h3{ font-size:15px; margin:14px 0 6px; } .ac-keep{ display:flex; align-items:center; gap:8px; border:2px dashed #F3C6D4; border-radius:14px; padding:8px 10px; margin:6px 0; } .ac-keep span{ flex:1; font-size:14px; line-height:1.4; } .ac-keep small{ display:block; color:#8A7A84; font-size:11px; } .ac-keep .frd-b{ width:auto; font-size:12px; padding:8px 10px; }
 .ac-big{ display:block; text-align:left; font-size:14px; padding:14px; margin:8px 0; line-height:1.5; } .ac-big b{ font-size:16px; } .ac-big small{ display:block; font-weight:400; font-size:12px; opacity:.85; } .ac-sub{ background:#fff; border:2px solid #FFB3C8; }
 .ac-note{ margin:12px auto; max-width:560px; background:#FFF6FA; border:2px solid #FFC2D0; border-radius:18px; padding:12px 14px; text-align:center; } .ac-note p{ margin:0 0 10px; font-size:14px; line-height:1.6; } .ac-note .frd-b{ display:inline-flex; padding:10px 18px; }
