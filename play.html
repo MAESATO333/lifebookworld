@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.49">
+<meta name="lifebook-version" content="v178.50">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -734,14 +734,14 @@ a.nav-b{ text-decoration:none; }
 <div class="wrap">
   <header class="masthead">
     <a class="name lb-logo" href="#" aria-label="LIFE BOOK"><span class="lb-isle" id="lbIsle" aria-hidden="true"></span><span class="lb-col" aria-hidden="true"><span class="lb-word"><span class="lb-t" style="--c:#E8667E">L</span><span class="lb-t" style="--c:#F2B630">I</span><span class="lb-t" style="--c:#6DB84A">F</span><span class="lb-t" style="--c:#5BA7DD">E</span><span class="lb-gap"></span><span class="lb-t" style="--c:#9B7FD9">B</span><span class="lb-t" style="--c:#EE7A92">O</span><span class="lb-t" style="--c:#F2B630">O</span><span class="lb-t" style="--c:#5DAE44">K</span></span><span class="lb-sub">人生のヒントが、ここにある</span></span></a>
-    <div class="mast-r"><nav class="mastnav" id="mastnav" aria-label="ページ"></nav><div class="meta" id="mastmeta"></div><button class="fr-top fr-open" type="button"><span class="mb-l">友だちに<wbr>紹介</span></button></div>
+    <div class="mast-r"><nav class="mastnav" id="mastnav" aria-label="ページ"></nav><div class="meta" id="mastmeta"></div><button class="fr-top mb-top" type="button" data-machitop="1"><span aria-hidden="true">🟡</span><span class="mb-l">街ブラ</span></button><button class="fr-top fr-open" type="button"><span class="mb-l">友だちに<wbr>紹介</span></button></div>
   </header>
   <main id="app"></main>
 </div>
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.49 (2026-11-18) */ var LB_VER='v178.49';
+/* LIFE BOOK game version: v178.50 (2026-11-18) */ var LB_VER='v178.50';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21501,6 +21501,9 @@ body .btn,body .mp-btn,body .rv-btn,body .mbx-pbtn,body .hm-btn{ border:2px soli
 body .btn.ghost,body .hm-btn.ghost,body .rv-btn.rv-sub,body .mbx-pbtn.mbx-sub2,body .mt-close,body .pa-b,body .mp-btn.fl-b2{ border:2px solid #FFB3C8!important; background:#fff!important; color:#D9467A!important; box-shadow:0 3px 0 #FFD6E1!important; }
 body .btn.small,body .rv-btn.rv-sm{ min-height:36px; padding:6px 13px; font-size:13px; }
 body .btn:disabled,body .mp-btn:disabled,body .rv-btn:disabled,body .mbx-pbtn:disabled,body .hm-btn:disabled{ opacity:.5; cursor:default; }
+/* ホームの2つの枠：幅・高さをそろえる */
+.hmi,.mbx-strip{ box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; margin:14px -6px 2px!important; }
+.masthead .mb-top::before{ display:none!important; }
 /* ロゴの下に「人生のヒントが、ここにある」 */
 .lb-col{ display:inline-flex; flex-direction:column; align-items:flex-start; gap:5px; } .lb-sub{ font-family:var(--serif); font-size:12px; letter-spacing:.1em; color:var(--muted); line-height:1.2; white-space:nowrap; }
 @media (max-width:640px){ .masthead .lb-col{ align-items:center; gap:6px; } .masthead .lb-sub{ font-size:13px; letter-spacing:.12em; } }
@@ -21515,10 +21518,10 @@ body .frd-b{ padding:9px 10px; }
 @media (max-width:640px){ .masthead{ justify-content:center; row-gap:12px!important; padding-block:16px 12px; } .masthead .lb-logo{ width:100%; justify-content:center; gap:10px; }
   .masthead .lb-isle{ width:58px; height:66px; } .masthead .lb-word{ gap:3px; } .masthead .lb-t{ width:30px; height:32px; font-size:19px; border-radius:7px; } .masthead .lb-gap{ width:8px; }
   .masthead .mast-r{ display:grid!important; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); gap:5px!important; width:100%; } .masthead .mastnav{ display:contents!important; } .masthead .mast-r .meta{ display:none; }
-  .masthead .mastnav .nav-b,.masthead .fr-top{ flex-direction:column; width:100%; height:56px; padding:0 1px!important; font-size:10.5px!important; line-height:1.15; gap:3px; letter-spacing:0; position:relative; border-radius:14px; border-width:1.5px; white-space:normal; word-break:keep-all; text-align:center; box-shadow:0 2px 0 #D85878!important; }
+  .masthead .mastnav .nav-b,.masthead .fr-top{ flex-direction:column; width:100%; height:56px; padding:0 1px!important; font-size:10px!important; line-height:1.15; gap:3px; letter-spacing:0; position:relative; border-radius:14px; border-width:1.5px; white-space:normal; word-break:keep-all; text-align:center; box-shadow:0 2px 0 #D85878!important; }
   .masthead .fr-top::before{ width:15px; height:13px; flex:none; } .masthead .mastnav .nav-b .ic{ width:15px; height:15px; flex:none; } .masthead .fr-top>span[aria-hidden]{ font-size:15px; line-height:1; }
   .masthead .fof-top-n{ position:absolute; top:-7px; right:-3px; min-width:16px; height:16px; padding:0 4px; font-size:10px; box-sizing:border-box; border:1.5px solid #FF8FAA; } .masthead .ac-dot{ top:-3px; right:-2px; } }
-@media (max-width:350px){ .masthead .lb-t{ width:24px; height:26px; font-size:15px; } .masthead .lb-isle{ width:44px; height:50px; flex:none; } .masthead .mastnav .nav-b,.masthead .fr-top{ font-size:9.5px!important; } .masthead .mast-r{ gap:3px!important; } }`;
+@media (max-width:350px){ .masthead .lb-t{ width:24px; height:26px; font-size:15px; } .masthead .lb-isle{ width:44px; height:50px; flex:none; } .masthead .mastnav .nav-b,.masthead .fr-top{ font-size:8.5px!important; } .masthead .mast-r{ gap:3px!important; } }`;
   const s=document.createElement('style'); s.textContent=css; document.head.appendChild(s);
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',acStart); else acStart(); })();
 </script>
@@ -23570,16 +23573,20 @@ function mbxUnivModal(){ if(typeof MB_UNIV==='undefined') return; mbxCss(); cons
 function mbxStripBuild(){ const isl=mbxStripKeys().map(key=>{ if(key==='univ') return `<button type="button" class="mbx-isle" data-u="1" aria-label="LIFE BOOK大学の絵をひらく"><img src="${MB_UNIV.thumb}" alt="" width="320" height="220" loading="lazy" decoding="async"><span class="mbx-fc"><b>LIFE BOOK大学</b><span>月の裏側</span></span></button>`; const k=key.lastIndexOf('-'), id=key.slice(0,k), vi=+key.slice(k+1)-1, ci=mbxCI(id); if(ci<0||!MB_THUMB2[key]) return ''; const C=MB_CITIES[ci], v=mbxV(ci,vi);
     return `<button type="button" class="mbx-isle" data-c="${ci}" data-v="${vi}" aria-label="${v.pl}の写真をひらく"><img src="${MB_THUMB2[key]}" alt="" width="320" height="220" loading="lazy" decoding="async"><span class="mbx-fc"><b>${C.name.replace(/^.*・/,'')}</b><span>${C.area.split('・')[0]}</span></span></button>`; }).join('');
   const s=document.createElement('section'); s.className='mbx-strip'; s.setAttribute('aria-label','いろんな街');
-  s.innerHTML=`<p class="mbx-st">いろんな街が、空に浮かんでいます</p><p class="mbx-sn">街は、その街の住所の地理情報をもとに、正確に作られています。</p><div class="mbx-view"><div class="mbx-track">${isl}${isl.replace(/<button /g,'<button tabindex="-1" aria-hidden="true" ')}</div></div><button type="button" class="mbx-pbtn mbx-go">🟡 街ブラへ行く</button><p class="mbx-credit">地図データ：国土地理院・© OpenStreetMap contributors・© OpenMapTiles</p>`;
+  s.innerHTML=`<p class="mbx-st">いろんな街が、空に浮かんでいます</p><p class="mbx-sn">街は、その街の住所の地理情報をもとに、正確に作られています。</p><div class="mbx-view"><div class="mbx-track">${isl}${isl.replace(/<button /g,'<button tabindex="-1" aria-hidden="true" ')}</div></div><p class="mbx-credit">地図データ：国土地理院・© OpenStreetMap contributors・© OpenMapTiles</p>`;
   s.querySelector('.mbx-track').addEventListener('click',e=>{ const b=e.target.closest('.mbx-isle'); if(!b) return; if(b.dataset.u) mbxUnivModal(); else mbxStripModal(+b.dataset.c,+b.dataset.v); });
-  s.querySelector('.mbx-go').addEventListener('click',machiBuraOpen); return s; }
+  return s; }
 let mbxAway=false;
 function mbxPlace(){ try{ const app=document.getElementById('app'); if(!app||typeof page==='undefined'||page!=='home'||(typeof viewing!=='undefined'&&viewing)){ mbxAway=true; return; } const home=app.querySelector('.home'); if(!home) return;
   mbxCss(); if(mbxStripEl&&mbxAway){ mbxStripEl.remove(); mbxStripEl=null; } mbxAway=false; if(!mbxStripEl) mbxStripEl=mbxStripBuild();
   const lives=app.querySelector('.hmi'), slot=app.querySelector('.hmi-slot'), news=app.querySelector('.lbn');
   if(lives) lives.after(mbxStripEl); else if(slot) slot.after(mbxStripEl); else if(news) news.before(mbxStripEl); else home.prepend(mbxStripEl);
-  mbxTilePlace(app);
+  mbxTilePlace(app); mbxEven(); setTimeout(mbxEven,900);
 }catch(e){ try{ console.warn('[街ブラ]',e); }catch(_){} } }
+// 「いろんな国の人生」と「いろんな街」の枠の高さをそろえる（2026-11-18 MITSUさん）
+function mbxEven(){ try{ const a=document.querySelector('#app .hmi'), b=mbxStripEl; if(!a||!b||!document.body.contains(b)) return; a.style.minHeight=b.style.minHeight=''; const h=Math.max(a.offsetHeight,b.offsetHeight); a.style.minHeight=b.style.minHeight=h+'px'; }catch(_){} }
+window.addEventListener('resize',()=>{ clearTimeout(mbxEven._t); mbxEven._t=setTimeout(mbxEven,200); });
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-machitop]'); if(t){ e.preventDefault(); machiBuraOpen(); } });
 // Life Home の「友だちの木・うちのペット」の下に、街ブラのカード（きょうのおすすめの街 ＋ 観光アルバムの最近の写真 ＋ 街ブラへ行く）
 let mbxTileEl=null, mbxTileKey='';
 function mbxPick(){ const d=new Date(); const n=d.getFullYear()*400+d.getMonth()*32+d.getDate(); const keys=MB_STRIP.filter(k=>MB_THUMB2[k]); const key=keys[(n*7919)%keys.length]; const k=key.lastIndexOf('-'); return { key, ci:mbxCI(key.slice(0,k)), vi:+key.slice(k+1)-1 }; }
