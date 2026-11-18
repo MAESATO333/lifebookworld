@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.52">
+<meta name="lifebook-version" content="v178.53">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -735,14 +735,14 @@ a.nav-b{ text-decoration:none; }
   <header class="masthead">
     <a class="name lb-logo" href="#" aria-label="LIFE BOOK"><span class="lb-isle" id="lbIsle" aria-hidden="true"></span><span class="lb-col" aria-hidden="true"><span class="lb-word"><span class="lb-t" style="--c:#E8667E">L</span><span class="lb-t" style="--c:#F2B630">I</span><span class="lb-t" style="--c:#6DB84A">F</span><span class="lb-t" style="--c:#5BA7DD">E</span><span class="lb-gap"></span><span class="lb-t" style="--c:#9B7FD9">B</span><span class="lb-t" style="--c:#EE7A92">O</span><span class="lb-t" style="--c:#F2B630">O</span><span class="lb-t" style="--c:#5DAE44">K</span></span><span class="lb-sub">人生のヒントが、ここにある</span></span></a>
     <div class="mast-r"><nav class="mastnav" id="mastnav" aria-label="ページ"></nav><div class="meta" id="mastmeta"></div><button class="fr-top mb-top" type="button" data-machitop="1"><span aria-hidden="true">🟡</span><span class="mb-l">街ブラ</span></button><button class="fr-top fr-open" type="button"><span class="mb-l">友だちに<wbr>紹介</span></button></div>
-    <div class="mast-q" id="mastQ" hidden><button class="fr-top mb-top" type="button" data-mq="pet"><span aria-hidden="true">🐾</span><span class="mb-l">ペット</span></button><button class="fr-top mb-top" type="button" data-mq="flower"><span aria-hidden="true">💐</span><span class="mb-l">お花</span></button><button class="fr-top mb-top" type="button" data-mq="ride"><span aria-hidden="true">🔑</span><span class="mb-l">乗り物</span></button><button class="fr-top mb-top" type="button" data-mq="earth"><span aria-hidden="true">🌏</span><span class="mb-l">名所</span></button><button class="fr-top mb-top" type="button" data-mq="diary"><span aria-hidden="true">📖</span><span class="mb-l">日記</span></button></div>
+    <div class="mast-q" id="mastQ" hidden><button class="fr-top mb-top" type="button" data-mq="channel"><span aria-hidden="true">📷</span><span class="mb-l">Channel</span></button><button class="fr-top mb-top" type="button" data-mq="pet"><span aria-hidden="true">🐾</span><span class="mb-l">ペット</span></button><button class="fr-top mb-top" type="button" data-mq="flower"><span aria-hidden="true">💐</span><span class="mb-l">お花</span></button><button class="fr-top mb-top" type="button" data-mq="ride"><span aria-hidden="true">🔑</span><span class="mb-l">乗り物</span></button><button class="fr-top mb-top" type="button" data-mq="earth"><span aria-hidden="true">🌏</span><span class="mb-l">名所</span></button><button class="fr-top mb-top" type="button" data-mq="diary"><span aria-hidden="true">📖</span><span class="mb-l">日記</span></button></div>
   </header>
   <main id="app"></main>
 </div>
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.52 (2026-11-19) */ var LB_VER='v178.52';
+/* LIFE BOOK game version: v178.53 (2026-11-19) */ var LB_VER='v178.53';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21419,7 +21419,7 @@ function acBindPanes(d){ d.querySelectorAll('[data-actab]').forEach(b=>b.onclick
   d.querySelectorAll('[data-acarc]').forEach(b=>b.onclick=()=>{ const a=(store.get(KEY_ARC,[])||[])[+b.dataset.acarc]; if(!a) return; acClose(); viewing={ seed:a.seed, country:a.country, force:a.force||null, choice:a.choice, bs:a.bs||null }; render(); window.scrollTo(0,0); acFromStart('arc'); }); }
 // ---- 上のボタン2段目：下のほうにある遊びを、すぐ開けるように（携帯は下に長いので）（2026-11-18 MITSUさん） ----
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-mq]'); if(!b) return; e.preventDefault(); const q=b.dataset.mq;
-  try{ if(q==='pet') mpOpen(); else if(q==='flower') flOpen(); else if(q==='ride') ridesOpen(); else if(q==='earth') eaOpenDialog();
+  try{ if(q==='channel'){ albumOpen=true; goLife(); setTimeout(()=>{ const al=document.querySelector('.album')||document.querySelector('.album-btn'); if(al) al.scrollIntoView({ block:'start' }); },80); } else if(q==='pet') mpOpen(); else if(q==='flower') flOpen(); else if(q==='ride') ridesOpen(); else if(q==='earth') eaOpenDialog();
     else if(q==='diary'){ if(page!=='home'||viewing){ viewing=null; page='home'; render(); } setTimeout(()=>{ const d=document.querySelector('.hm-daily-top')||document.querySelector('.hm-daily'); if(d) d.scrollIntoView({ block:'start' }); },120); } }catch(err){ console.warn(err); } });
 setInterval(()=>{ try{ const q=document.getElementById('mastQ'); if(q){ const on=!!(typeof cur!=='undefined'&&cur&&cur.P); if(q.hidden===on) q.hidden=!on; } }catch(e){} },700);
 // ---- マイページから開いたページ：「とじる」ではなく「← マイページへ戻る」。押すと（閉じると）マイページのトップへ戻る（2026-11-18 MITSUさん） ----
@@ -21509,9 +21509,9 @@ body .btn.small,body .rv-btn.rv-sm{ min-height:36px; padding:6px 13px; font-size
 body .btn:disabled,body .mp-btn:disabled,body .rv-btn:disabled,body .mbx-pbtn:disabled,body .hm-btn:disabled{ opacity:.5; cursor:default; }
 /* ホームの2つの枠：幅・高さをそろえる */
 .hmi,.mbx-strip{ box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; margin:14px -6px 2px!important; }
-.masthead .mb-top::before{ display:none!important; } .hm-daily-top,.hm-daily{ scroll-margin-top:12px; } @media (min-width:821px){ .hm-daily-top,.hm-daily{ scroll-margin-top:150px; } }
+.masthead .mb-top::before{ display:none!important; } .hm-daily-top,.hm-daily,.album,.album-btn{ scroll-margin-top:12px; } @media (min-width:821px){ .hm-daily-top,.hm-daily,.album,.album-btn{ scroll-margin-top:150px; } }
 .masthead{ flex-wrap:wrap; } .masthead .meta:empty{ display:none; } .masthead .mast-r{ justify-content:flex-start!important; } .masthead .mast-q{ display:flex; flex-wrap:wrap; justify-content:flex-start; gap:8px; width:100%; } .masthead .mast-q[hidden]{ display:none!important; }
-@media (max-width:640px){ .masthead .mast-q{ display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); gap:5px; margin-top:-6px; } .masthead .mast-q .fr-top{ height:50px; } }
+@media (max-width:640px){ .masthead .mast-q{ display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); gap:5px; margin-top:-6px; } }
 /* ロゴの下に「人生のヒントが、ここにある」 */
 .lb-col{ display:inline-flex; flex-direction:column; align-items:flex-start; gap:5px; } .lb-sub{ font-family:var(--serif); font-size:12px; letter-spacing:.1em; color:var(--muted); line-height:1.2; white-space:nowrap; }
 @media (max-width:640px){ .masthead .lb-col{ align-items:center; gap:6px; } .masthead .lb-sub{ font-size:13px; letter-spacing:.12em; } }
