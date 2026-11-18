@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.28">
+<meta name="lifebook-version" content="v178.29">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head><body>
@@ -724,7 +724,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.28 (2026-11-17) */ var LB_VER='v178.28';
+/* LIFE BOOK game version: v178.29 (2026-11-18) */ var LB_VER='v178.29';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20268,6 +20268,42 @@ window.addEventListener('click',e=>{ if(e._lbRe||!e.isTrusted) return; const t=e
     const ev=new MouseEvent('click',{ bubbles:true, cancelable:true, view:window, clientX:e.clientX, clientY:e.clientY }); ev._lbRe=1; tg.dispatchEvent(ev); },0)); },true);
 // 押した時の小さな反応
 (function(){ const s=document.createElement('style'); s.textContent='.lb-press{ filter:brightness(.92); transform:scale(.97); transition:transform .08s; }'; document.head.appendChild(s); })();
+// v178.29: 友だちがまだいない人に、やさしく「友だちに紹介」をすすめる（MITSUさん 2026-11-18 OK：①②の両方）
+// ① Life Home：ニュースの下に小さなカード（友だち0人のときだけ。「あとで」で7日間出さない。友だちができたら出さない）
+// ② Life Record：生まれてから24時間のあいだだけ、名前カードの下に1行（友だち0人のときだけ）
+// 「出会う」は meet.js にある本当の仕組み（紹介でつながった友だちの Channel と、人生のどこかで出会う）。
+const KEY_FRNUDGE='hitotsu.frNudge';
+function frnHasFriend(){ try{ const f=store.get(KEY_FRIEND,[]); return Array.isArray(f)&&f.length>0; }catch(e){ return true; } }
+try{ document.head.insertAdjacentHTML('beforeend',`<style>
+.frn{ margin:14px 0; padding:14px 16px; border-radius:18px; background:#FFF3F6; border:1.5px solid #FFC7D4; }
+.frn h3{ margin:0 0 6px; font-size:1.05rem; color:#D94A72; }
+.frn p{ margin:0 0 12px; font-size:.95rem; line-height:1.7; }
+.frn-btns{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.frn-btns .fr-big{ margin:0; min-height:44px; }
+.frn-later{ min-height:44px; padding:0 14px; border:none; background:none; color:#8a7a80; font-size:.9rem; text-decoration:underline; cursor:pointer; }
+.frn-born{ margin:10px 0 4px; padding:10px 14px; border-radius:14px; background:#FFF3F6; font-size:.92rem; line-height:1.7; }
+.frn-born .fr-open{ margin-left:4px; min-height:36px; padding:0 12px; border:none; border-radius:999px; background:#FF8FAB; color:#fff; font-weight:700; font-size:.85rem; cursor:pointer; }
+</style>`); }catch(e){}
+function frnPlaceHome(){ try{ const app=document.getElementById('app'); if(!app||typeof page==='undefined'||page!=='home'||viewing||app.querySelector('.frn')) return;
+  if(frnHasFriend()) return; const until=Number(store.get(KEY_FRNUDGE,0))||0; if(Date.now()<until) return;
+  const el=document.createElement('section'); el.className='frn'; el.setAttribute('aria-label','友だちと、いっしょに');
+  el.innerHTML=`<h3>🤝 友だちと、いっしょに</h3><p>友だちを紹介すると、ふたりの Channel は、それぞれの人生のどこかで出会います。出会ったときは、お互いに「出会った！」が届きます。</p>
+    <div class="frn-btns"><button type="button" class="fr-big fr-open"><i class="ic ic-heart" aria-hidden="true"></i>友だちに紹介する</button><button type="button" class="frn-later">あとで</button></div>`;
+  const lbn=app.querySelector('.lbn'), cid=app.querySelector('.hm-cid'), osm=app.querySelector('.osm'), hint=app.querySelector('.hm-hint'), home=app.querySelector('.home');
+  if(lbn) lbn.after(el); else if(cid) cid.after(el); else if(osm) osm.before(el); else if(hint) hint.before(el); else if(home) home.prepend(el); else return;
+  el.querySelector('.fr-open').onclick=()=>{ if(typeof openFriend==='function') openFriend(); };
+  el.querySelector('.frn-later').onclick=()=>{ store.set(KEY_FRNUDGE,Date.now()+7*86400000); el.remove(); };
+}catch(e){ try{ console.warn('[frn]',e); }catch(_){} } }
+function frnPlaceBorn(){ try{ const app=document.getElementById('app'); if(!app||typeof page==='undefined'||page!=='life'||viewing||!st||!cur||app.querySelector('.frn-born')) return;
+  if(frnHasFriend()) return; if(!st.birthTime||Date.now()-st.birthTime>86400000) return;
+  const card=app.querySelector('.idcard'); if(!card) return;
+  const el=document.createElement('p'); el.className='frn-born';
+  el.innerHTML=`友だちを誘うと、<b>${esc(cur.P.given)}</b>が人生のどこかで、友だちの Channel と出会うかもしれません。<button type="button" class="fr-open">友だちに紹介する</button>`;
+  card.after(el); try{ rubyApply(el,cur.P,cur.L); }catch(_){}
+  el.querySelector('.fr-open').onclick=()=>{ if(typeof openFriend==='function') openFriend(); };
+}catch(e){ try{ console.warn('[frn]',e); }catch(_){} } }
+(function(){ if(typeof render1!=='function') return; const _r=render1; render1=function(){ const r=_r.apply(this,arguments); frnPlaceHome(); frnPlaceBorn(); return r; }; })();
+setTimeout(()=>{ frnPlaceHome(); frnPlaceBorn(); },0);
 </script>
 <script>
 // ===== サーバーで紹介を届ける（Firebase） =====
