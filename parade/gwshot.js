@@ -217,7 +217,7 @@ function gwRender(rec,D,host){ var wide=!!rec.w, bg=wide?D.bgW:D.bgN, v=bg.vb.sp
   if(rec.q&&gs[rec.q[1]]) try{ var se=gs[rec.q[1]], bb=se.getBBox(), fs=rec.z?Math.max(3,rec.z[3]/22):(wide?4.6:6.8), g=document.createElementNS('http://www.w3.org/2000/svg','g'); g.innerHTML=sayG(bb.x+bb.width/2,bb.y-fs*.7,String(rec.q[0]).slice(0,24),fs); se.appendChild(g); }catch(er){}
   if(rec.s&&rec.s.length) try{ gwMovieLoad(function(M){ try{ M.play(host.firstChild,rec); }catch(er){} }); }catch(er){} /* 🎬 動く写真：アルバムの中で動かす */
   return host.firstChild; }
-var _gwmQ=null; function gwMovieLoad(cb){ if(window.GWMovie){ cb(window.GWMovie); return; } if(!_gwmQ){ _gwmQ=[]; var sc=document.createElement('script'); sc.src=BASE+'gwmovie.js?v=v178.79'; sc.onload=function(){ var q=_gwmQ; _gwmQ=null; if(window.GWMovie) q.forEach(function(f){ f(window.GWMovie); }); }; sc.onerror=function(){ _gwmQ=null; }; document.head.appendChild(sc); } _gwmQ.push(cb); }
+var _gwmQ=null; function gwMovieLoad(cb){ if(window.GWMovie){ cb(window.GWMovie); return; } if(!_gwmQ){ _gwmQ=[]; var sc=document.createElement('script'); sc.src=BASE+'gwmovie.js?v=v178.80'; sc.onload=function(){ var q=_gwmQ; _gwmQ=null; if(window.GWMovie) q.forEach(function(f){ f(window.GWMovie); }); }; sc.onerror=function(){ _gwmQ=null; }; document.head.appendChild(sc); } _gwmQ.push(cb); }
 
 var DD=null, Q=null; function data(){ if(DD) return Promise.resolve(DD); if(!Q) Q=fetch(BASE+'parade.json').then(function(r){ return r.json(); }).then(function(d){ DD=d; return d; }); return Q; }
 try{ var st=document.createElement('style'); st.textContent='.gw-photo{display:block;width:100%;height:auto}.gw-photo .pd-sb{display:none}'; document.head.appendChild(st); }catch(e){}
