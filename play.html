@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.30">
+<meta name="lifebook-version" content="v178.31">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.30 (2026-11-18) */ var LB_VER='v178.30';
+/* LIFE BOOK game version: v178.31 (2026-11-18) */ var LB_VER='v178.31';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -9133,6 +9133,7 @@ function valuesYear(X){
   if(!S.dietSet && age>=6){ S.dietSet=true; S.diet='none';
     if(rel==='hindu' && r.chance(.42)) S.diet='veg_born';
     if(rel==='muslim') S.halal=true; if(rel==='jewish' && r.chance(.25)) S.kosher=true;
+    (S.dietLog=S.dietLog||[]).push([S.diet==='veg_born'?0:age,S.diet]);
     if(S.diet==='veg_born') push('food','家では、肉も魚も卵も食べなかった。生まれたときから、それが当たり前だった。',0);
     else if(S.halal && age<=8) push('food','豚肉は食べない。それは、家の中では言うまでもない決まりだった。',0);
     else if(S.kosher) push('food','家では、肉と乳製品を一緒に食べない決まりを守っていた。',0);
@@ -9140,10 +9141,10 @@ function valuesYear(X){
     else if(MEAT_C[c] && age<=10 && r.chance(.5)) push('food',`休みの日、家族や親せきが集まって、${MEAT_C[c]}を囲んだ。`,2);
   }
   if(S.diet==='none' && age>=14 && age<=45 && !S.vegTried){
-    const p=vegBase(c,rel,y)/25; if(rel!=='hindu' && r.chance(p)){ S.vegTried=true; const vegan=y>=2010 && r.chance(.3); S.diet=vegan?'vegan':'veg';
+    const p=vegBase(c,rel,y)/25; if(rel!=='hindu' && r.chance(p)){ S.vegTried=true; const vegan=y>=2010 && r.chance(.3); S.diet=vegan?'vegan':'veg'; (S.dietLog=S.dietLog||[]).push([age,S.diet]);
       push('food',vegan?'動物の命や環境のことを調べるうちに、肉も魚も、乳製品も卵もやめることにした（ヴィーガン）。':'肉を食べるのを、やめることにした（ベジタリアン）。',1,age<=12?null:'自分で選んだことだから、続けたい');
       push('food',r.pick(['家族との食事で、自分だけ別の皿になった。','友だちとの外食で、食べられるものを探してメニューをにらんだ。','「肉を食べないと力が出ない」と、親に心配された。']),-1); }
-  } else if((S.diet==='veg'||S.diet==='vegan') && r.chance(.05)){ S.diet='none'; push('food','菜食を、やめた。何年かぶりに食べた肉の味に、少しとまどった。',0); }
+  } else if((S.diet==='veg'||S.diet==='vegan') && r.chance(.05)){ S.diet='none'; (S.dietLog=S.dietLog||[]).push([age,'none']); push('food','菜食を、やめた。何年かぶりに食べた肉の味に、少しとまどった。',0); }
   if(S.halal && age>=18 && !S.halalAbroad && (P.econ>=1) && r.chance(.03)){ S.halalAbroad=true; push('food','外国へ行ったとき、ハラールの食事を探して、町を歩き回った。',-1); }
   // ---- 性（内面の価値観として） ----
   if(!S.sexv && age>=15){ const cons=sexConserv(c,rel,y); const x=r.next();
@@ -10658,6 +10659,7 @@ function simulate(P, choice, FORCE){
     if(pendingNow) break;
   }
   L.svcSpy=S.spyPast||(S.job&&S.job.intel)||null; L.svcVet=S.vet||(S.job&&S.job.mil)||null; L.svcBB=S.gym&&(S.gym.bb||S.gym.done)?S.gym:null;
+  L.dietLog=S.dietLog||[];
   L.deathAge=deathAge; L.beliefs=S.beliefs; L.job=S.job; L.kids=kids; L.flags=S.flags; L.partnerFinal=partner; L.ex=S.exPartner||null;
   L.friend=friend; L.sib=sib; L.father=father; L.mother=mother; L.grandma=grandma;
   L.college=!!S.college; L.everMarried=S.marriedAt!=null||!!S.married||!!S.divorced;
@@ -11656,7 +11658,7 @@ bs(6,1,C=>C.christ,'生まれて数週間後、教会で洗礼を受けた。冷
 bs(6,.8,C=>C.christ,'洗礼式で、白い長い服を着せられた。母も、祖母も、同じ服で洗礼を受けたのだった。');
 bs(6,.8,C=>C.christ,'名付け親になった父の友人が、小さな十字架のペンダントを贈ってくれた。');
 bs(6,1,C=>C.hindu,'生まれて十二日目の命名式（ナームカラン）で、祖母が、赤ちゃんの耳もとで名前をささやいた。');
-bs(6,.8,C=>C.hindu,'生まれてすぐ、蜂蜜とギーを混ぜたものを、金の匙で口にふれさせる儀式が行われた。');
+bs(6,.8,C=>C.hindu,'生まれてすぐの儀式（ジャータカルマ）で、父が、金の匙を赤ちゃんの口もとに近づけて、祈りの言葉をささやいた。昔は蜂蜜をなめさせたが、赤ちゃんには毒になると医師に教わり、匙は空のままだった。');
 bs(6,.8,C=>C.hindu,'生まれた時刻をもとに、占星術師がホロスコープを作った。家族は、それを大切に箱にしまった。');
 bs(6,1,C=>C.cn,'生後一か月の満月酒に、親戚が集まり、赤く染めたゆで卵が配られた。');
 bs(6,.8,C=>C.cn,'母は、生まれてから一か月、家から出ずに体を休める「坐月子」を過ごした。');
@@ -11664,7 +11666,7 @@ bs(6,1,C=>C.kr,'生まれた家の門に、唐辛子と炭をさげた縄（ク�
 bs(6,.8,C=>C.kr,'生後百日に、白い餅を百人に分けると長生きする、と祖母が言い、近所じゅうに餅を配った。');
 bs(6,.8,C=>C.kr,'母は、産後、毎日わかめのスープを飲んだ。');
 bs(6,1,C=>C.ng,'生まれて八日目の命名式で、家族や親戚が、それぞれの思いをこめた名前をいくつも贈った。');
-bs(6,.8,C=>C.af,'命名式の日、塩や蜂蜜、水などが、ひとつずつ赤ちゃんの唇にふれさせられた。人生のさまざまな味を知るように、という意味だった。');
+bs(6,.8,C=>C.af,'命名式の日、塩や蜂蜜、水などが並べられ、大人たちが、ひとつずつ味見をした。人生のさまざまな味を知るように、という意味だった。赤ちゃんの唇には、きれいな水だけがそっとふれた。');
 bs(6,1,C=>C.jew,'生まれて八日目に、親戚が集まり、割礼の儀式が行われた。');
 bs(6,.6,C=>C.secular&&C.rich,'宗教の儀式はしなかった。かわりに、家族だけの小さなパーティーで、名前を発表した。');
 bs(6,.6,C=>C.buddhist&&!C.jp,'生まれて一か月後、寺の僧侶が家に来て、手首に白い糸を結んでくれた。');
@@ -11813,7 +11815,8 @@ function moOne(P,L,y,i,used,ctx){ const age=y.age, stg=moStage(age);
     const tk=se+'|'+(age>=6&&age<=18?1:0); const times=ctx.tc[tk]||(ctx.tc[tk]=MO_TIME.filter(x=>(!x[1]||x[1].includes(se))&&(!x[2]||(x[2]==='jp'?P.countryId==='jp':x[2]==='school'&&age>=6&&age<=18))));
     const tm=times[h('t')%times.length][0];
     const pls=stg==='baby'?MO_PLACE.kid.slice(0,8):(MO_PLACE[stg]||MO_PLACE.kid); const pl=pls[h('p')%pls.length];
-    const dos=MO_DO[stg]; let act=dos[h('a')%dos.length]; const ppl=ctx.ppl; act=act.replace(/\{p\}/g,ppl[h('w')%ppl.length]).replace('{o}',MO_OBJ[h('o')%MO_OBJ.length]).replace('{f}',MO_FOOD[h('fo')%MO_FOOD.length]).replace('{s}',MO_SOUND[h('so')%MO_SOUND.length]);
+    const dos=MO_DO[stg]; let act=dos[h('a')%dos.length]; const ppl=ctx.ppl; act=act.replace(/\{p\}/g,ppl[h('w')%ppl.length]).replace('{o}',MO_OBJ[h('o')%MO_OBJ.length]).replace('{s}',MO_SOUND[h('so')%MO_SOUND.length]);
+    if(act.includes('{f}')){ const fd=typeof moFoodPick==='function'?moFoodPick(P,L,age,act,h('fo')):MO_FOOD[h('fo')%MO_FOOD.length]; if(!fd) continue; act=act.replace('{f}',fd); }
     if(age===0&&/声を立てて笑|知らない人の顔|ぱしゃり|髪を、小さな手で|首を回した/.test(act)) continue;
     if(age<5&&/おつかい|ひもを結ぶ|名前を、大きく書|なぞなぞ|石けり/.test(act)) continue;
     const nt=/夜|寝る前|夕飯のあと|晩/.test(tm), rn=/雨|くもり/.test(tm);
@@ -20321,6 +20324,119 @@ function frnPlaceBorn(){ try{ const app=document.getElementById('app'); if(!app|
 }catch(e){ try{ console.warn('[frn]',e); }catch(_){} } }
 (function(){ if(typeof render1!=='function') return; const _r=render1; render1=function(){ const r=_r.apply(this,arguments); frnPlaceHome(); frnPlaceBorn(); return r; }; })();
 setTimeout(()=>{ frnPlaceHome(); frnPlaceBorn(); },0);
+// ===== 食べ物の決まり（年齢と宗教）：物語に、あり得ない食べ物の場面を出さない =====
+// 乳幼児：厚生労働省「授乳・離乳の支援ガイド（2019年改定版）」
+//   ・はちみつは満1歳まで与えない（乳児ボツリヌス症）。
+//   ・離乳食は5〜6か月ごろから。なめらかにすりつぶした物 → 舌でつぶせる固さ（7〜8か月）→ 歯ぐきでつぶせる固さ（9〜11か月）→ 歯ぐきでかめる固さ（12〜18か月）。
+//   ・牛乳を飲み物にするのは1歳を過ぎてから。香辛料などの刺激物は控える。1歳ごろまでは加熱した物。
+// 消費者庁（2021年・2023年）：硬い豆やナッツ類は5歳以下の子どもに食べさせない（窒息・誤嚥）。ミニトマトやぶどうは丸ごと与えない（4等分）。
+// こども家庭庁「教育・保育施設等における事故防止及び事故発生時の対応のためのガイドライン」：餅・白玉など、粘りのある物に注意。
+// 宗教：イスラム教＝豚肉とその加工品・ラード、お酒は口にしない（ハラール）。ユダヤ教＝豚肉・えびやかに・貝・いかやたこなどを食べない（コーシャ）。
+//   ヒンドゥー教＝牛は神聖で、牛肉を食べない（菜食の家庭も多い）。エチオピア正教＝豚肉を食べない、断食の日が多い。
+//   参考：Yale University Chaplain's Office "Dietary Cheat Sheet"、Glasgow Centre for Population Health "Religious dietary requirements"。
+const FS_REFS=[['食べ物の決まり','赤ちゃんには、満1歳まではちみつを与えない（乳児ボツリヌス症）。離乳食は5〜6か月ごろから、なめらかにすりつぶした物で始める。硬い豆やナッツ類は5歳以下には与えない。イスラム教では豚肉とお酒、ユダヤ教では豚肉や貝・えびなど、ヒンドゥー教では牛肉を口にしない。','厚生労働省「授乳・離乳の支援ガイド」（2019）、消費者庁（2021・2023）、Yale University Chaplain\'s Office "Dietary Cheat Sheet"']];
+
+// ---- 小さな日々（moments）の食べ物：種類つき ----
+// k：d=料理 b=焼き菓子・パン s=買ってそのまま食べる物 w=飲み物 h=はちみつ  m：0=食べられる最初の年齢
+// f：meat 肉 / fish 魚 / egg 卵 / dairy 乳 / nut 硬いナッツ / caf カフェイン / hot 熱い / honey
+const FS_FOOD=[
+ ['あたたかいスープ','d',2],['焼きたてのパン','b',2],['甘い果物','s',2],['ゆでた卵','d',2,'egg'],['豆の煮もの','d',2],['炊きたてのごはん','d',2],['香ばしい焼き魚','d',2,'fish'],
+ ['野菜の炒めもの','d',2],['あまいお菓子','b',2],['冷たい水','w',1],['熱いお茶','w',6,'caf hot'],['とうもろこし','s',2],['いもの煮っころがし','d',2],['温かいミルク','w',1,'dairy'],
+ ['ひと切れのケーキ','b',2,'egg dairy'],['しょっぱいせんべい','s',2],['具だくさんの汁もの','d',2],['よく冷えた果物','s',2],['焼いたいも','s',2],['ゆで卵','d',2,'egg'],
+ ['ホットミルク','w',2,'dairy'],['豆の煮こみ','d',2],['炊きたてのご飯','d',2],['焼いた魚','d',2,'fish'],['おかゆ','d',0],['オレンジ','s',2],['温かいお茶','w',6,'caf'],
+ ['ドーナツ','b',2,'egg dairy'],['すいか','s',2],['豆のスープ','d',2],['トースト','b',2],['果物のゼリー','s',2],['温かい紅茶','w',6,'caf'],['手作りのクッキー','b',2,'egg dairy'],
+ ['温かいパン','b',2],['野菜のスープ','d',2],['甘い焼き菓子','b',2,'egg dairy'],['果物','s',2],['ヨーグルト','s',1,'dairy'],['ゆでたじゃがいも','d',2],['チーズ','s',2,'dairy'],
+ ['焼いた肉','d',2,'meat'],['豆のごはん','d',2],['香りのいいお茶','w',6,'caf'],['ナッツ','s',6,'nut'],['炒めた野菜','d',2],['魚のスープ','d',2,'fish'],['はちみつ','h',1,'honey'],['焼いたとうもろこし','s',2]];
+// 0歳（離乳食）と1歳（幼児食のはじめ）だけの食べ物
+const FS_FOOD0=[['おかゆ','d'],['すりつぶしたかぼちゃ','d'],['つぶしたバナナ','s'],['すりおろしたりんご','s'],['やわらかく煮たにんじん','d'],['つぶしたさつまいも','d'],['くたくたに煮た野菜','d'],['つぶしたじゃがいも','d'],['白身魚のおかゆ','d','fish']];
+const FS_FOOD1=[['やわらかいごはん','d'],['やわらかく煮た麺','d'],['小さく切ったバナナ','s'],['やわらかく煮た野菜','d'],['ヨーグルト','s','dairy'],['蒸しパン','b'],['つぶしたじゃがいも','d'],['ほぐした煮魚','d','fish'],['野菜のスープ','d'],['やわらかく煮たりんご','d']];
+
+// 人生のある年齢の、食べ方（家の宗教と、本人の菜食）
+function fsDiet(P,L,age){ const rel=P&&P.religion; let d='none';
+  for(const x of (L&&L.dietLog)||[]){ if(x[0]<=age||x[1]==='veg_born') d=x[1]; if(x[0]>age&&x[1]!=='veg_born') break; }
+  return { rel, d, vegBorn:((L&&L.dietLog)||[]).some(x=>x[1]==='veg_born') }; }
+function fsFoodOK(fl,dt){ fl=fl||''; const veg=dt.vegBorn||dt.d==='veg'||dt.d==='vegan'||dt.d==='veg_born';
+  if(veg && /meat|fish/.test(fl)) return false; if((dt.vegBorn||dt.d==='veg_born'||dt.d==='vegan') && /egg/.test(fl) && !/dairy/.test(fl)) return false;
+  if(dt.d==='vegan' && /dairy|egg|honey/.test(fl)) return false; return true; }
+// その場面（act）に合う食べ物を選ぶ。合うものがなければ null（その場面は使わない）
+const FS_PCACHE={};
+function moFoodPick(P,L,age,act,hv){ const dt=fsDiet(P,L,age);
+  const ak=(/ほおば|食べ|お皿|口に入れて|ごちそう|囲ん|分けあ|おいしかった|おいしいと/.test(act)?1:0)+(/作/.test(act)?2:0)+(/味わ|おかわり/.test(act)?4:0)+(/におい/.test(act)?8:0)+(/こぼ|運/.test(act)?16:0)+(/買っ|持っ|送っ|届/.test(act)?32:0);
+  const ck=[Math.min(age,6),ak,dt.d,dt.vegBorn?1:0].join('|'); let pool=FS_PCACHE[ck];
+  if(!pool){ pool=moFoodPool(age,act,dt); FS_PCACHE[ck]=pool; }
+  if(!pool.length) return null; return pool[hv%pool.length][0]; }
+function moFoodPool(age,act,dt){
+  const eat=/ほおば|食べ|お皿|口に入れて|ごちそう|囲ん|分けあ|おいしかった|おいしいと/.test(act), make=/作/.test(act), sip=/味わ|おかわり/.test(act), smell=/におい/.test(act);
+  let pool;
+  if(age<=0) pool=FS_FOOD0.map(x=>[x[0],x[1],0,x[2]]); else if(age===1) pool=FS_FOOD1.map(x=>[x[0],x[1],1,x[2]]);
+  else pool=FS_FOOD.filter(x=>x[2]<=age);
+  pool=pool.filter(x=>{ const k=x[1]; if(!fsFoodOK(x[3],dt)) return false;
+    if(k==='h' && (eat||make||sip||smell||/こぼ|運/.test(act))) return false;
+    if(k==='w' && (eat||make||/買っ|持っ|送っ|届/.test(act))) return false;
+    if(k==='s' && (make||smell)) return false;
+    if(age<=5 && /hot|caf|nut/.test(x[3]||'')) return false;
+    return true; });
+  return pool; }
+
+// ---- すべての場面の見直し（最後の安全網） ----
+const FS_EAT=/食べ|口に(?:入れ|ふく|し|運)|ほおば|かじっ|味わ|飲ん|飲ま|飲み|飲む|ごちそう|いただ|なめ|すすっ|囲ん|おかわり|食卓|お弁当|給食|朝ごはん|昼ごはん|夕飯|ごはんは/;
+const FS_NEG=/食べない|食べなかった|食べず|飲まない|飲まなかった|飲まず|口にしない|口にしなかった|口にせず|断った|断り|避け|禁じ|禁止|やめ|ハラール|コーシャ|決まり|使わない|入っていない|ぬき|抜き|代わりに|かわりに|空のまま|毒になる|与えない|あげない|ふれさせなかった|まだ早い/;
+const FS_OTHER=/(?:^|、|。)(?:父|母|祖父|祖母|兄|姉|弟|妹|おじ|おば|親戚|大人たち|大人|客|近所の人|上司|同僚|友人|友だち|夫|妻|恋人|みんな|家族)(?:の[^、。]{0,8})?(?:は|が|も)、?/;
+const FS_PORK=/豚|ポーク|ベーコン|ハム(?!スター|レット|ラ)|ソーセージ|サラミ|とんかつ|トンカツ|チャーシュー|ラード|生姜焼き|酢豚|ホットドッグ|ペパロニ|角煮|焼き豚|とん汁|豚汁/;
+const FS_ALC=/お酒|酒を|酒が|酒に|酒の|酒で|酒と|酒も|酒は|日本酒|ビール|ワイン|ウイスキー|焼酎|ウォッカ|ラム酒|カクテル|シャンパン|晩酌|居酒屋|酔っ|酔い|ほろ酔い|二日酔い|はしご酒|一杯やろう|飲み屋|バーで/;
+const FS_BEEF=/牛肉|牛の肉|ビーフ|ステーキ|牛丼|すき焼き|焼肉|ハンバーガー|ハンバーグ|ローストビーフ|牛すじ|牛タン|ミートソース/;
+const FS_SHELL=/えび|エビ|海老|かに(?!も|が|と|く|ゆ)|カニ|蟹|貝(?:を|の料理|料理|のスープ|汁)|あさり|しじみ|はまぐり|牡蠣|カキフライ|ホタテ|ほたて|いか(?:の|を|焼|飯)|イカ|たこ焼|タコ|ロブスター|ムール貝/;
+const FS_MEAT=/肉|ハム(?!スター)|ソーセージ|ベーコン|ハンバーガー|ハンバーグ|ステーキ|焼き鳥|唐揚げ|からあげ|フライドチキン|チキン|とんかつ|魚|刺身|すし|寿司|えび|エビ|カニ|貝|ツナ|サーモン|シーフード/;
+const FS_EGG=/卵|たまご|タマゴ|オムレツ|オムライス|目玉焼き|玉子/;
+const FS_XMAS=/クリスマス|イースター|ハロウィン/;
+const FS_HONEY=/はちみつ(?!色)|蜂蜜(?!色)|ハチミツ(?!色)/;
+const FS_INF_BAD=/炒め|揚げ|焼いた肉|焼き肉|焼肉|ステーキ|ナッツ|ピーナッツ(?!バター)|アーモンド|餅|もち(?:を|が|つき|米)|白玉|団子|だんご|ケーキ|クッキー|ドーナツ|お菓子|せんべい|チョコ|あめ玉|飴|ジュース|お茶|紅茶|コーヒー|生卵|刺身|すし|寿司|カレー|辛い|唐辛子|ラーメン|ピザ|ハンバーガー|ポテトチップス|フライドポテト|ガム|牛乳を飲|ぶどう|ブドウ|ミニトマト|こんにゃく|パン(?!ツ|ダ)|チーズ|焼き魚|焼いた魚|ソーセージ|ハム(?!スター)|ベーコン|干し肉|塩辛|漬物/;
+const FS_TODDLER_BAD=/(?<!ピー)ナッツ|ピーナッツ(?!バター)|アーモンド|煎り豆|炒り豆|豆まきの豆を(?:食べ|ほおば|口に)|こんにゃくゼリー|丸ごとのぶどう|丸ごとのミニトマト|餅|白玉|お酒|ビール|ワイン|コーヒー|生卵|刺身|生の魚/;
+function fsSentences(t){ t=String(t); const m=t.match(/(?:「[^」]*」|[^。！？「])*[。！？」]*|.+$/g)||[t]; const out=m.filter(x=>x); return out.join('')===t?out:[t]; }
+// その文が、この人生・この年齢では「あり得ない食べ物の場面」か
+function fsBadSentence(s,age,dt,kind){
+  const eat=FS_EAT.test(s), neg=FS_NEG.test(s), other=FS_OTHER.test(s)&&!/に食べさせ|に飲ませ|の口に|口に入れてもら|にくれた|に分けて|に買って|ひとさじ/.test(s);
+  // 乳児・幼児（本人が食べる場面だけ。大人が食べる・飲む場面は、そのまま）
+  if(age<=0 && FS_HONEY.test(s) && !neg && !other) return true;                       // はちみつは満1歳まで、口にふれさせることもしない
+  if(age<=0 && eat && !other && FS_INF_BAD.test(s)) return true;
+  if(age===1 && eat && !other && /(?<!ピー)ナッツ|ピーナッツ(?!バター)|アーモンド|餅|もち(?:を|が)|白玉|団子|だんご|あめ玉|飴|お酒|ビール|ワイン|コーヒー|紅茶|生卵|刺身|すし|寿司|辛い|唐辛子|揚げ|ぶどう|ブドウ|ミニトマト|こんにゃく|ガム|ポテトチップス/.test(s)) return true;
+  if(age>=2 && age<=5 && eat && !other && FS_TODDLER_BAD.test(s)) return true;
+  if(age>=6 && age<=11 && eat && !other && /お酒|酒を|ビール|ワイン|ウイスキー|焼酎|酔っ/.test(s)) return true;
+  // 宗教（家族ぐるみの決まり。食べない・断ったという文はそのまま）
+  const r=dt.rel;
+  if(!neg){
+    if((r==='muslim'||r==='jewish'||r==='orthodox_et') && FS_PORK.test(s) && (eat||/買|作|料理|焼|煮|揚|用意|弁当|食卓|ごちそう|運/.test(s))) return true;
+    if(r==='muslim' && FS_ALC.test(s)) return true;
+    if(r==='jewish' && FS_SHELL.test(s) && (eat||/買|作|料理|焼|煮|揚|用意|弁当|食卓|ごちそう|運/.test(s))) return true;
+    if(r==='hindu' && FS_BEEF.test(s) && (eat||/買|作|料理|焼|煮|揚|用意|弁当|食卓|ごちそう|運/.test(s))) return true;
+    if((r==='muslim'||r==='jewish') && FS_XMAS.test(s) && !/町|街|通り|テレビ|外国|友だちの家|クラスメート|同僚/.test(s)) return true;
+    // 菜食（生まれつきの菜食の家・自分で決めた菜食）：本人や家の食卓に肉や魚が出ない
+    const veg=dt.vegBorn||dt.d==='veg'||dt.d==='vegan';
+    if(veg && eat && !other && FS_MEAT.test(s) && !/肉汁が|肉球|筋肉|皮肉|肉親|肉体|魚釣り|魚屋の前|金魚|熱帯魚|魚を釣|魚が泳/.test(s)) return true;
+    if((dt.vegBorn||dt.d==='vegan') && eat && !other && FS_EGG.test(s)) return true;
+  }
+  return false; }
+const FS_KEEP=['birth','death','choice','branch','pattern','origin','insp'];
+function fsFixEvent(e,age,dt){ let changed=false, emptied=false;
+  for(const k of ['text','feel','result','inner']){ const t=e[k]; if(!t||typeof t!=='string') continue;
+    if(!FS_QUICK.test(t)) continue;
+    const ss=fsSentences(t); const keep=ss.filter(s=>!fsBadSentence(s,age,dt,e.kind)); if(keep.length===ss.length) continue;
+    changed=true; const nt=keep.join(''); if(k==='text'&&!nt.trim()) emptied=true; e[k]=nt; }
+  return { changed, emptied }; }
+const FS_QUICK=/はちみつ|蜂蜜|ハチミツ|食べ|口に|ほおば|かじ|味わ|飲|ごちそう|いただ|なめ|すす|囲ん|おかわり|食卓|弁当|給食|ごはん|夕飯|豚|ポーク|ベーコン|ハム|ソーセージ|サラミ|とんかつ|トンカツ|チャーシュー|ラード|酒|ビール|ワイン|ウイスキー|焼酎|ウォッカ|カクテル|シャンパン|居酒屋|酔|牛|ビーフ|ステーキ|焼肉|ハンバ|えび|エビ|海老|カニ|かに|蟹|貝|いか|イカ|たこ|タコ|クリスマス|イースター|ハロウィン|ロブスター/;
+// 人生ぜんたいを見直す（一度見た場面は、もう見ない）
+function safeFoodApply(P,L){ if(!P||!L||!L.years) return L;
+  for(const y of L.years){ const age=y.age; let dt=null; let drop=false;
+    for(const e of y.events){ if(!e||e._fs) continue; e._fs=1; if(e.kind==='moment' && typeof moFoodPick==='function') continue; /* 小さな日々は、選ぶときに年齢と食べ方を見ている */ if(!dt) dt=fsDiet(P,L,age);
+      const r=fsFixEvent(e,age,dt); if(r.emptied && !FS_KEEP.includes(e.kind) && !e.big){ e._fsDrop=1; drop=true; } }
+    if(drop) y.events=y.events.filter(e=>!e._fsDrop); }
+  return L; }
+// 人生を作る関数・場面を足す関数のあとに、かならず見直す
+(function(){ const g=(typeof window!=='undefined'&&window)||globalThis;
+  const wrap=(name,pos)=>{ const f=g[name]; if(typeof f!=='function'||f._fsW) return; const w=function(){ const out=f.apply(this,arguments); try{ const P=arguments[0], L=pos==='ret'?out:arguments[1]; safeFoodApply(P,L); }catch(e){} return out; }; w._fsW=1; g[name]=w; };
+  wrap('simulate','ret');
+  ['birthSitApply','momentsApply','mpLifeApply','petExtraApply','fort2Apply','petBreedApply','siblingsApply','dreamApply','friendMeet'].forEach(n=>wrap(n,'arg'));
+})();
 </script>
 <script>
 // ===== サーバーで紹介を届ける（Firebase） =====
