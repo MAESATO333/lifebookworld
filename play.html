@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.54">
+<meta name="lifebook-version" content="v178.55">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.54 (2026-11-19) */ var LB_VER='v178.54';
+/* LIFE BOOK game version: v178.55 (2026-11-19) */ var LB_VER='v178.55';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21431,6 +21431,10 @@ setInterval(()=>{ try{ const q=document.getElementById('mastQ'); if(q){ const on
 let _acFrom=null, _acFromT=0; const AC_BACK='← マイページへ戻る', AC_OV='#mpDlg:not([hidden]),#eaOv,.mbx,.rvx,.rvx-modal,.mbx-modal,#frDlg:not([hidden])';
 function acFromStop(){ _acFrom=null; clearInterval(_acFromT); document.querySelectorAll('#acFab,.ac-backin').forEach(x=>x.remove()); }
 function acBackHome(){ acFromStop(); _acTab='life'; acOpen(); }
+// v178.55（MITSUさん 2026-11-19）：マイページのメインページからは、迷わないように必ず Life Home のいちばん上へ戻る（まだ生まれていないときは、元の画面へ）
+function acHasHome(){ try{ return typeof st!=='undefined'&&!!st&&typeof cur!=='undefined'&&!!cur; }catch(e){ return false; } }
+function acLeaveLabel(){ return acHasHome()?'🏠 Life Home に戻る':'← 戻る'; }
+function acLeave(){ acClose(); if(!acHasHome()) return; try{ if(page==='home'&&!viewing) window.scrollTo(0,0); else goHome(); }catch(e){} }
 function acCloseOv(){ try{ document.querySelectorAll('.mbx-modal,.rvx-modal,#eaOv').forEach(x=>x.remove()); ['.mbx-close','.rvx-close'].forEach(q=>{ const b=document.querySelector(q); if(b) b.click(); });
     const m=document.getElementById('mpDlg'); if(m&&!m.hidden) mpClose(); const f=document.getElementById('frDlg'); if(f&&!f.hidden) closeFriend(); }catch(e){ console.warn(e); } }
 function acFromStart(g){ acFromStop(); const pg=(g==='life'||g==='arc'); _acFrom={ g, pg, seen:false, t:Date.now(), page:page };
@@ -21446,8 +21450,8 @@ function acFromTick(){ const s=_acFrom; if(!s) return;
   if(s.seen){ const same=page===s.page; acFromStop(); if(same){ _acTab='life'; acOpen(); } return; }
   if(Date.now()-s.t>2500) acFromStop(); }
 function acOpen(){ const d=acDlg(); if(_acFrom) acFromStop(); const sub=acIn()&&_acTab!=='life';
-  d.innerHTML=`<div class="frd-in ac-in">${sub?'<button class="frd-x ac-backx" type="button" data-achome="1">← 戻る</button>':'<button class="frd-x" type="button" aria-label="閉じる">×</button>'}${acHTML()}</div>`; d.hidden=false; document.body.classList.add('frd-on');
-  d.querySelector('.frd-x').onclick=sub?acBackHome:acClose; d.querySelectorAll('[data-achome]').forEach(b=>b.onclick=acBackHome); const on=(id,f)=>{ const b=document.getElementById(id); if(b) b.onclick=f; };
+  d.innerHTML=`<div class="frd-in ac-in">${sub?'<button class="frd-x ac-backx" type="button" data-achome="1">← 戻る</button>':'<button class="frd-x ac-backx" type="button" aria-label="'+acLeaveLabel()+'">← 戻る</button>'}${acHTML()}${sub?'':'<button class="frd-b frd-pink ac-wide ac-leave" type="button" data-acleave="1">'+acLeaveLabel()+'</button>'}</div>`; d.hidden=false; document.body.classList.add('frd-on');
+  d.querySelector('.frd-x').onclick=sub?acBackHome:acLeave; d.querySelectorAll('[data-achome]').forEach(b=>b.onclick=acBackHome); d.querySelectorAll('[data-acleave]').forEach(b=>b.onclick=acLeave); const on=(id,f)=>{ const b=document.getElementById(id); if(b) b.onclick=f; };
   on('acG',acGoogle); on('acLogin',()=>acEmail('in')); on('acNew',()=>acEmail('new')); on('acForgot',acReset); on('acOut',acLogout);
   on('acNow',async()=>{ acMsg('保存しています…'); await acSync('now'); acMsg(_acLastErr?'うまく保存できませんでした。もう一度押してください。':'保存完了しました！'); if(!_acLastErr) setTimeout(()=>{ const m=document.getElementById('acMsg'); if(m&&/保存完了/.test(m.textContent)) m.textContent=''; },2500); });
   const r=document.getElementById('fbRetry'); if(r) r.onclick=()=>{ if(typeof fbStart==='function') fbStart(); setTimeout(acOpen,1500); };
@@ -21502,6 +21506,7 @@ function acStart(){ if(_acStarted) return; _acStarted=true; acBtnSync(); documen
 .ac-cnt{ margin:4px 0 8px; text-align:center; font-size:15px; font-weight:700; color:#3A2A33; background:#FFF6FA; border:2px solid #FFC2D0; border-radius:14px; padding:9px 10px; } .ac-cnt b{ font-size:24px; color:#D9467A; margin:0 3px; }
 .ac-tn{ font-style:normal; font-size:11px; line-height:1.2; background:#FFE3EC; color:#D9467A; border-radius:999px; padding:0 7px; margin-top:1px; } .ac-tab.on .ac-tn{ background:#fff; }
 .frd-x.ac-backx{ width:auto; height:34px; padding:0 13px; border-radius:999px; font:inherit; font-size:13px; font-weight:700; background:#FF8FAB; border-color:#FF8FAB; color:#fff; white-space:nowrap; } .ac-in:has(.ac-backx) h2{ padding-right:84px; }
+.ac-in .ac-leave{ display:block; width:100%; margin:14px 0 2px; font-size:16px; padding:13px 10px; }
 .ac-in .ac-backb{ margin:12px 0 2px; border:2px solid #FFB3C8; color:#D9467A; font-weight:700; }
 .ac-backin{ display:block; width:100%; box-sizing:border-box; margin:14px 0 2px; padding:12px 10px; border-radius:14px; border:2px solid #FFB3C8; background:#fff; color:#D9467A; font:inherit; font-size:15px; font-weight:700; cursor:pointer; }
 .ac-fab{ position:fixed; left:12px; bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:55; padding:11px 16px; border-radius:999px; border:2px solid #fff; background:#FF8FAB; color:#fff; font:inherit; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(217,70,122,.35); }
