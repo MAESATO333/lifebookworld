@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.41">
+<meta name="lifebook-version" content="v178.42">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.41 (2026-11-18) */ var LB_VER='v178.41';
+/* LIFE BOOK game version: v178.42 (2026-11-18) */ var LB_VER='v178.42';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21328,7 +21328,7 @@ async function acAfterLogin(){ try{ sessionStorage.setItem('ac.reopen','1'); }ca
   acMsg(_acLastErr?'うまくつながりませんでした。「いま保存する」を押してください。':acHasLife(acLocal())?'ログインしました。この人生はマイページに保存されています。':'ログインしました。ほかの端末で見守っている人生は、その端末でも同じ方法でログインすると、ここに出てきます。'); }
 function acGoogle(){ const U=FB.U, u=acUser(), pv=new U.GoogleAuthProvider(); pv.setCustomParameters({ prompt:'select_account' });
   // 小窓はタップのすぐあとに開かないと止められるので、待たずに呼ぶ
-  const p=(u&&u.isAnonymous)?U.linkWithPopup(u,pv).catch(e=>{ if(/credential-already-in-use/.test(e&&e.code||'')){ const c=U.GoogleAuthProvider.credentialFromError(e); if(c) return U.signInWithCredential(FB.auth,c); } throw e; }):U.signInWithPopup(FB.auth,pv);
+  const p=(u&&u.isAnonymous)?U.linkWithPopup(u,pv,U.browserPopupRedirectResolver).catch(e=>{ if(/credential-already-in-use/.test(e&&e.code||'')){ const c=U.GoogleAuthProvider.credentialFromError(e); if(c) return U.signInWithCredential(FB.auth,c); } throw e; }):U.signInWithPopup(FB.auth,pv,U.browserPopupRedirectResolver);
   p.then(acAfterLogin).catch(e=>acMsg(acErr(e))); }
 async function acEmail(mode){ const U=FB.U, em=($('#acEm').value||'').trim(), pw=$('#acPw').value||''; if(!em||!pw){ acMsg('メールアドレスとパスワードを入れてください。'); return; }
   // Gmail の人は、Googleでログインのほうが まちがいが少ない（打ちまちがいで別のアカウントができないように）
