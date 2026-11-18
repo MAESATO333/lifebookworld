@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.82">
+<meta name="lifebook-version" content="v178.83">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -747,7 +747,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.82 (2026-11-19) */ var LB_VER='v178.82';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.83';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -11153,7 +11153,7 @@ function friendShareText(link){ return String(link||''); } // 紹介文は付け
 function friendPlainLink(){ const u=/(github\.io|lifebookworld\.com)$/.test(location.host)?location.origin+location.pathname:FRIEND_URL; return typeof extURL==='function'?extURL(u):u; }
 // 画面の中に置く案内（大きなボタンつき）
 function friendHTML(){ const fr=store.get(KEY_FRIEND,[]);
-  return `<section class="friend-card"><div class="fc-art">${frArtSVG()}</div><div class="fc-body"><h3>友だちに紹介する</h3><p>${FR_LEAD}</p>
+  return `<section class="friend-card"><div class="fc-art">${frArtSVG()}</div><div class="fc-body"><h3><svg class="lb-heart lb-heart-l" viewBox="0 0 7 6" shape-rendering="crispEdges" aria-hidden="true"><path fill="#E0566B" d="M1 0h2v1h1V0h2v1h1v2H6v1H5v1H4v1H3V5H2V4H1V3H0V1h1z"/><path fill="#fff" opacity=".7" d="M1 1h1v1H1z"/></svg>友だちに紹介する</h3><p>${FR_LEAD}</p>
     <button class="fr-big fr-open" type="button"><i class="ic ic-heart" aria-hidden="true"></i>友だちに紹介する</button>
     ${fr.length?`<p class="tiny muted">つながっている人：${fr.map(f=>esc(f.by||'友だち')+'さん').join('、')}</p>`:''}</div></section>`; }
 function frHeart(x,y,u,col){ const P=['.XX.XX.','XXXXXXX','XXXXXXX','.XXXXX.','..XXX..','...X...']; let o=''; P.forEach((r,j)=>[...r].forEach((c,i)=>{ if(c==='X') o+=`<rect x="${x+i*u}" y="${y+j*u}" width="${u}" height="${u}" fill="${col}"/>`; })); return o; }
@@ -11171,7 +11171,7 @@ function frArtSVG(big){ let S; try{ S=bkScene(); }catch(e){ return ''; }
 // 紹介の窓
 function friendDialogHTML(){ const me=store.get(KEY_ME,''); const can=!!myHero(); const fr=store.get(KEY_FRIEND,[]);
   return `<div class="frd-in"><button class="frd-x" type="button" aria-label="閉じる">×</button>
-    <div class="frd-art">${frArtSVG(true)}</div><h2>友だちに紹介する</h2><p class="frd-lead">${FR_LEAD}</p>${frReplyHTML()}
+    <div class="frd-art">${frArtSVG(true)}</div><h2><svg class="lb-heart" viewBox="0 0 7 6" shape-rendering="crispEdges" aria-hidden="true"><path fill="#E0566B" d="M1 0h2v1h1V0h2v1h1v2H6v1H5v1H4v1H3V5H2V4H1V3H0V1h1z"/><path fill="#fff" opacity=".7" d="M1 1h1v1H1z"/></svg>友だちに紹介する<svg class="lb-heart" viewBox="0 0 7 6" shape-rendering="crispEdges" aria-hidden="true"><path fill="#E0566B" d="M1 0h2v1h1V0h2v1h1v2H6v1H5v1H4v1H3V5H2V4H1V3H0V1h1z"/><path fill="#fff" opacity=".7" d="M1 1h1v1H1z"/></svg></h2><p class="frd-lead">${FR_LEAD}</p>${frReplyHTML()}
     ${can?'':'<p class="tiny frd-note">まだ Channel が生まれていないので、今送れるのは LIFE BOOK の入口のリンクです。「生まれる」を押したあとに送ると、ふたりの Channel が出会います。</p>'}
     <div class="frd-name"><label for="frBy">あなたの呼び名（友だちに表示されます）</label><div class="frd-nrow"><input id="frBy" value="${esc(me)}" maxlength="20" placeholder="例：みつ"><button class="frd-ok" id="frByOk" type="button">OK！</button></div><p class="frd-saved" id="frBySaved" role="status" aria-live="polite"></p></div>
     <div class="frd-btns">
@@ -16866,7 +16866,7 @@ function mpTileHTML(){ const p=mpGet();
   if(!p) return `<p class="tiny">あなたも、ペットを家族に迎えられます。犬や猫などから、本当の種類を選んで、名前をつけてください。Channel と同じように、成長を見守れます。</p><button type="button" class="mp-btn" data-mp="new">🐾 ペットをお迎えする</button>`;
   const gone=mpGone(p), st=mpStage(p), a=Math.floor(Math.min(mpAge(p),p.life)), b=PB_ALL[p.breed]||{};
   return `<div class="mp-card" data-mp="open" role="button" tabindex="0">${mpArt(p,st[1])}<div class="mp-info"><b>${esc(p.name)}</b><small>${esc(b.name||'')}</small>
-    <span class="mp-day">${gone?`🌈 虹の橋をわたりました（${p.life}歳）`:`うちに来て <b>${mpDays(p)}</b> 日目`}</span>${gone?'':`<span class="mp-age">${a}歳・${st[0]}${mpHuman(p)!=null?`（人なら約${mpHuman(p)}歳）`:''}</span>`}<span class="mp-love">💗 愛情 ${p.love||0}</span></div></div>
+    <span class="mp-day">${gone?`🌈 虹の橋をわたりました（${p.life}歳）`:`うちに来て <b>${mpDays(p)}</b> 日目`}</span>${gone?'':`<span class="mp-age">${a}歳・${st[0]}${mpHuman(p)!=null?`（人なら約${mpHuman(p)}歳）`:''}</span>`}<span class="mp-love"><svg class="lb-heart lb-heart-s" viewBox="0 0 7 6" shape-rendering="crispEdges" aria-hidden="true"><path fill="#E0566B" d="M1 0h2v1h1V0h2v1h1v2H6v1H5v1H4v1H3V5H2V4H1V3H0V1h1z"/><path fill="#fff" opacity=".7" d="M1 1h1v1H1z"/></svg>愛情 ${p.love||0}</span></div></div>
     <button type="button" class="linkish" data-mp="open">${esc(p.name)}のページをひらく</button>`; }
 function mpAnniv(p){ const d=mpDays(p); const m={7:'うちに来て1週間！',30:'うちに来て30日！',100:'うちに来て100日の記念日！',365:'うちに来て1年！',500:'うちに来て500日！',1000:'うちに来て1000日！'}[d]; if(m&&p.lastAnD!==d&&!mpGone(p)){ p.lastAnD=d; mpLog(p,m.replace(/！$/,'。'),'anniv'); mpSet(p); } if(m) return `🎉 ${m} ${p.name}と、これからもいっしょに。`; const a=Math.floor(mpAge(p)); if(a>=1&&p.lastBd!==a&&!mpGone(p)){ p.lastBd=a; p.anMsg={ d:dayKey(), t:`🎂 ${p.name}が${a}歳になりました！ おめでとう。` }; mpLog(p,`${a}歳の誕生日。`,'bd'); mpSet(p); } return p.anMsg&&p.anMsg.d===dayKey()?p.anMsg.t:''; }
 function mpOpen(view){ let d=document.getElementById('mpDlg'); if(!d){ d=document.createElement('div'); d.id='mpDlg'; d.className='mp-ov'; document.body.appendChild(d); }
@@ -20924,7 +20924,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.g
 try{ document.head.insertAdjacentHTML('beforeend','<style>.lbs{ position:fixed; inset:0; z-index:9600; background:rgba(40,25,40,.6); display:flex; align-items:center; justify-content:center; padding:16px; } .lbs-in{ box-sizing:border-box; width:min(520px,100%); max-height:92vh; overflow:auto; background:#FFFDFE; color:#3A2E38; border-radius:22px; padding:14px 16px 18px; box-shadow:0 10px 30px rgba(0,0,0,.3); text-align:center; } .lbs-h{ margin:4px 0 10px; font-size:18px; color:#C2476B; } .lbs-pv{ border-radius:14px; overflow:hidden; background:#F6EEF2; min-height:80px; display:grid; place-items:center; } .lbs-pv img{ display:block; width:100%; height:auto; -webkit-touch-callout:default; } .lbs-wait{ margin:0; padding:22px 12px; font-size:14px; color:#6F626B; } .lbs-b{ display:grid; gap:10px; margin:12px 0 6px; } .lbs-go,.lbs-sv,.lbs-x{ box-sizing:border-box; display:flex; align-items:center; justify-content:center; width:100%; min-height:46px; padding:0 14px; border-radius:999px; font:inherit; font-size:15px; font-weight:700; text-decoration:none; cursor:pointer; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; } .lbs-n{ margin:6px 2px 10px; font-size:12.5px; line-height:1.6; color:#6F626B; min-height:1em; } .lbs-x{ margin-top:4px; } .lbs-ot{ border:0; background:none; padding:2px 0; font:inherit; font-size:12px; color:#8A6A78; text-decoration:underline; cursor:pointer; } .lbs-sl{margin:6px 0 0;font-size:13px;font-weight:700;color:#C2476B;text-align:left}.lbs-sns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.lbs-fv{background:#E8508E!important;border-color:#C93A76!important;box-shadow:0 3px 0 #B02F66!important}.lbs-sb{display:flex;align-items:center;justify-content:center;text-decoration:none;box-sizing:border-box;width:100%;min-height:42px;padding:0 4px;border-radius:999px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:2px solid #E86A88;background:#FF8FAA;color:#fff;box-shadow:0 3px 0 #D85878;white-space:nowrap}.lbs-op{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;min-height:46px;margin:0 0 10px;padding:0 14px;border-radius:999px;font-size:15px;font-weight:700;text-decoration:none;border:2px solid #E86A88;background:#fff;color:#D9467A;box-shadow:0 3px 0 #FFD6E1} .ph-share{ display:block; margin:6px auto 0; font-size:12.5px; } body .fl-alb li .mp-btn.fl-phbtn{ border:2px solid #E86A88!important; background:#FF8FAA!important; color:#fff!important; box-shadow:0 3px 0 #D85878!important; }</style>'); }catch(e){}
 
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.82'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.83'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
@@ -21620,7 +21620,7 @@ body .btn:disabled,body .mp-btn:disabled,body .rv-btn:disabled,body .mbx-pbtn:di
 /* v178.68（MITSUさん 2026-11-19）：左上の動くロゴ（島）が下すぎたので、上へ。島のまん中を「LIFE BOOK」の文字の列の高さに合わせる */
 .masthead .lb-isle{ position:relative; top:-16px; }
 /* v178.81（MITSUさん 2026-11-19）：Gateway の出会いのハート（かわいいので）を、「出会った！」の画面と、友だちのカードの案内にも */
-.lb-heart{ display:inline-block; width:26px; height:auto; vertical-align:-3px; margin:0 8px; animation:lbHeartBeat 1.6s ease-in-out infinite; } .lb-heart-ap{ display:block; width:30px; margin:0 auto 2px; }
+.lb-heart{ display:inline-block; width:26px; height:auto; vertical-align:-3px; margin:0 8px; animation:lbHeartBeat 1.6s ease-in-out infinite; } .lb-heart-ap{ display:block; width:30px; margin:0 auto 2px; } .lb-heart-l{ width:22px; margin:0 8px 0 0; vertical-align:-2px; } .lb-heart-s{ width:16px; margin:0 5px 0 0; vertical-align:-1px; } /* v178.83：友だちに紹介する（カード・窓の見出し）、うちのペットの「愛情」にも */
 @keyframes lbHeartBeat{ 0%,100%{ transform:scale(1) } 15%{ transform:scale(1.18) } 30%{ transform:scale(1) } 45%{ transform:scale(1.12) } } @media (prefers-reduced-motion:reduce){ .lb-heart{ animation:none; } }
 /* v178.61（MITSUさん 2026-11-19）：携帯が「暗い画面（ダークモード）」のとき、白やピンクの明るい枠の中の文字が薄くなって読めなかったのを直す。明るい枠の中は、いつも濃い色の文字にする */
 .gsz-in,.pa-in,.frn,.frn-born,.ac-note,.rvx,.mt-card,.frd-in,.mp-box,.friend-card,.pc-w,.mt-appeal,.hm-bubble{ --ink:#3A2E38; --muted:#6F626B; --line:#E3D5DB; --surface:#FFF8FA; --bg:#FFFDFE; --accent:#34507F; --accent-soft:#DCE3EF; --ember:#9A5B33; --ember-soft:#F1E3D8; --alt:#8A93A4; }
