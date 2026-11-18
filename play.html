@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.47">
+<meta name="lifebook-version" content="v178.48">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -734,14 +734,14 @@ a.nav-b{ text-decoration:none; }
 <div class="wrap">
   <header class="masthead">
     <a class="name lb-logo" href="#" aria-label="LIFE BOOK"><span class="lb-isle" id="lbIsle" aria-hidden="true"></span><span class="lb-word" aria-hidden="true"><span class="lb-t" style="--c:#E8667E">L</span><span class="lb-t" style="--c:#F2B630">I</span><span class="lb-t" style="--c:#6DB84A">F</span><span class="lb-t" style="--c:#5BA7DD">E</span><span class="lb-gap"></span><span class="lb-t" style="--c:#9B7FD9">B</span><span class="lb-t" style="--c:#EE7A92">O</span><span class="lb-t" style="--c:#F2B630">O</span><span class="lb-t" style="--c:#5DAE44">K</span></span></a>
-    <div class="mast-r"><nav class="mastnav" id="mastnav" aria-label="ページ"></nav><div class="meta" id="mastmeta"></div><button class="fr-top fr-open" type="button"><span class="mb-l">友だちに<wbr>紹介</span></button><button class="fr-top fof-top" type="button" data-foftop="1"><span aria-hidden="true">👥</span><span class="mb-l">友だちの<wbr>友だち</span><b class="fof-top-n" hidden></b></button></div>
+    <div class="mast-r"><nav class="mastnav" id="mastnav" aria-label="ページ"></nav><div class="meta" id="mastmeta"></div><button class="fr-top fr-open" type="button"><span class="mb-l">友だちに<wbr>紹介</span></button></div>
   </header>
   <main id="app"></main>
 </div>
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.47 (2026-11-18) */ var LB_VER='v178.47';
+/* LIFE BOOK game version: v178.48 (2026-11-18) */ var LB_VER='v178.48';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21503,14 +21503,14 @@ function acStart(){ if(_acStarted) return; _acStarted=true; acBtnSync(); documen
 .masthead .mastnav .nav-b{ box-shadow:0 3px 0 var(--line); } .masthead .fr-top{ box-shadow:0 3px 0 #D85878!important; } .masthead .mastnav .nav-b .ic{ transform:none!important; flex:none; }
 /* 色もそろえる：ぜんぶピンク。いま開いているページだけ白地にピンクの字 */
 .masthead .mastnav .nav-b,.masthead .fr-top{ background:#FF8FAA; border-color:#E86A88; color:#fff; box-shadow:0 3px 0 #D85878!important; }
-.masthead .mastnav .nav-b.on{ background:#fff; border-color:#FF8FAA; color:#D9467A; }
+.masthead .mastnav .nav-b.on{ background:#FF8FAA; color:#fff; border-color:#fff; }
 @media (max-width:640px){ .masthead{ justify-content:center; row-gap:12px!important; padding-block:16px 12px; } .masthead .lb-logo{ width:100%; justify-content:center; gap:10px; }
   .masthead .lb-isle{ width:58px; height:66px; } .masthead .lb-word{ gap:3px; } .masthead .lb-t{ width:30px; height:32px; font-size:19px; border-radius:7px; } .masthead .lb-gap{ width:8px; }
-  .masthead .mast-r{ display:grid!important; grid-template-columns:repeat(6,minmax(0,1fr)); gap:4px!important; width:100%; } .masthead .mastnav{ display:contents!important; } .masthead .mast-r .meta{ display:none; }
-  .masthead .mastnav .nav-b,.masthead .fr-top{ flex-direction:column; width:100%; height:56px; padding:0 1px!important; font-size:9.5px!important; line-height:1.15; gap:3px; letter-spacing:0; position:relative; border-radius:14px; border-width:1.5px; white-space:normal; word-break:keep-all; text-align:center; box-shadow:0 2px 0 #D85878!important; }
+  .masthead .mast-r{ display:grid!important; grid-template-columns:repeat(5,minmax(0,1fr)); gap:5px!important; width:100%; } .masthead .mastnav{ display:contents!important; } .masthead .mast-r .meta{ display:none; }
+  .masthead .mastnav .nav-b,.masthead .fr-top{ flex-direction:column; width:100%; height:56px; padding:0 1px!important; font-size:10.5px!important; line-height:1.15; gap:3px; letter-spacing:0; position:relative; border-radius:14px; border-width:1.5px; white-space:normal; word-break:keep-all; text-align:center; box-shadow:0 2px 0 #D85878!important; }
   .masthead .fr-top::before{ width:15px; height:13px; flex:none; } .masthead .mastnav .nav-b .ic{ width:15px; height:15px; flex:none; } .masthead .fr-top>span[aria-hidden]{ font-size:15px; line-height:1; }
   .masthead .fof-top-n{ position:absolute; top:-7px; right:-3px; min-width:16px; height:16px; padding:0 4px; font-size:10px; box-sizing:border-box; border:1.5px solid #FF8FAA; } .masthead .ac-dot{ top:-3px; right:-2px; } }
-@media (max-width:350px){ .masthead .lb-t{ width:24px; height:26px; font-size:15px; } .masthead .lb-isle{ width:44px; height:50px; flex:none; } .masthead .mastnav .nav-b,.masthead .fr-top{ font-size:8.5px!important; } .masthead .mast-r{ gap:3px!important; } }`;
+@media (max-width:350px){ .masthead .lb-t{ width:24px; height:26px; font-size:15px; } .masthead .lb-isle{ width:44px; height:50px; flex:none; } .masthead .mastnav .nav-b,.masthead .fr-top{ font-size:9.5px!important; } .masthead .mast-r{ gap:3px!important; } }`;
   const s=document.createElement('style'); s.textContent=css; document.head.appendChild(s);
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',acStart); else acStart(); })();
 </script>
