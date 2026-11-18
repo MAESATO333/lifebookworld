@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.61">
+<meta name="lifebook-version" content="v178.62">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.61 (2026-11-19) */ var LB_VER='v178.61';
+/* LIFE BOOK game version: v178.62 (2026-11-19) */ var LB_VER='v178.62';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21451,7 +21451,7 @@ function acBindPanes(d){ d.querySelectorAll('[data-actab]').forEach(b=>b.onclick
 // ---- 上のボタン2段目：下のほうにある遊びを、すぐ開けるように（携帯は下に長いので）（2026-11-18 MITSUさん） ----
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-mq]'); if(!b) return; e.preventDefault(); const q=b.dataset.mq;
   try{ if(q==='channel'){ albumOpen=true; goLife(); setTimeout(()=>{ const al=document.querySelector('.album')||document.querySelector('.album-btn'); if(al) al.scrollIntoView({ block:'start' }); },80); } else if(q==='pet') mpOpen(); else if(q==='flower') flOpen(flNewN()?'got':flPhNewN()?'album':undefined); else if(q==='ride') ridesOpen(); else if(q==='earth') eaOpenDialog();
-    else if(q==='tree'){ /* v178.60（MITSUさん 2026-11-19）：上の「日記」ボタンは「友だちの木」に。Life Home の友だちの木のところへ飛ぶ */ if(page!=='home'||viewing){ viewing=null; page='home'; render(); } const go=()=>{ const d=document.querySelector('.hm-friends .gs-tree')||document.querySelector('.hm-friends'); if(d) (d.closest('.hm-friends')||d).scrollIntoView({ block:'start' }); }; setTimeout(go,120); setTimeout(go,500); }
+    else if(q==='tree'){ /* v178.60（MITSUさん 2026-11-19）：上の「日記」ボタンは「友だちの木」に。Life Home の友だちの木のところへ飛ぶ */ if(page!=='home'||viewing){ viewing=null; page='home'; render(); } const go=()=>{ const d=document.querySelector('.hm-friends .gs-tree')||document.querySelector('.hm-friends'); if(d) (d.closest('.hm-friends')||d).scrollIntoView({ block:'start' }); }; /* v178.62：友だちの木の大きな絵（1本目の木）を、そのまま開く。木が無いときは、友だちの木のところへ飛ぶだけ */ const op=()=>{ go(); const z=document.querySelector('.hm-friends [data-gsz]'); const d=document.getElementById('gsZoom'); if(z&&!(d&&!d.hidden)) z.click(); }; setTimeout(op,140); setTimeout(go,600); }
     else if(q==='diary'){ if(page!=='home'||viewing){ viewing=null; page='home'; render(); } setTimeout(()=>{ const d=document.querySelector('.hm-daily-top')||document.querySelector('.hm-daily'); if(d) d.scrollIntoView({ block:'start' }); },120); } }catch(err){ console.warn(err); } });
 setInterval(()=>{ try{ const q=document.getElementById('mastQ'); if(q){ const on=!!(typeof cur!=='undefined'&&cur&&cur.P); if(q.hidden===on) q.hidden=!on; } }catch(e){} },700);
 // v178.56（MITSUさん 2026-11-19）：いちばん上の「ペット」「お花」のボタンに、届いたプレゼントの数を出す（🎁＋数）。見たら消える
