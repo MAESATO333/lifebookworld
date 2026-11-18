@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.53">
+<meta name="lifebook-version" content="v178.54">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.53 (2026-11-19) */ var LB_VER='v178.53';
+/* LIFE BOOK game version: v178.54 (2026-11-19) */ var LB_VER='v178.54';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -13247,7 +13247,9 @@ const KENJA=[['千里の行も足下より始まる。','老子'],['足るを知
 // 賢者の言葉：1日1つ。その日は同じ言葉、次の日は、まだ見ていない言葉から。
 function kenjaToday(){ const k=dayKey(); try{ const v=JSON.parse(localStorage.getItem('hitotsu.kjDay')||'null'); if(v&&v.d===k){ const q=KENJA.find(x=>seenId(x[0])===v.i); if(q) return q; } }catch(e){}
   const t=seenPick('hitotsu.kjSeen',KENJA.map(x=>x[0])); try{ localStorage.setItem('hitotsu.kjDay',JSON.stringify({d:k,i:seenId(t)})); }catch(e){} return KENJA.find(x=>x[0]===t); }
-function dailyThreeHTML(P){ const k=dayKey(); const h=(...a)=>dHash(k,...a);
+// v178.54：携帯（幅640px以下）では、星座占い・花言葉・賢者の言葉を一旦出さない（MITSUさん 2026-11-18）。もどすときは LB_D3_PHONE_OFF=false
+var LB_D3_PHONE_OFF=true;
+function dailyThreeHTML(P){ try{ if(LB_D3_PHONE_OFF&&window.matchMedia&&matchMedia('(max-width:640px)').matches) return ''; }catch(_){} const k=dayKey(); const h=(...a)=>dHash(k,...a);
   const my=P&&P.month?zdOf(P.month,P.day||1):null; const order=ZD.map(z=>z[0]).sort((a,b)=>h('zd',a)-h('zd',b));
   const zd=n=>{ const r=order.indexOf(n)+1; return { r, msg:ZD_MSG[h('zm',n)%ZD_MSG.length], col:ZD_COL[h('zc',n)%ZD_COL.length], it:ZD_ITEM[h('zi',n)%ZD_ITEM.length] }; };
   const show=my||order[0]; const z=zd(show); const top3=order.slice(0,3);
@@ -19910,7 +19912,10 @@ function lbnPlace(){ try{ const app=document.getElementById('app'); if(!app||typ
   if(cid) cid.after(el); else if(osm) osm.before(el); else if(hint) hint.before(el); else if(home) home.prepend(el); else return;
   el.querySelectorAll('.lbn-i').forEach(d=>d.addEventListener('toggle',()=>{ if(!d.open) return; const s=store.get(KEY_LBNSEEN,{}); if(!s[d.dataset.lbn]){ s[d.dataset.lbn]=Date.now(); const ks=Object.keys(s); if(ks.length>80) delete s[ks[0]]; store.set(KEY_LBNSEEN,s); const n=d.querySelector('.lbn-new'); if(n) n.remove(); const c=el.querySelector('.lbn-n'); const left=lbnList().filter(x=>!s[x.i]).length; if(c){ if(left) c.textContent=left; else c.remove(); } } }));
   const p=el.querySelector('.lbn-past'); if(p) p.addEventListener('toggle',()=>{ _lbnOpen=p.open; });
+  try{ queueMicrotask(lbnMob); }catch(_){ setTimeout(lbnMob,0); }
 }catch(e){ try{ console.warn('[news]',e); }catch(_){} } }
+// v178.54：携帯では、ニュースを「いろんな国の人生」の帯のすぐ上へ（ほかのカードは元の場所のまま。描き終わってから動かす）
+function lbnMob(){ try{ if(!(window.matchMedia&&matchMedia('(max-width:640px)').matches)) return; const app=document.getElementById('app'); if(!app) return; const n=app.querySelector('.lbn'), t=app.querySelector('.hmi')||app.querySelector('.hmi-slot'); if(n&&t&&n.nextElementSibling!==t) t.before(n); }catch(e){} }
 (function(){ if(typeof render1!=='function') return; const _r=render1; render1=function(){ const r=_r.apply(this,arguments); lbnPlace(); return r; }; })();
 setTimeout(lbnPlace,0);
 // 管理者が書いたお知らせを、サーバー（os/news）から読む。ひらいたとき・20分以上たって画面にもどったとき
