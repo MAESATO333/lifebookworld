@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.58">
+<meta name="lifebook-version" content="v178.59">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -735,14 +735,14 @@ a.nav-b{ text-decoration:none; }
   <header class="masthead">
     <a class="name lb-logo" href="#" aria-label="LIFE BOOK"><span class="lb-isle" id="lbIsle" aria-hidden="true"></span><span class="lb-col" aria-hidden="true"><span class="lb-word"><span class="lb-t" style="--c:#E8667E">L</span><span class="lb-t" style="--c:#F2B630">I</span><span class="lb-t" style="--c:#6DB84A">F</span><span class="lb-t" style="--c:#5BA7DD">E</span><span class="lb-gap"></span><span class="lb-t" style="--c:#9B7FD9">B</span><span class="lb-t" style="--c:#EE7A92">O</span><span class="lb-t" style="--c:#F2B630">O</span><span class="lb-t" style="--c:#5DAE44">K</span></span><span class="lb-sub">人生のヒントが、ここにある</span></span></a>
     <div class="mast-r"><nav class="mastnav" id="mastnav" aria-label="ページ"></nav><div class="meta" id="mastmeta"></div><button class="fr-top mb-top" type="button" data-machitop="1"><span aria-hidden="true">🟡</span><span class="mb-l">街ブラ</span></button><button class="fr-top fr-open" type="button"><span class="mb-l">友だちに<wbr>紹介</span></button></div>
-    <div class="mast-q" id="mastQ" hidden><button class="fr-top mb-top" type="button" data-mq="channel"><span aria-hidden="true">📷</span><span class="mb-l">Channel</span></button><button class="fr-top mb-top" type="button" data-mq="pet"><span aria-hidden="true">🐾</span><span class="mb-l">ペット</span></button><button class="fr-top mb-top" type="button" data-mq="flower"><span aria-hidden="true">💐</span><span class="mb-l">お花</span></button><button class="fr-top mb-top" type="button" data-mq="ride"><span aria-hidden="true">🔑</span><span class="mb-l">乗り物</span></button><button class="fr-top mb-top" type="button" data-mq="earth"><span aria-hidden="true">🌏</span><span class="mb-l">名所</span></button><button class="fr-top mb-top" type="button" data-mq="diary"><span aria-hidden="true">📖</span><span class="mb-l">日記</span></button></div>
+    <div class="mast-q" id="mastQ" hidden><button class="fr-top mb-top" type="button" data-mq="channel"><span aria-hidden="true">📷</span><span class="mb-l">Channel</span></button><button class="fr-top mb-top" type="button" data-mq="pet"><span aria-hidden="true">🐾</span><span class="mb-l">ペット</span></button><button class="fr-top mb-top" type="button" data-mq="flower"><span aria-hidden="true">💐</span><span class="mb-l">お花<br>写真</span></button><button class="fr-top mb-top" type="button" data-mq="ride"><span aria-hidden="true">🔑</span><span class="mb-l">乗り物</span></button><button class="fr-top mb-top" type="button" data-mq="earth"><span aria-hidden="true">🌏</span><span class="mb-l">名所</span></button><button class="fr-top mb-top" type="button" data-mq="diary"><span aria-hidden="true">📖</span><span class="mb-l">日記</span></button></div>
   </header>
   <main id="app"></main>
 </div>
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.58 (2026-11-19) */ var LB_VER='v178.58';
+/* LIFE BOOK game version: v178.59 (2026-11-19) */ var LB_VER='v178.59';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -18303,7 +18303,7 @@ document.addEventListener('click',e=>{ const t=e.target; if(t.closest&&t.closest
   const z=t.closest&&t.closest('[data-gsz]'); if(z){ const i=+z.dataset.gsz; const c=gsChunks(_gsFr,GS_PER)[i]||_gsFr; const fof=store.get('hitotsu.fof',{}); const many=_gsFr.length>GS_PER;
     gsZoomOpen(`<h3 class="gsz-h">🌳 ${many?`${i+1}本目の木（${c.length}人）`:`友だちの木（${c.length}人）`}</h3><div class="gsz-art">${gsSVG(c,true)}</div>${c.length>6?`<p class="gsz-sc">↕ スクロールして、${c.length}人を見られます</p>`:''}<ul class="gsz-l">${c.map(f=>{ const e=fof[f.id]||{}; const sub=(e.fr||[]).map(x=>x.b).filter(Boolean); return `<li><b>${esc(f.by||'友だち')}さん</b>${sub.length?`<small>つながっている人：${sub.map(x=>esc(x)+'さん').join('、')}</small>`:''}${e.pet?`<small>🐾 ${esc(e.pet.b)}（${esc((PB_ALL[e.pet.p]||{}).name||'')}）</small>`:''}</li>`; }).join('')||'<li>まだ、つながった人はいません。</li>'}</ul>`); return; }
   const pz=t.closest&&t.closest('[data-gspz]'); if(pz){ const i=+pz.dataset.gspz; const list=gsFrPets(_gsFr); const c=gsChunks(list,GS_PPER)[i]||[];
-    gsZoomOpen(`<h3 class="gsz-h">🐾 ペットのつながりの木（${c.length}匹）</h3><div class="gsz-art">${gsPetSVG(c,true)}</div><ul class="gsz-l">${c.map(p=>`<li><b>${p.g?'🌈 ':''}${esc(p.b)}</b><small title="Higher Self：${esc(p.owner)}さん・${esc((PB_ALL[p.p]||{}).name||'')}・${p.a}歳">🌟 ${esc(p.owner)}さん・${esc((PB_ALL[p.p]||{}).name||'')}・${p.a}歳</small>${typeof pgBtns==='function'?pgBtns(p):''}</li>`).join('')||'<li>友だちがペットを迎えると、ここに出ます。</li>'}</ul>`); } });
+    gsZoomOpen(`<h3 class="gsz-h">🐾 ペットのつながりの木（${c.length}匹）</h3><div class="gsz-art">${gsPetSVG(c,true)}</div><ul class="gsz-l">${c.map(p=>`<li><b>${p.g?'🌈 ':''}${esc(p.b)}</b><small title="Higher Self：${esc(p.owner)}さん・${esc((PB_ALL[p.p]||{}).name||'')}・${p.a}歳">🌟 ${esc(p.owner)}さん・${esc((PB_ALL[p.p]||{}).name||'')}・${p.a}歳</small>${typeof pgBtns==='function'?pgBtns(p):''}</li>`).join('')||'<li>友だちがペットを迎えると、ここに出ます。</li>'}</ul>${typeof pcZoomHTML==='function'?pcZoomHTML():''}`); } });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ const d=document.getElementById('gsZoom'); if(d&&!d.hidden) gsZoomClose(); } });
 document.head.insertAdjacentHTML('beforeend',`<style>
 .gs-zb{ display:block; width:100%; padding:0; border:0; background:none; cursor:zoom-in; position:relative; font:inherit; }
@@ -18922,7 +18922,7 @@ function paSetAge(v){ const p=mpGet(); if(!p||mpGone(p)) return; const n=Math.ma
     const i=h.indexOf('<h4 class="mp-h4">📷'); h=i>=0?h.slice(0,i)+f+h.slice(i):h+f; }catch(e){} return h; }; }
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-pa-age]'); if(b){ const s=document.getElementById('paAge'); paSetAge(s&&s.value); } });
 try{ document.head.insertAdjacentHTML('beforeend',`<style>.pa-age{ margin:12px 0; padding:8px 12px; border-radius:12px; background:#FFF6F9; } .pa-age summary{ cursor:pointer; font-weight:700; color:#C2476B; } .pa-age select{ font-size:16px; padding:6px 10px; border-radius:10px; border:1px solid #F4C6D4; margin:6px 6px 0 0; }</style>`); }catch(e){}
-// ===== v173: ペットたちのおしゃべり（ペットのつながりの木の下で、コメントが上から流れてくる） =====
+// ===== v173: ペットたちのおしゃべり（v178.59 から：ペットのつながりの木の中に入ると、コメントが上から流れてくる） =====
 // コメントは1つずつ手で書いたもの（テンプレートの組み合わせはしない）。PC_LINES に [種類, タグ, 文]。元のファイルは life-book/pet-chat/ の各 .txt
 // 種類: love mood humor life society gossip(本当のつながりだけ) kind(タグ=動物) weather(タグ=m/d/e/n か sp/su/au/wi) food(タグ g=ごはんをくれた人あり) health soul chat reply
 // {hs}=そのペットの Higher Self、{f}=相手のペット、{g}=ごはんをくれた Higher Self、{food}=その動物のごはん、{I}=ぼく/わたし
@@ -18995,7 +18995,10 @@ function pcTick(){ if(_pcStop||document.hidden) return; pcEnsure(); const ls=doc
   ls.forEach(l=>{ l.insertAdjacentHTML('afterbegin',pcLi(x,1)); while(l.children.length>30) l.lastElementChild.remove(); }); }
 function pcHTML(){ if(!pcPets().length) return ''; pcEnsure(); if(!_pcLog.length){ for(let i=0;i<6;i++){ const x=pcNext(); if(x){ x.ts=Date.now(); _pcLog.push(x); } } pcSave(); }
   return `<div class="pc-w"><div class="pc-top"><p class="pc-h">💬 ペットたちのおしゃべり</p><button type="button" class="pc-p" data-pcp aria-pressed="${_pcStop}">${_pcStop?'▶ 流す':'⏸ 止める'}</button></div><ul class="pc-l" aria-label="ペットたちのコメント">${_pcLog.slice(0,30).map(x=>pcLi(x,0)).join('')}</ul><button type="button" class="pc-ab" data-pcall aria-expanded="${_pcAll}">${_pcAll?'▲ とじる':'📖 これまでのおしゃべりを読む'}</button>${_pcAll?pcAllHTML():''}</div>`; }
-(function(){ if(typeof gsPetTreeHTML!=='function') return; const _g=gsPetTreeHTML; gsPetTreeHTML=function(){ const h=_g.apply(this,arguments); if(!h) return h; let c=''; try{ c=pcHTML(); }catch(e){} if(!c) return h; const i=h.lastIndexOf('</div>'); return i<0?h+c:h.slice(0,i)+c+h.slice(i); }; })();
+// v178.59（MITSUさん 2026-11-19）：おしゃべりは、Life Home には出さない。ペットのつながりの木の中（木を押して開いた画面）で読む。Life Home には入口のボタンだけ
+function pcZoomHTML(){ try{ return pcHTML(); }catch(e){ return ''; } }
+(function(){ if(typeof gsPetTreeHTML!=='function') return; const _g=gsPetTreeHTML; gsPetTreeHTML=function(){ const h=_g.apply(this,arguments); if(!h) return h; let on=false; try{ on=pcPets().length>0; }catch(e){} if(!on) return h; const c='<button type="button" class="pg-open pc-open" data-gspz="0">💬 ペットたちのおしゃべりを読む</button>'; const i=h.lastIndexOf('</div>'); return i<0?h+c:h.slice(0,i)+c+h.slice(i); }; })();
+document.addEventListener('click',e=>{ if(!(e.target.closest&&e.target.closest('.pc-open'))) return; setTimeout(()=>{ try{ const w=document.querySelector('#gsZoom .pc-w'); if(w) w.scrollIntoView({ block:'start' }); }catch(_){} },60); });
 document.addEventListener('click',e=>{ const a=e.target.closest&&e.target.closest('[data-pcall]'); if(!a) return; _pcAll=!_pcAll; document.querySelectorAll('[data-pcall]').forEach(x=>{ x.textContent=_pcAll?'▲ とじる':'📖 これまでのおしゃべりを読む'; x.setAttribute('aria-expanded',_pcAll); const w=x.parentNode, o=w.querySelector('.pc-all'); if(o) o.remove(); if(_pcAll) x.insertAdjacentHTML('afterend',pcAllHTML()); }); });
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-pcp]'); if(!b) return; _pcStop=!_pcStop; document.querySelectorAll('[data-pcp]').forEach(x=>{ x.textContent=_pcStop?'▶ 流す':'⏸ 止める'; x.setAttribute('aria-pressed',_pcStop); }); });
 _pcT=setInterval(pcTick,3200);
@@ -21451,7 +21454,7 @@ function mqBadgeSync(){ try{ const set=(q,n,what)=>{ const b=document.querySelec
     const t=typeof n==='string'?n:'🎁'+(n>99?'99+':n); if(i.textContent!==t) i.textContent=t; b.setAttribute('aria-label',what+'（'+(typeof n==='string'?'お花や写真':'プレゼント')+'が 届いています）'); };
   set('pet',typeof pgNewCount==='function'?pgNewCount():0,'ペット');
   const fl=typeof flNewN==='function'?flNewN():0, ph=typeof flPhNewN==='function'?flPhNewN():0, c=x=>x>99?'99+':x; /* v178.58：お花は 💐＋数、写真は 📷＋数 */
-  set('flower',(fl?'💐'+c(fl):'')+(ph?'📷'+c(ph):''),'お花'); }catch(e){} }
+  set('flower',(fl?'💐'+c(fl):'')+(ph?'📷'+c(ph):''),'お花・写真'); }catch(e){} }
 setInterval(mqBadgeSync,1500); setTimeout(mqBadgeSync,800);
 try{ document.head.insertAdjacentHTML('beforeend','<style>.masthead .mast-q .fr-top{ position:relative; } .mq-n{ position:absolute; top:-8px; right:-4px; z-index:2; min-width:18px; height:18px; box-sizing:border-box; padding:0 5px; border-radius:999px; background:#fff; color:#D9467A; border:1.5px solid #E86A88; font-style:normal; font-size:11px; font-weight:700; line-height:15px; white-space:nowrap; box-shadow:0 1px 4px rgba(0,0,0,.25); animation:mqPop 1.6s ease-in-out infinite; } @keyframes mqPop{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.12); } } @media (prefers-reduced-motion:reduce){ .mq-n{ animation:none; } }'
   +'.pg-newl,.fl-newl{ list-style:none; margin:0 0 10px; padding:0; display:grid; gap:6px; } .pg-newl li,.fl-newl li{ background:#FFF0F5; color:#3A2A33; border-radius:10px; padding:8px 12px; font-size:14px; line-height:1.6; box-shadow:inset 3px 0 0 #E86A88; } .pg-newl li b,.fl-newl li b{ color:#C2476B; } .pg-newl small,.fl-newl small{ display:block; font-size:12px; color:#8A7A84; } .pg-newl li.pg-more,.fl-newl li.pg-more{ background:none; box-shadow:none; padding:0 4px; font-size:12px; color:#8A7A84; } .fl-hmb{ margin-bottom:8px; }</style>'); }catch(e){}
@@ -21545,6 +21548,11 @@ body .btn,body .mp-btn,body .rv-btn,body .mbx-pbtn,body .hm-btn{ border:2px soli
 body .btn.ghost,body .hm-btn.ghost,body .rv-btn.rv-sub,body .mbx-pbtn.mbx-sub2,body .mt-close,body .pa-b,body .mp-btn.fl-b2{ border:2px solid #FFB3C8!important; background:#fff!important; color:#D9467A!important; box-shadow:0 3px 0 #FFD6E1!important; }
 body .btn.small,body .rv-btn.rv-sm{ min-height:36px; padding:6px 13px; font-size:13px; }
 body .btn:disabled,body .mp-btn:disabled,body .rv-btn:disabled,body .mbx-pbtn:disabled,body .hm-btn:disabled{ opacity:.5; cursor:default; }
+/* v178.59（MITSUさん 2026-11-19）：Life Home の「お花」「街ブラ」のカードに並ぶボタンは、全部ピンク・全部同じ大きさにそろえる（白いボタンは無し）。もどすときは、この5行を消す */
+body .fl-tile .fl-tile-b,body .mbx-tile .mbx-tf{ display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:10px 8px; align-items:center; }
+@media (max-width:640px){ body .fl-tile .fl-tile-b,body .mbx-tile .mbx-tf{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+body .gs-pet-w .pg-open{ box-sizing:border-box; width:100%; max-width:340px; min-height:44px; } body .fl-tile .fl-tile-b + .fl-tile-b{ margin-top:10px; } body .fl-tile .fl-tile-b .linkish{ grid-column:1/-1; justify-self:start; }
+body .fl-tile .fl-tile-b .mp-btn,body .mbx-tile .mbx-tf .mbx-pbtn{ box-sizing:border-box; display:flex; align-items:center; justify-content:center; width:100%; height:46px; min-height:46px; margin:0; padding:0 6px; font-size:clamp(11.5px,3.3vw,14px); line-height:1.2; text-align:center; white-space:normal; border:2px solid #E86A88!important; background:#FF8FAA!important; color:#fff!important; box-shadow:0 3px 0 #D85878!important; }
 /* ホームの2つの枠：幅・高さをそろえる */
 .hmi,.mbx-strip{ box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; margin:14px -6px 2px!important; }
 .masthead .mb-top::before{ display:none!important; } .hm-daily-top,.hm-daily,.album,.album-btn{ scroll-margin-top:12px; } @media (min-width:821px){ .hm-daily-top,.hm-daily,.album,.album-btn{ scroll-margin-top:150px; } }
