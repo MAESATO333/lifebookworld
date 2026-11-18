@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.78">
+<meta name="lifebook-version" content="v178.79">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -747,7 +747,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.78 (2026-11-19) */ var LB_VER='v178.78';
+/* LIFE BOOK game version: v178.79 (2026-11-19) */ var LB_VER='v178.79';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -19893,6 +19893,8 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // v166: Life Home の上のほうに「✨ LIFE BOOKのニュース」。新しい機能・更新のお知らせ。
 // ゲームに入っているお知らせ（LBN_BUILTIN）＋ 管理者が Firebase の os/news に書いたお知らせ（{ n:[{ i, d:ミリ秒, t:題, b:説明 }] }）。新しい順に3つ、のこりは「これまでのお知らせ」。
 const LBN_BUILTIN=[
+  { i:'v178-movie', d:Date.UTC(2026,10,18,18,32), t:'🎬 動く写真の撮影ができるようになりました', b:'Gateway の海辺の街で「🎬 動く写真」を押すと、その場面が動く写真としてアルバムに残ります。アルバムを開くと、そのまま動いて見られます。SNS のシェアも、携帯への保存も可能になります。「📤 シェア・保存」から、LINE・Instagram・X・TikTok・YouTube・note に進めます。' },
+  { i:'v178-land', d:Date.UTC(2026,10,18,18,30), t:'📱 携帯を横にしても、広い画面で見られるようになりました', b:'ペットや、友だちと交差する街が、携帯画面を横にしても広い画面で見られるようになりました。横にすると、上のピンクのボタンがかくれて、街の風景を広く楽しめます。ボタンは、ロゴの右の「☰ ボタンを出す」で、いつでも出せます。' },
   { i:'v178-gwphoto', d:Date.UTC(2026,10,17,10,50), t:'Gateway の海辺の街で撮った写真を、友だちに送れるようになりました📷', b:'Gateway の海辺の街で 📷 を押すと、その場面がアルバムに残ります。アルバムの「💌 Higher Self に送る」から、友だちの Higher Self に送れます。届いた写真は「💐 お花」の写真のところで見られます。' },
   { i:'v178-gwsea', d:Date.UTC(2026,10,17,10,20), t:'Gateway の海辺の街で、友だちとの偶然の出会いが見られます🌊', b:'Gateway の「海辺の街」を走る乗り物に、あなたの Higher Self と、友だちや友だちの友だちが、偶然いっしょに乗っている場面が見られるようになりました。どこで会えるかは、見てのお楽しみです。' },
   { i:'v178-nakama', d:Date.UTC(2026,10,17,9,56), t:'🎉 新しい仲間が、やってきました！', b:'カンガルー、パンダ、ライオン、キリン、ゾウ、ワシ、恐竜など、新しくペットにできる動物たちです。公園の右上の「🎉 新しい仲間」ボタンや、「うちのペット」の欄から、みんなの姿が見られます。公園の道にも、ときどき走ってきます。' },
@@ -20922,7 +20924,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.g
 try{ document.head.insertAdjacentHTML('beforeend','<style>.lbs{ position:fixed; inset:0; z-index:9600; background:rgba(40,25,40,.6); display:flex; align-items:center; justify-content:center; padding:16px; } .lbs-in{ box-sizing:border-box; width:min(520px,100%); max-height:92vh; overflow:auto; background:#FFFDFE; color:#3A2E38; border-radius:22px; padding:14px 16px 18px; box-shadow:0 10px 30px rgba(0,0,0,.3); text-align:center; } .lbs-h{ margin:4px 0 10px; font-size:18px; color:#C2476B; } .lbs-pv{ border-radius:14px; overflow:hidden; background:#F6EEF2; min-height:80px; display:grid; place-items:center; } .lbs-pv img{ display:block; width:100%; height:auto; -webkit-touch-callout:default; } .lbs-wait{ margin:0; padding:22px 12px; font-size:14px; color:#6F626B; } .lbs-b{ display:grid; gap:10px; margin:12px 0 6px; } .lbs-go,.lbs-sv,.lbs-x{ box-sizing:border-box; display:flex; align-items:center; justify-content:center; width:100%; min-height:46px; padding:0 14px; border-radius:999px; font:inherit; font-size:15px; font-weight:700; text-decoration:none; cursor:pointer; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; } .lbs-n{ margin:6px 2px 10px; font-size:12.5px; line-height:1.6; color:#6F626B; min-height:1em; } .lbs-x{ margin-top:4px; } .lbs-ot{ border:0; background:none; padding:2px 0; font:inherit; font-size:12px; color:#8A6A78; text-decoration:underline; cursor:pointer; } .lbs-sl{margin:6px 0 0;font-size:13px;font-weight:700;color:#C2476B;text-align:left}.lbs-sns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.lbs-fv{background:#E8508E!important;border-color:#C93A76!important;box-shadow:0 3px 0 #B02F66!important}.lbs-sb{display:flex;align-items:center;justify-content:center;text-decoration:none;box-sizing:border-box;width:100%;min-height:42px;padding:0 4px;border-radius:999px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:2px solid #E86A88;background:#FF8FAA;color:#fff;box-shadow:0 3px 0 #D85878;white-space:nowrap}.lbs-op{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;min-height:46px;margin:0 0 10px;padding:0 14px;border-radius:999px;font-size:15px;font-weight:700;text-decoration:none;border:2px solid #E86A88;background:#fff;color:#D9467A;box-shadow:0 3px 0 #FFD6E1} .ph-share{ display:block; margin:6px auto 0; font-size:12.5px; } body .fl-alb li .mp-btn.fl-phbtn{ border:2px solid #E86A88!important; background:#FF8FAA!important; color:#fff!important; box-shadow:0 3px 0 #D85878!important; }</style>'); }catch(e){}
 
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.78'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.79'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
