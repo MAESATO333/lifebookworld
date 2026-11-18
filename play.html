@@ -48,9 +48,26 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.29">
+<meta name="lifebook-version" content="v178.30">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script>
+// LIFE BOOK マイページ：ほかの端末の記録を、ゲームが読みこむ前に入れる（account.js が sessionStorage に置いていく）。
+// ゲームより先に動く必要があるので、play.html の <head> に入れる。
+(function(){
+  var K='ac.stage', s=null;
+  try{ s=sessionStorage.getItem(K); if(s) sessionStorage.removeItem(K); }catch(e){ return; }
+  if(!s) return;
+  var p=null; try{ p=JSON.parse(s); }catch(e){ return; }
+  if(!p||p.v!==1) return;
+  try{
+    (p.del||[]).forEach(function(k){ localStorage.removeItem(k); });
+    var m=p.set||{}; for(var k in m){ localStorage.setItem(k,m[k]); }
+    var meta=p.meta||{}; for(var j in meta){ localStorage.setItem(j,meta[j]); }
+    localStorage.setItem('hitotsu.fbreg',JSON.stringify(''));
+  }catch(e){ try{ console.warn('[account] 記録を入れられませんでした',e); }catch(_){} }
+})();
+</script>
 </head><body>
 <title>LIFE BOOK — 人生のヒントが、ここにある</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -724,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.29 (2026-11-18) */ var LB_VER='v178.29';
+/* LIFE BOOK game version: v178.30 (2026-11-18) */ var LB_VER='v178.30';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21068,6 +21085,221 @@ function flPhListen(){ if(_flPL||!flOn()) return; _flPL=true; const { collection
       try{ const dl=document.getElementById('flDlg'); if(dl&&!dl.hidden) flOpen(); else flRefreshTile(); }catch(_){} try{ if(typeof lbnRefresh==='function') lbnRefresh(); }catch(_){} }
     got.forEach(g=>{ try{ deleteDoc(FB.D.doc(FB.db,'ids',myId(),'photo',g.id)); }catch(_){} }); },()=>{ _flPL=false; }); }
 setInterval(flPhListen,4000); setTimeout(flPhListen,1800);
+// ===== マイページ：ログインすると、どの端末でも同じ1つの人生（2026-11-18 MITSUさんOK） =====
+// しくみ：
+//  ・ログインは Google か、メールアドレス＋パスワード（どちらも Firebase の無料の範囲）。ログインは自由（しなくても今までどおり）。
+//  ・この端末の匿名ログインに Google／メールを「結びつける」ので、最初の端末は今の記号（uid）のまま。2台目からはその人の uid に入る。
+//  ・記録（localStorage のうち、ゲームの記録だけ）をまとめて縮め、Firestore の users/{uid} に置く（1MB ごとに分ける）。
+//  ・変わったときだけ、少しまとめて送る（5分に1回まで＋画面を閉じるとき）。開いたとき・戻ってきたときに、ほかの端末の分を受けとる。
+//  ・受けとった記録は sessionStorage に置いて読み直し、acct-in.js（<head>）がゲームより先に入れる（あとからだと、ゲームの保存で上書きされるため）。
+//  ・両方で変わっていたとき：今の人生は「先へ進んでいるほう」、本棚と友だちは合わせる、ほかはこの端末のほう。
+//  ・はじめてのログインで、この端末とマイページに別の人生があるときは、聞かずに「長く見守ってきたほう」に必ずそろえる。もう一方は「しまってある人生」に残す（消さない）。
+//  ・ログインしていない端末で、はじめて「生まれる」を押したときは、ほかの端末で見守っていないか先にたずねる（別の人生が生まれないように）。
+const AC_UID='ac.uid', AC_REV='ac.rev', AC_BASE='ac.base', AC_AT='ac.at', AC_CHUNK=900000;
+let _acReloading=false, _acBusy=false, _acStarted=false, _acPullAt=0, _acLastErr='', _acKeeps=null, _acState='';
+function acSkip(k){ return /^(firebase:|ac\.|lb\.|gw\.seen|mbx\.lastStrip$|hmiDeck$|hitotsu\.(fbreg|fbpush|pwaSet|dev|mvNo|news$|sky\.|nw\.|nwjp\.|stat|space\.))/.test(k); }
+function acLocal(){ const m={}; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&!acSkip(k)){ const v=localStorage.getItem(k); if(v!=null) m[k]=v; } } }catch(e){} return m; }
+function acHash(s){ let h=0x811c9dc5; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,0x01000193); } return (h>>>0).toString(36)+'.'+s.length; }
+function acHashes(m){ const o={}; for(const k in m) o[k]=acHash(m[k]); return o; }
+function acGet(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
+function acSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+function acUser(){ return (typeof FB!=='undefined'&&FB&&FB.auth&&FB.auth.currentUser)||null; }
+function acIn(){ const u=acUser(); return !!(u&&!u.isAnonymous); }
+function acDev(){ const ua=navigator.userAgent||''; return /iPhone/.test(ua)?'iPhone':/iPad/.test(ua)?'iPad':/Android/.test(ua)?'Android':/Macintosh/.test(ua)?'Mac':/Windows/.test(ua)?'Windows':'ブラウザ'; }
+// 記録から、その人生の名前を出す（確認の画面・しまってある人生の一覧に使う）
+function acLifeName(m){ try{ const s=m&&m['hitotsu.current']?JSON.parse(m['hitotsu.current']):null; if(s&&s.seed!=null){ const P=makeBirth(s.seed,{ country:s.country||null, force:s.force||null }); return P.full+'（'+P.country.name+'）'; } }catch(e){}
+  try{ const a=m&&m['hitotsu.archive']?JSON.parse(m['hitotsu.archive']):[]; if(a&&a.length) return '本棚の人生 '+a.length+'つ'; }catch(e){} return ''; }
+function acHasLife(m){ if(!m) return false; if(m['hitotsu.current']&&m['hitotsu.current']!=='null') return true; try{ const a=JSON.parse(m['hitotsu.archive']||'[]'); return !!(a&&a.length); }catch(e){ return false; } }
+// ---- サーバーとのやりとり（記録は縮めて、1MB ごとに分けて置く） ----
+async function acPack(m){ return (typeof moveZip==='function')?await moveZip(JSON.stringify(m)):'j'+JSON.stringify(m); }
+async function acUnpack(z){ if(z[0]==='j') return JSON.parse(z.slice(1)); return JSON.parse(await moveUnzip(z)); }
+async function acWriteBlob(path,m,extra){ const { doc, writeBatch }=FB.D; const z=await acPack(m); const n=Math.max(1,Math.ceil(z.length/AC_CHUNK));
+  const b=writeBatch(FB.db); for(let i=0;i<n;i++) b.set(doc(FB.db,...path,'c',String(i)),{ z:z.slice(i*AC_CHUNK,(i+1)*AC_CHUNK) });
+  b.set(doc(FB.db,...path),Object.assign({ n, at:Date.now(), nm:acLifeName(m).slice(0,60), dev:acDev() },extra||{})); await b.commit(); }
+async function acReadHead(path){ const { doc, getDoc }=FB.D; const s=await getDoc(doc(FB.db,...path)); return s.exists()?s.data():null; }
+async function acReadBlob(path,head){ const { doc, getDoc }=FB.D; const parts=await Promise.all(Array.from({ length:head.n||1 },(_,i)=>getDoc(doc(FB.db,...path,'c',String(i)))));
+  return acUnpack(parts.map(p=>p.exists()?p.data().z:'').join('')); }
+function acPath(){ return ['users',acUser().uid]; }
+async function acPush(m){ const rev=Date.now().toString(36)+Math.random().toString(36).slice(2,6); await acWriteBlob(acPath(),m,{ rev }); acSet(AC_REV,rev); acSet(AC_BASE,acHashes(m)); acSet(AC_AT,Date.now()); acSet(AC_UID,acUser().uid); return rev; }
+// 受けとった記録を、ゲームより先に入れるため、読み直す
+function acStageReload(R,local,meta){ const set={}, del=[]; for(const k in R) if(local[k]!==R[k]) set[k]=R[k]; for(const k in local) if(!(k in R)) del.push(k);
+  if(!Object.keys(set).length&&!del.length){ for(const k in meta) try{ localStorage.setItem(k,meta[k]); }catch(e){} return false; }
+  const n=+(sessionStorage.getItem('ac.reloads')||0), t=+(sessionStorage.getItem('ac.reloadT')||0);
+  if(Date.now()-t<60000&&n>=3){ _acLastErr='読み直しが続いたので、いったん止めました'; return false; } // 念のため：読み直しがくり返されないように
+  try{ sessionStorage.setItem('ac.reloads',String(Date.now()-t<60000?n+1:1)); if(Date.now()-t>=60000) sessionStorage.setItem('ac.reloadT',String(Date.now()));
+    sessionStorage.setItem('ac.stage',JSON.stringify({ v:1, set, del, meta })); }catch(e){ _acLastErr='この端末の保存場所がいっぱいです'; return false; }
+  _acReloading=true; acToast('ほかの端末の記録を読みこんでいます…'); setTimeout(()=>location.reload(),300); return true; }
+function acMeta(rev,R){ return { [AC_REV]:JSON.stringify(rev), [AC_BASE]:JSON.stringify(acHashes(R)), [AC_AT]:JSON.stringify(Date.now()), [AC_UID]:JSON.stringify(acUser().uid) }; }
+// 両方で変わったときの合わせ方
+function acPickLife(a,b){ let A=null,B=null; try{ A=JSON.parse(a); B=JSON.parse(b); }catch(e){ return a; } if(!A) return b; if(!B) return a;
+  if(A.seed===B.seed) return ((B.choice||'').length>(A.choice||'').length)?b:a; // 同じ人生なら、先へ進んでいるほう
+  return ((B.birthTime||0)>(A.birthTime||0))?b:a; } // 別の人生なら、あとから生まれたほう（前の人生は本棚に入っている）
+function acUnion(a,b,key){ try{ const A=JSON.parse(a)||[], B=JSON.parse(b)||[]; if(!Array.isArray(A)||!Array.isArray(B)) return a; const seen=new Set(A.map(key)); const out=A.concat(B.filter(x=>!seen.has(key(x))));
+  return JSON.stringify(out); }catch(e){ return a; } }
+function acMergeKey(k,L,C){ if(k==='hitotsu.current') return acPickLife(L,C);
+  if(k==='hitotsu.archive'){ try{ const u=JSON.parse(acUnion(L,C,x=>x.seed+':'+(x.at||0))); u.sort((x,y)=>(y.at||0)-(x.at||0)); return JSON.stringify(u.slice(0,30)); }catch(e){ return L; } }
+  if(k==='hitotsu.friends') return acUnion(L,C,x=>x&&x.id);
+  return L; }
+// 3つを見くらべて合わせる（B＝前に合わせたときの印、L＝この端末、C＝マイページ）
+function acMerge(L,C,B){ const R={}; const keys=new Set([...Object.keys(L),...Object.keys(C),...Object.keys(B||{})]);
+  keys.forEach(k=>{ const l=L[k], c=C[k], hl=l==null?'':acHash(l), hc=c==null?'':acHash(c), hb=(B&&B[k])||'';
+    let r; if(hl===hc) r=l; else if(hl===hb) r=c; else if(hc===hb) r=l; else if(l==null) r=c; else if(c==null) r=l; else r=acMergeKey(k,l,c);
+    if(r!=null) R[k]=r; }); return R; }
+function acSame(a,b){ const ka=Object.keys(a), kb=Object.keys(b); if(ka.length!==kb.length) return false; for(const k of ka) if(a[k]!==b[k]) return false; return true; }
+// ふだんの同期：開いたとき・戻ってきたとき・1分ごと・閉じるとき
+async function acSync(why){ if(!acIn()||_acBusy||_acReloading) return; _acBusy=true;
+  try{ const uid=acUser().uid; if(acGet(AC_UID,'')!==uid){ await acFirst(); return; }
+    const L=acLocal(), B=acGet(AC_BASE,{}), rev=acGet(AC_REV,''); const pull=why!=='tick'&&why!=='hide';
+    const H=acHashes(L); let dirty=Object.keys(H).length!==Object.keys(B).length; if(!dirty) for(const k in H) if(H[k]!==B[k]){ dirty=true; break; }
+    if(!dirty&&!pull) return; // 変わっていないときは、サーバーに聞かない（無料の範囲を大切に）
+    const head=await acReadHead(acPath()); _acPullAt=Date.now();
+    if(head&&head.rev&&head.rev!==rev){ // ほかの端末が送った分がある → 合わせる（上書きして消さない）
+      const C=await acReadBlob(acPath(),head); const R=acMerge(L,C,B);
+      let nrev=head.rev; if(!acSame(R,C)) nrev=await acPush(R); else { acSet(AC_REV,nrev); acSet(AC_BASE,acHashes(R)); acSet(AC_AT,Date.now()); }
+      acStageReload(R,L,acMeta(nrev,R)); }
+    else if(dirty||!head) await acPush(L);
+    _acLastErr=''; }
+  catch(e){ _acLastErr=String(e&&(e.code||e.message)||e).slice(0,80); try{ console.warn('[account]',e); }catch(_){} }
+  finally{ _acBusy=false; acDlgRefresh(); } }
+// はじめてログインしたとき
+async function acFirst(){ const L=acLocal(); const head=await acReadHead(acPath());
+  if(!head){ await acPush(L); acToast('この端末の記録を、マイページに入れました'); return; }
+  const C=await acReadBlob(acPath(),head);
+  const sameMe=L['hitotsu.myid']&&L['hitotsu.myid']===C['hitotsu.myid'];
+  if(!acHasLife(L)||!acHasLife(C)||sameMe){ // この端末がまだ・マイページがまだ・同じ人 → 合わせる
+    const R=acHasLife(L)?acMerge(L,C,sameMe?{}:acHashes(C)):C; const nrev=acSame(R,C)?head.rev:await acPush(R);
+    if(acSame(R,C)){ acSet(AC_REV,nrev); acSet(AC_BASE,acHashes(R)); acSet(AC_AT,Date.now()); acSet(AC_UID,acUser().uid); }
+    if(!acStageReload(R,L,acMeta(nrev,R))) acToast('マイページとつながりました'); return; }
+  // 別の人生どうし → 聞かずに、必ず1つにそろえる（MITSUさん「必ず同じ人生にするように」2026-11-18）。
+  //  そろえる先は「長く見守ってきたほう」（本棚の冊数 → 生まれた日が早いほう）。もう一方は消さずに「しまってある人生」へ。
+  const useC=acOlder(C,L);
+  if(useC){ await acKeep(L); try{ sessionStorage.setItem('ac.notice',JSON.stringify([acLifeName(C),acLifeName(L)])); }catch(e){} if(!acStageReload(C,L,acMeta(head.rev,C))) acNotice(acLifeName(C),acLifeName(L)); }
+  else { await acKeep(C); await acPush(L); acNotice(acLifeName(L),acLifeName(C)); } }
+function acScore(m){ let a=0, b=Infinity; try{ a=(JSON.parse(m['hitotsu.archive']||'[]')||[]).length; }catch(e){} try{ const s=JSON.parse(m['hitotsu.current']||'null'); if(s&&s.birthTime) b=s.birthTime; }catch(e){} return { a, b }; }
+function acOlder(C,L){ const c=acScore(C), l=acScore(L); if(c.a!==l.a) return c.a>l.a; return c.b<=l.b; } // 同じなら、マイページのほう
+function acNotice(nw,nx){ const d=acDlg(); nw=nw||'見守ってきた人生'; nx=nx||'もう一方の人生';
+  d.innerHTML=`<div class="frd-in ac-in"><h2>同じ人生に そろえました</h2>
+  <p class="frd-lead">これからは、どの端末でも <b>${esc(nw)}</b> の人生を見守ります。</p>
+  <p class="tiny muted">この端末にあった別の人生（${esc(nx)}）は、消さずにマイページの「しまってある人生」に入れました。</p>
+  <div class="frd-btns"><button class="frd-b frd-pink" id="acOk" type="button" style="grid-column:1/-1">OK</button></div></div>`;
+  d.hidden=false; document.body.classList.add('frd-on'); $('#acOk').onclick=acClose; }
+// しまってある人生（選ばなかったほう）：5つまで
+async function acKeep(m){ const { collection, getDocs, deleteDoc, doc }=FB.D; const id='k'+Date.now().toString(36); await acWriteBlob([...acPath(),'keep',id],m);
+  try{ const s=await getDocs(collection(FB.db,...acPath(),'keep')); const a=s.docs.map(x=>({ id:x.id, ...x.data() })).sort((x,y)=>(y.at||0)-(x.at||0));
+    for(const k of a.slice(5)){ for(let i=0;i<(k.n||1);i++) await deleteDoc(doc(FB.db,...acPath(),'keep',k.id,'c',String(i))); await deleteDoc(doc(FB.db,...acPath(),'keep',k.id)); } }catch(e){}
+  _acKeeps=null; }
+async function acKeepList(){ const { collection, getDocs }=FB.D; const s=await getDocs(collection(FB.db,...acPath(),'keep')); return s.docs.map(x=>({ id:x.id, ...x.data() })).sort((x,y)=>(y.at||0)-(x.at||0)); }
+async function acRestore(id){ const { doc, deleteDoc }=FB.D; const path=[...acPath(),'keep',id]; const head=await acReadHead(path); if(!head) return;
+  const K=await acReadBlob(path,head), L=acLocal(); await acKeep(L);
+  for(let i=0;i<(head.n||1);i++) await deleteDoc(doc(FB.db,...path,'c',String(i))); await deleteDoc(doc(FB.db,...path));
+  const rev=await acPush(K); acStageReload(K,L,acMeta(rev,K)); }
+// ---- ログイン ----
+function acErr(e){ const c=String(e&&e.code||''); if(/popup-closed|cancelled-popup/.test(c)) return 'ログインの画面が閉じられました。';
+  if(/popup-blocked/.test(c)) return 'ログインの小さな画面が開けませんでした。もう一度押してください。';
+  if(/email-already-in-use|credential-already-in-use/.test(c)) return 'このメールアドレスは、もう登録されています。「ログインする」を押してください。';
+  if(/invalid-email/.test(c)) return 'メールアドレスの形が正しくありません。';
+  if(/weak-password/.test(c)) return 'パスワードは6文字以上にしてください。';
+  if(/wrong-password|invalid-credential|user-not-found|invalid-login/.test(c)) return 'メールアドレスかパスワードが ちがいます。';
+  if(/too-many-requests/.test(c)) return '何回も試したため、少し待ってから もう一度どうぞ。';
+  if(/operation-not-allowed|configuration-not-found/.test(c)) return 'いま準備中です。少し待ってから もう一度どうぞ。';
+  if(/network/.test(c)) return '通信が不安定です。もう一度どうぞ。'; return 'うまくいきませんでした（'+c.replace('auth/','')+'）'; }
+async function acAfterLogin(){ acMsg('マイページとつないでいます…'); try{ store.set('hitotsu.fbreg',''); }catch(e){} if(typeof FB!=='undefined'&&FB) FB.uid=acUser().uid;
+  await acSync('login'); acDlgRefresh(); }
+function acGoogle(){ const U=FB.U, u=acUser(), pv=new U.GoogleAuthProvider(); pv.setCustomParameters({ prompt:'select_account' });
+  // 小窓はタップのすぐあとに開かないと止められるので、待たずに呼ぶ
+  const p=(u&&u.isAnonymous)?U.linkWithPopup(u,pv).catch(e=>{ if(/credential-already-in-use/.test(e&&e.code||'')){ const c=U.GoogleAuthProvider.credentialFromError(e); if(c) return U.signInWithCredential(FB.auth,c); } throw e; }):U.signInWithPopup(FB.auth,pv);
+  p.then(acAfterLogin).catch(e=>acMsg(acErr(e))); }
+async function acEmail(mode){ const U=FB.U, em=($('#acEm').value||'').trim(), pw=$('#acPw').value||''; if(!em||!pw){ acMsg('メールアドレスとパスワードを入れてください。'); return; }
+  acMsg(mode==='new'?'登録しています…':'ログインしています…');
+  try{ const u=acUser();
+    if(mode==='new'){ const c=U.EmailAuthProvider.credential(em,pw); if(u&&u.isAnonymous) await U.linkWithCredential(u,c); else await U.createUserWithEmailAndPassword(FB.auth,em,pw); }
+    else await U.signInWithEmailAndPassword(FB.auth,em,pw);
+    await acAfterLogin(); }catch(e){ acMsg(acErr(e)); } }
+async function acReset(){ const em=($('#acEm').value||'').trim(); if(!em){ acMsg('上の欄にメールアドレスを入れてから、もう一度押してください。'); return; }
+  try{ await FB.U.sendPasswordResetEmail(FB.auth,em); acMsg('パスワードを決め直すメールを送りました。メールを開いてください。'); }catch(e){ acMsg(acErr(e)); } }
+async function acLogout(){ if(!confirmInline()) return; await acSync('hide'); try{ await FB.U.signOut(FB.auth); }catch(e){}
+  ['ac.uid','ac.rev','ac.base','ac.at'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} }); try{ store.set('hitotsu.fbreg',''); }catch(e){} location.reload(); }
+let _acLogoutAsk=0; function confirmInline(){ if(Date.now()-_acLogoutAsk<6000) return true; _acLogoutAsk=Date.now(); acMsg('もう一度「ログアウト」を押すと、ログアウトします。この端末の記録は消えません。'); return false; }
+// ---- 画面 ----
+function acDlg(){ let d=document.getElementById('acDlg'); if(!d){ d=document.createElement('div'); d.id='acDlg'; d.className='frd'; d.hidden=true; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','マイページ'); document.body.appendChild(d);
+    d.addEventListener('click',e=>{ if(e.target===d&&!d.querySelector('#acOk')) acClose(); }); document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!d.hidden&&!d.querySelector('#acOk')) acClose(); }); } return d; }
+function acClose(){ const d=document.getElementById('acDlg'); if(d) d.hidden=true; document.body.classList.remove('frd-on'); }
+function acMsg(t){ const m=document.getElementById('acMsg'); if(m) m.textContent=t; }
+function acAgo(t){ if(!t) return ''; const s=Math.round((Date.now()-t)/1000); return s<60?'さっき':s<3600?Math.floor(s/60)+'分前':s<86400?Math.floor(s/3600)+'時間前':Math.floor(s/86400)+'日前'; }
+function acHTML(){ const srv=typeof fbStatusHTML==='function'?fbStatusHTML():'';
+  if(typeof FB==='undefined'||!FB) return `<h2>👤 マイページ</h2><p class="frd-lead">ログインすると、スマホでもパソコンでも、同じ1つの人生を見守れます。</p>${srv}<p class="tiny muted">サーバーにつながると、ログインできます。</p>`;
+  if(!acIn()) return `<h2>👤 マイページ</h2>
+  <p class="frd-lead">ログインすると、スマホでもパソコンでも、<b>同じ1つの人生</b>を見守れます。ほかの端末で見守っている人は、そちらと同じ方法でログインしてください。</p>
+  <button class="frd-b ac-g" id="acG" type="button"><svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg><span>Googleでログイン</span></button>
+  <p class="ac-or"><span>または メールアドレスで</span></p>
+  <label class="ac-l">メールアドレス<input id="acEm" type="email" autocomplete="email" inputmode="email" maxlength="120"></label>
+  <label class="ac-l">パスワード（6文字以上）<input id="acPw" type="password" autocomplete="current-password" maxlength="64"></label>
+  <div class="frd-btns"><button class="frd-b frd-pink" id="acLogin" type="button">ログインする</button><button class="frd-b frd-sky" id="acNew" type="button">はじめて登録する</button></div>
+  <p class="tiny"><button class="linkish" id="acForgot" type="button">パスワードを忘れたとき</button></p>
+  <p class="frd-msg" id="acMsg" role="status">${esc(_acLastErr)}</p>
+  <p class="tiny muted">ログインしなくても、今までどおり遊べます。預かるのは、ゲームの記録とログイン用のメールアドレスだけです。</p>`;
+  const u=acUser(), how=(u.providerData||[]).some(p=>p.providerId==='google.com')?'Google':'メール';
+  const P=typeof cur!=='undefined'&&cur&&cur.P?cur.P:null; const arc=(store.get(KEY_ARC,[])||[]).length; const at=acGet(AC_AT,0);
+  return `<h2>👤 マイページ</h2>
+  <div class="ac-card"><p><small>ログイン中（${how}）</small><br><b>${esc(u.email||'')}</b></p>
+  ${P?`<p><small>見守っている Channel</small><br><b>${esc(P.full)}</b>（${esc(P.country.name)}）${typeof chnIdNum==='function'?`<br><small>Channel 番号 ${esc(String(chnIdNum(P)))}</small>`:''}</p>`:''}
+  <p><small>思い出のLIFE BOOK</small><br><b>${arc}</b> 冊</p></div>
+  <p class="ac-sync">${_acBusy?'☁️ 記録を合わせています…':_acLastErr?`⚠️ ${esc(_acLastErr)}`:`☁️ 記録はマイページに保存されています${at?`（${acAgo(at)}）`:''}`}</p>
+  <p class="tiny muted">ほかの端末でも、同じ方法でログインすると、この人生の続きを見守れます。</p>
+  <div id="acKeeps"></div>
+  <div class="frd-btns"><button class="frd-b frd-sky" id="acNow" type="button">いま保存する</button><button class="frd-b" id="acOut" type="button">ログアウト</button></div>
+  <p class="frd-msg" id="acMsg" role="status"></p>`; }
+async function acKeepsFill(){ const box=document.getElementById('acKeeps'); if(!box||!acIn()) return;
+  try{ if(!_acKeeps) _acKeeps=await acKeepList(); }catch(e){ return; } if(!_acKeeps.length){ box.innerHTML=''; return; }
+  box.innerHTML=`<h3 class="ac-h3">しまってある人生</h3>`+_acKeeps.map(k=>`<div class="ac-keep"><span>${esc(k.nm||'人生')}<small>${esc(k.dev||'')}・${acAgo(k.at)}にしまいました</small></span><button class="frd-b" type="button" data-ackeep="${esc(k.id)}">この人生にもどす</button></div>`).join('')+`<p class="tiny muted">もどすと、すべての端末でその人生に入れかわり、いまの人生がここにしまわれます。</p>`;
+  box.querySelectorAll('[data-ackeep]').forEach(b=>b.onclick=async()=>{ if(b.dataset.sure!=='1'){ b.dataset.sure='1'; b.textContent='もう一度押すと、もどします'; return; } b.disabled=true; acMsg('もどしています…'); try{ await acRestore(b.dataset.ackeep); }catch(e){ acMsg(acErr(e)); } }); }
+function acOpen(){ const d=acDlg(); d.innerHTML=`<div class="frd-in ac-in"><button class="frd-x" type="button" aria-label="閉じる">×</button>${acHTML()}</div>`; d.hidden=false; document.body.classList.add('frd-on');
+  d.querySelector('.frd-x').onclick=acClose; const on=(id,f)=>{ const b=document.getElementById(id); if(b) b.onclick=f; };
+  on('acG',acGoogle); on('acLogin',()=>acEmail('in')); on('acNew',()=>acEmail('new')); on('acForgot',acReset); on('acOut',acLogout);
+  on('acNow',async()=>{ acMsg('保存しています…'); await acSync('now'); acMsg(_acLastErr?'うまく保存できませんでした':'保存しました'); });
+  const r=document.getElementById('fbRetry'); if(r) r.onclick=()=>{ if(typeof fbStart==='function') fbStart(); setTimeout(acOpen,1500); };
+  acKeepsFill(); }
+function acDlgRefresh(){ const d=document.getElementById('acDlg'); if(d&&!d.hidden&&!d.querySelector('#acOk')&&!d.querySelector('#acEm:focus,#acPw:focus')){ const m=(document.getElementById('acMsg')||{}).textContent||''; acOpen(); if(m) acMsg(m); } acBtnSync(); }
+function acToast(t){ let e=document.getElementById('acToast'); if(!e){ e=document.createElement('div'); e.id='acToast'; e.className='ac-toast'; e.setAttribute('role','status'); document.body.appendChild(e); } e.textContent=t; e.hidden=false; clearTimeout(acToast._t); acToast._t=setTimeout(()=>{ e.hidden=true; },4000); }
+// 上の帯のボタン
+function acBtnSync(){ const r=document.querySelector('.mast-r'); if(!r) return; let b=document.getElementById('acTop');
+  if(!b){ b=document.createElement('button'); b.id='acTop'; b.type='button'; b.className='fr-top ac-top'; b.onclick=acOpen; r.appendChild(b); }
+  const t=acIn()?'<span aria-hidden="true">👤</span>マイページ<i class="ac-dot" aria-hidden="true"></i>':'<span aria-hidden="true">👤</span>マイページ'; if(b.innerHTML!==t) b.innerHTML=t; }
+// まだ生まれていない画面で：ほかの端末で見守っている人へのひとこと
+function acIntroNote(){ try{ if(acIn()||(typeof st!=='undefined'&&st)||(typeof viewing!=='undefined'&&viewing)) return; const app=document.getElementById('app'); if(!app||app.querySelector('.ac-note')) return;
+  const n=document.createElement('div'); n.className='ac-note'; n.setAttribute('role','note');
+  n.innerHTML='<p>ほかの端末で、もう人生を見守っていますか？<br><b>👤 マイページ</b>からログインすると、同じ人生の続きが見られます。</p><button class="frd-b frd-pink" type="button">マイページを開く</button>';
+  n.querySelector('button').onclick=acOpen; app.prepend(n); }catch(e){} }
+// ログインしていない端末で、はじめて「生まれる」を押したとき：ほかの端末で見守っていないか先にたずねる
+function acBornGuard(e){ const b=e.target&&e.target.closest&&e.target.closest('#bornBtn,#bornBtn2'); if(!b||b.disabled) return;
+  if(acIn()||acHasLife(acLocal())||acGet('ac.bornOK',0)||!/^https?:$/.test(location.protocol)) return;
+  e.preventDefault(); e.stopImmediatePropagation(); const d=acDlg();
+  d.innerHTML=`<div class="frd-in ac-in"><button class="frd-x" type="button" aria-label="閉じる">×</button><h2>ほかの端末で、もう見守っていますか？</h2>
+  <p class="frd-lead">スマホやパソコンで、もう人生を見守っている人は、ここで生まれずに <b>👤 マイページ</b>からログインしてください。同じ人生の続きが見られます。</p>
+  <button class="frd-b frd-pink ac-big" id="acBgIn" type="button" style="text-align:center">はい、ログインする</button>
+  <button class="frd-b ac-big ac-sub" id="acBgNew" type="button" style="text-align:center">いいえ、はじめてです（生まれる）</button></div>`;
+  d.hidden=false; document.body.classList.add('frd-on'); d.querySelector('.frd-x').onclick=acClose;
+  $('#acBgIn').onclick=acOpen; $('#acBgNew').onclick=()=>{ acSet('ac.bornOK',1); acClose(); b.click(); }; }
+function acStart(){ if(_acStarted) return; _acStarted=true; acBtnSync(); document.addEventListener('click',acBornGuard,true);
+  try{ const n=sessionStorage.getItem('ac.notice'); if(n){ sessionStorage.removeItem('ac.notice'); const a=JSON.parse(n); setTimeout(()=>acNotice(a[0],a[1]),400); } }catch(e){}
+  try{ const r0=render; window.render=render=function(){ const x=r0.apply(this,arguments); acIntroNote(); return x; }; }catch(e){}
+  acIntroNote();
+  const wait=setInterval(()=>{ if(typeof FB!=='undefined'&&FB&&FB.auth){ clearInterval(wait); acBtnSync(); acIntroNote(); if(acIn()) acSync('open');
+      try{ FB.auth.onAuthStateChanged(()=>{ acBtnSync(); }); }catch(e){} } },700);
+  setInterval(()=>{ if(acIn()&&!document.hidden) acSync('tick'); },300000); // 5分ごと（＋閉じるとき・戻ったとき）
+  document.addEventListener('visibilitychange',()=>{ if(!acIn()) return; if(document.hidden) acSync('hide'); else if(Date.now()-_acPullAt>20000) acSync('back'); }); }
+(function(){ const css=`.ac-top{ position:relative; } .ac-top::before{ display:none; } .ac-dot{ position:absolute; top:3px; right:5px; width:7px; height:7px; border-radius:50%; background:#5BD18B; box-shadow:0 0 0 2px #fff; }
+.ac-in h2{ margin:0 0 8px; font-size:19px; } .ac-in .frd-b{ width:100%; } .ac-g{ background:#fff; border:2px solid #E3D3DA; font-size:15px; padding:13px 10px; margin:6px 0 4px; }
+.ac-or{ display:flex; align-items:center; gap:8px; color:#8A7A84; font-size:12px; margin:12px 0 6px; } .ac-or::before,.ac-or::after{ content:""; flex:1; height:1px; background:#F0D5DE; }
+.ac-l{ display:block; font-size:13px; font-weight:600; margin:8px 0; } .ac-l input{ display:block; width:100%; box-sizing:border-box; margin-top:4px; font:inherit; font-size:16px; padding:11px 12px; border-radius:12px; border:2px solid #F3C6D4; background:#fff; color:#3A2A33; }
+.ac-l input:focus{ outline:3px solid #8EC3E6; outline-offset:1px; } .frd-pink,.ac-in .frd-pink{ background:#FF8FAB; color:#fff; } .ac-card{ background:#fff; border:2px solid #FFD6E1; border-radius:16px; padding:4px 14px; margin:6px 0 10px; } .ac-card p{ margin:10px 0; line-height:1.55; } .ac-card small{ color:#8A7A84; }
+.ac-sync{ font-size:13px; margin:6px 0; } .ac-h3{ font-size:15px; margin:14px 0 6px; } .ac-keep{ display:flex; align-items:center; gap:8px; border:2px dashed #F3C6D4; border-radius:14px; padding:8px 10px; margin:6px 0; } .ac-keep span{ flex:1; font-size:14px; line-height:1.4; } .ac-keep small{ display:block; color:#8A7A84; font-size:11px; } .ac-keep .frd-b{ width:auto; font-size:12px; padding:8px 10px; }
+.ac-big{ display:block; text-align:left; font-size:14px; padding:14px; margin:8px 0; line-height:1.5; } .ac-big b{ font-size:16px; } .ac-big small{ display:block; font-weight:400; font-size:12px; opacity:.85; } .ac-sub{ background:#fff; border:2px solid #FFB3C8; }
+.ac-note{ margin:12px auto; max-width:560px; background:#FFF6FA; border:2px solid #FFC2D0; border-radius:18px; padding:12px 14px; text-align:center; } .ac-note p{ margin:0 0 10px; font-size:14px; line-height:1.6; } .ac-note .frd-b{ display:inline-flex; padding:10px 18px; }
+.ac-toast{ position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:70; background:#D9467A; color:#fff; font-size:14px; padding:10px 16px; border-radius:999px; box-shadow:0 6px 20px rgba(0,0,0,.2); max-width:calc(100vw - 32px); }
+@media (max-width:520px){ .ac-in{ padding:14px 14px 16px; } }`;
+  const s=document.createElement('style'); s.textContent=css; document.head.appendChild(s);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',acStart); else acStart(); })();
 </script>
 <script>
 // ===== 街ブラ（🟡街ブラ）：世界の街の島・Life Home の街の帯・観光アルバム。ぜんぶこのファイルの中で完結します（ほかのファイルの名前とぶつからないよう、外には machiBuraOpen だけ出します） =====
@@ -23423,7 +23655,7 @@ function rvRandLook(seed,o){ o=o||{}; const r=rvRng(seed==null?Math.floor(Math.r
   const jp=o.jp!=null?!!o.jp:r()<.6; // 日本人らしい見た目（あたたかい肌色・黒〜こげ茶の髪）
   const skin=jp?pk(['#FFE3CF','#F6D2B4','#F6D2B4','#F1CDA8','#F1CDA8','#E8BE98']):pk(RV_SKINS);
   const hair=st==='elder'?pk(['#D9D6D2','#BDB8B2','#E9E6E2','#8E8A86','#2B2320']):jp?pk(['#1E1A1C','#2B2320','#2B2320','#3A2A22','#4A3326','#4A3326','#7A5236','#B07A4A']):(r()<.12?pk(['#5A3A6E','#F49AB5','#7FB8E0','#B8452F']):pk(RV_HAIRS.slice(0,9)));
-  const hs=f?pk([0,1,1,2,2,3,7,7,8,4,9,11]):pk([0,0,5,6,6,4,10,10]); // MITSUさん：髪が長いのは女性。男性に長い髪型（1）は使わない
+  const hs=f?pk([0,1,1,2,2,3,7,7,8,4,9,11]):pk([0,0,5,6,6,1,4,10,10]);
   return { skin, hair, shirt:pk(RV_SHIRTS), pants:f?pk(RV_PANTSL.concat(['#F49AB5','#FFFFFF','#E9D9A6'])):pk(RV_PANTSL), f, st, hs, gl:r()<.2?pk(['#34363C','#8A5A3C','#C9A23A','#E85D75']):'', hat:r()<.14?pk(['#E85D75','#2F4F8F','#F2C230','#34363C','#3FA66B','#FFFFFF']):'', beard:!f&&!jp&&st!=='teen'&&st!=='child'&&r()<.22, ear:f&&r()<.35, w:pk([.85,.95,1,1,1.1,1.25]), top:f?pk([0,0,1,2,3,3,4,4,5]):pk([0,0,1,2,5,6,6]), acc:pk(['#FFFFFF','#34363C','#2F4F8F','#E9D9A6','#8A5A3C','#9AA1AA']), skirt:pk(['#2F3E5C','#34363C','#C9B48A','#F49AB5','#E85D75','#3D5A80']) }; }
 // Channel（横向き）。o:{ k, pose:'sit'|'head'|'stand'|'kneel', hand:[x,y], foot:[x,y], lean, helmet, wave, goggles, vest }
 function rvPerson(x,y,L,o){ o=o||{}; const k=(o.k||1)*({ baby:.5, toddler:.6, child:.76, teen:.93, adult:1, elder:.97 }[L.st]||1);
@@ -23464,7 +23696,7 @@ function rvPerson(x,y,L,o){ o=o||{}; const k=(o.k||1)*({ baby:.5, toddler:.6, ch
     if(hs===11) s+=`<path d="M${F(hx-hr*.2)} ${F(hy-hr*.9)} Q${F(hx+hr*.8)} ${F(hy-hr*.9)} ${F(hx+hr*.85)} ${F(hy-hr*.2)} L${F(hx+hr*.2)} ${F(hy-hr*.35)}Z" fill="${hair}"/>`;
     if(hs===5) s+=`<path d="M${F(hx-hr*.8)} ${F(hy-hr*.8)} l${F(1*k)} ${F(-4*k)} l${F(2*k)} ${F(3.4*k)} l${F(2*k)} ${F(-4.2*k)} l${F(2*k)} ${F(3.8*k)} l${F(2.2*k)} ${F(-3.6*k)} l${F(1.4*k)} ${F(4.4*k)}Z" fill="${hair}"/>`;
     if(L.hat) s+=`<path d="M${F(hx-hr-.6*k)} ${F(hy-hr*.25)} Q${F(hx-hr*.9)} ${F(hy-hr*1.35)} ${F(hx+hr*.2)} ${F(hy-hr*1.25)} Q${F(hx+hr*.95)} ${F(hy-hr*1.05)} ${F(hx+hr*.9)} ${F(hy-hr*.35)}Z" fill="${L.hat}"/>`+rvRect(hx+hr*.3,hy-hr*.48,hr*.95,2*k,rvShade(L.hat,.8),1*k); }
-  if(L.beard&&!L.f&&![1,2,3,7,8,9,11].includes(L.hs||0)&&!o.helmet) s+=`<path d="M${F(hx-hr*.35)} ${F(hy+hr*.35)} Q${F(hx+hr*.1)} ${F(hy+hr*1.15)} ${F(hx+hr*.85)} ${F(hy+hr*.55)} Q${F(hx+hr*.4)} ${F(hy+hr*.75)} ${F(hx-hr*.2)} ${F(hy+hr*.3)}Z" fill="${hair}"/>`;
+  if(L.beard&&!o.helmet) s+=`<path d="M${F(hx-hr*.35)} ${F(hy+hr*.35)} Q${F(hx+hr*.1)} ${F(hy+hr*1.15)} ${F(hx+hr*.85)} ${F(hy+hr*.55)} Q${F(hx+hr*.4)} ${F(hy+hr*.75)} ${F(hx-hr*.2)} ${F(hy+hr*.3)}Z" fill="${hair}"/>`;
   if(L.ear&&!o.helmet) s+=rvCirc(hx-hr*.25,hy+hr*.4,1*k,'#F2C230');
   if(o.goggles) s+=rvRect(hx+1*k,hy-3.5*k,hr-.5*k,3.4*k,'#7FC4E8',1.4,` stroke="#5A4A3A" stroke-width="${F(.9*k)}"`);
   s+=rvCirc(hx+4.6*k,hy-.8*k,1.15*k,'#3B2A24')+rvCirc(hx+5.4*k,hy+3*k,1.7*k,'#F29C9C',' opacity=".6"')+`<path d="M${F(hx+5.4*k)} ${F(hy+4.6*k)} q${F(1.6*k)} ${F(1.2*k)} ${F(3*k)} 0" stroke="#5A3A2E" stroke-width="${F(.9*k)}" fill="none" stroke-linecap="round"/>`;
