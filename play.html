@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.77">
+<meta name="lifebook-version" content="v178.78">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -731,6 +731,11 @@ a.nav-b{ text-decoration:none; }
 @keyframes frPop{ from{ transform:scale(.96); opacity:0; } to{ transform:none; opacity:1; } }
 </style>
 
+<script>
+/* v178.78（MITSUさん 2026-11-19）：Gateway のアルバムで「💌 Higher Self に送る」を押して来た時は、ゲームの画面を見せずに、すぐ「名簿を開いています…」を出して、そのまま Higher Self の名簿につなぐ（とちゅうの画面が一瞬見えて、分かりにくかったため） */
+(function(){ try{ if(!/[#&]gwsend=\d+/.test(location.hash||'')) return; var d=document.createElement('div'); d.id='gwBoot'; d.setAttribute('role','status'); d.setAttribute('style','position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#FFF5F8;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:24px;text-align:center;font:700 16px/1.7 -apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;color:#D9467A');
+  d.innerHTML='<div style="font-size:44px;line-height:1">💌</div><div>Higher Self の名簿を、開いています…</div>'; document.body.appendChild(d); setTimeout(function(){ var x=document.getElementById('gwBoot'); if(x) x.remove(); },9000); }catch(e){} })();
+</script>
 <div class="wrap">
   <header class="masthead">
     <a class="name lb-logo" href="#" aria-label="LIFE BOOK"><span class="lb-isle" id="lbIsle" aria-hidden="true"></span><span class="lb-col" aria-hidden="true"><span class="lb-word"><span class="lb-t" style="--c:#E8667E">L</span><span class="lb-t" style="--c:#F2B630">I</span><span class="lb-t" style="--c:#6DB84A">F</span><span class="lb-t" style="--c:#5BA7DD">E</span><span class="lb-gap"></span><span class="lb-t" style="--c:#9B7FD9">B</span><span class="lb-t" style="--c:#EE7A92">O</span><span class="lb-t" style="--c:#F2B630">O</span><span class="lb-t" style="--c:#5DAE44">K</span></span><span class="lb-sub">人生のヒントが、ここにある</span></span></a>
@@ -742,7 +747,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.77 (2026-11-19) */ var LB_VER='v178.77';
+/* LIFE BOOK game version: v178.78 (2026-11-19) */ var LB_VER='v178.78';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20374,7 +20379,7 @@ function gwFill(root){ (root||document).querySelectorAll('.gw-ph[data-gwk]:not(.
 function gwPhHTML(k){ return `<div class="gw-ph" data-gwk="${esc(k)}"><p class="tiny muted">写真を用意しています…</p></div>`; }
 // --- 送る ---
 let _gwTo=null;
-function gwSendOpen(t,msg){ const rec=gwGetRec(t); if(typeof gsZoomOpen!=='function') return;
+function gwSendOpen(t,msg){ try{ const bt=document.getElementById('gwBoot'); if(bt) setTimeout(()=>bt.remove(),120); }catch(_){} const rec=gwGetRec(t); if(typeof gsZoomOpen!=='function') return;
   if(!rec){ gsZoomOpen(`<h3 class="gsz-h">💌 Gateway の写真を送る</h3><p>この写真が、見つかりませんでした。Gateway のアルバムを、もう一度ひらいてみてください。</p>`); return; }
   const fr=typeof flFriends==='function'?flFriends():[]; if(_gwTo==null||!fr.some(f=>f.id===_gwTo)) _gwTo=fr[0]?fr[0].id:null;
   gsZoomOpen(`<div class="gw-send"><h3 class="gsz-h">💌 Gateway の写真を、Higher Self に送る</h3>${gwPhHTML('a:'+rec.t)}
@@ -20395,8 +20400,8 @@ document.addEventListener('click',e=>{ const a=e.target.closest&&e.target.closes
   if(a.dataset.gwto){ _gwTo=a.dataset.gwto; document.querySelectorAll('[data-gwto]').forEach(x=>x.classList.toggle('on',x===a)); }
   else if(a.dataset.gwgo) gwSend(a.dataset.gwgo); else if(a.dataset.gwsend) gwSendOpen(a.dataset.gwsend); });
 // サイトの Gateway アルバムの「💌 Higher Self に送る」から来た時
-function gwHash(){ const m=/[#&]gwsend=(\d+)/.exec(location.hash||''); if(!m) return; try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} setTimeout(()=>gwSendOpen(m[1]),600); }
-window.addEventListener('hashchange',gwHash); setTimeout(gwHash,900);
+function gwHash(){ const m=/[#&]gwsend=(\d+)/.exec(location.hash||''); if(!m) return; try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} setTimeout(()=>gwSendOpen(m[1]),120); }
+window.addEventListener('hashchange',gwHash); setTimeout(gwHash,250); /* v178.78：待ち時間を短く（前は 900＋600ミリ秒） */
 // --- 受けとる（お花の写真と同じ場所に届く。p が 'GW1:' で始まるもの） ---
 function gwRecv(docId,x){ try{ const seen=store.get(GW_SEEN,[]); if(!seen.includes(docId)){ const rec=JSON.parse(String(x.p).slice(4)); if(rec&&typeof rec==='object'){
       store.set(GW_SEEN,seen.concat([docId]).slice(-300)); store.set(GW_GOT,(store.get(GW_GOT,[])||[]).concat([{ id:docId, rec, fromBy:String(x.by||'友だち').slice(0,20), t:+x.t||Date.now(), rt:Date.now() }]).slice(-60));
@@ -20917,7 +20922,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.g
 try{ document.head.insertAdjacentHTML('beforeend','<style>.lbs{ position:fixed; inset:0; z-index:9600; background:rgba(40,25,40,.6); display:flex; align-items:center; justify-content:center; padding:16px; } .lbs-in{ box-sizing:border-box; width:min(520px,100%); max-height:92vh; overflow:auto; background:#FFFDFE; color:#3A2E38; border-radius:22px; padding:14px 16px 18px; box-shadow:0 10px 30px rgba(0,0,0,.3); text-align:center; } .lbs-h{ margin:4px 0 10px; font-size:18px; color:#C2476B; } .lbs-pv{ border-radius:14px; overflow:hidden; background:#F6EEF2; min-height:80px; display:grid; place-items:center; } .lbs-pv img{ display:block; width:100%; height:auto; -webkit-touch-callout:default; } .lbs-wait{ margin:0; padding:22px 12px; font-size:14px; color:#6F626B; } .lbs-b{ display:grid; gap:10px; margin:12px 0 6px; } .lbs-go,.lbs-sv,.lbs-x{ box-sizing:border-box; display:flex; align-items:center; justify-content:center; width:100%; min-height:46px; padding:0 14px; border-radius:999px; font:inherit; font-size:15px; font-weight:700; text-decoration:none; cursor:pointer; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; } .lbs-n{ margin:6px 2px 10px; font-size:12.5px; line-height:1.6; color:#6F626B; min-height:1em; } .lbs-x{ margin-top:4px; } .lbs-ot{ border:0; background:none; padding:2px 0; font:inherit; font-size:12px; color:#8A6A78; text-decoration:underline; cursor:pointer; } .lbs-sl{margin:6px 0 0;font-size:13px;font-weight:700;color:#C2476B;text-align:left}.lbs-sns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.lbs-fv{background:#E8508E!important;border-color:#C93A76!important;box-shadow:0 3px 0 #B02F66!important}.lbs-sb{display:flex;align-items:center;justify-content:center;text-decoration:none;box-sizing:border-box;width:100%;min-height:42px;padding:0 4px;border-radius:999px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:2px solid #E86A88;background:#FF8FAA;color:#fff;box-shadow:0 3px 0 #D85878;white-space:nowrap}.lbs-op{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;min-height:46px;margin:0 0 10px;padding:0 14px;border-radius:999px;font-size:15px;font-weight:700;text-decoration:none;border:2px solid #E86A88;background:#fff;color:#D9467A;box-shadow:0 3px 0 #FFD6E1} .ph-share{ display:block; margin:6px auto 0; font-size:12.5px; } body .fl-alb li .mp-btn.fl-phbtn{ border:2px solid #E86A88!important; background:#FF8FAA!important; color:#fff!important; box-shadow:0 3px 0 #D85878!important; }</style>'); }catch(e){}
 
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.77'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.78'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
