@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.67">
+<meta name="lifebook-version" content="v178.68">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.67 (2026-11-19) */ var LB_VER='v178.67';
+/* LIFE BOOK game version: v178.68 (2026-11-19) */ var LB_VER='v178.68';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20868,7 +20868,7 @@ try{ if(PWA_STANDALONE) store.set(KEY_PWASET,Date.now()); }catch(e){}
 window.addEventListener('appinstalled',()=>{ _pwaPrompt=null; _pwaDone=true; try{ store.set(KEY_PWASET,Date.now()); }catch(e){} pwaRefresh(); });
 if('serviceWorker' in navigator && /(github\.io|lifebookworld\.com)$/.test(location.host)) window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.67'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.68'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
@@ -21561,6 +21561,8 @@ body .btn,body .mp-btn,body .rv-btn,body .mbx-pbtn,body .hm-btn{ border:2px soli
 body .btn.ghost,body .hm-btn.ghost,body .rv-btn.rv-sub,body .mbx-pbtn.mbx-sub2,body .mt-close,body .pa-b,body .mp-btn.fl-b2{ border:2px solid #FFB3C8!important; background:#fff!important; color:#D9467A!important; box-shadow:0 3px 0 #FFD6E1!important; }
 body .btn.small,body .rv-btn.rv-sm{ min-height:36px; padding:6px 13px; font-size:13px; }
 body .btn:disabled,body .mp-btn:disabled,body .rv-btn:disabled,body .mbx-pbtn:disabled,body .hm-btn:disabled{ opacity:.5; cursor:default; }
+/* v178.68（MITSUさん 2026-11-19）：左上の動くロゴ（島）が下すぎたので、上へ。島のまん中を「LIFE BOOK」の文字の列の高さに合わせる */
+.masthead .lb-isle{ position:relative; top:-9px; }
 /* v178.61（MITSUさん 2026-11-19）：携帯が「暗い画面（ダークモード）」のとき、白やピンクの明るい枠の中の文字が薄くなって読めなかったのを直す。明るい枠の中は、いつも濃い色の文字にする */
 .gsz-in,.pa-in,.frn,.frn-born,.ac-note,.rvx,.mt-card,.frd-in,.mp-box,.friend-card,.pc-w,.mt-appeal,.hm-bubble{ --ink:#3A2E38; --muted:#6F626B; --line:#E3D5DB; --surface:#FFF8FA; --bg:#FFFDFE; --accent:#34507F; --accent-soft:#DCE3EF; --ember:#9A5B33; --ember-soft:#F1E3D8; --alt:#8A93A4; }
 .gsz-in,.pa-in,.frn,.frn-born,.ac-note,.rvx{ color:#3A2E38; }
