@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.33">
+<meta name="lifebook-version" content="v178.34">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.33 (2026-11-18) */ var LB_VER='v178.33';
+/* LIFE BOOK game version: v178.34 (2026-11-18) */ var LB_VER='v178.34';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21212,7 +21212,7 @@ setInterval(flPhListen,4000); setTimeout(flPhListen,1800);
 //  ・変わったときだけ、少しまとめて送る（5分に1回まで＋画面を閉じるとき）。開いたとき・戻ってきたときに、ほかの端末の分を受けとる。
 //  ・受けとった記録は sessionStorage に置いて読み直し、acct-in.js（<head>）がゲームより先に入れる（あとからだと、ゲームの保存で上書きされるため）。
 //  ・両方で変わっていたとき：今の人生は「先へ進んでいるほう」、本棚と友だちは合わせる、ほかはこの端末のほう。
-//  ・はじめてのログインで、この端末とマイページに別の人生があるときは、聞かずに「長く見守ってきたほう」に必ずそろえる。もう一方は「しまってある人生」に残す（消さない）。
+//  ・はじめてのログインで、この端末とマイページに別の人生があるときは、聞かずに「長く見守ってきたほう」に必ずそろえる。もう一方は「保管してある人生」に残す（消さない）。
 //  ・ログインしていない端末で、はじめて「生まれる」を押したときは、ほかの端末で見守っていないか先にたずねる（別の人生が生まれないように）。
 const AC_UID='ac.uid', AC_REV='ac.rev', AC_BASE='ac.base', AC_AT='ac.at', AC_CHUNK=900000;
 let _acReloading=false, _acBusy=false, _acStarted=false, _acPullAt=0, _acLastErr='', _acKeeps=null, _acState='';
@@ -21225,7 +21225,7 @@ function acSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){}
 function acUser(){ return (typeof FB!=='undefined'&&FB&&FB.auth&&FB.auth.currentUser)||null; }
 function acIn(){ const u=acUser(); return !!(u&&!u.isAnonymous); }
 function acDev(){ const ua=navigator.userAgent||''; return /iPhone/.test(ua)?'iPhone':/iPad/.test(ua)?'iPad':/Android/.test(ua)?'Android':/Macintosh/.test(ua)?'Mac':/Windows/.test(ua)?'Windows':'ブラウザ'; }
-// 記録から、その人生の名前を出す（確認の画面・しまってある人生の一覧に使う）
+// 記録から、その人生の名前を出す（確認の画面・保管してある人生の一覧に使う）
 function acLifeName(m){ try{ const s=m&&m['hitotsu.current']?JSON.parse(m['hitotsu.current']):null; if(s&&s.seed!=null){ const P=makeBirth(s.seed,{ country:s.country||null, force:s.force||null }); return P.full+'（'+P.country.name+'）'; } }catch(e){}
   try{ const a=m&&m['hitotsu.archive']?JSON.parse(m['hitotsu.archive']):[]; if(a&&a.length) return '本棚の人生 '+a.length+'つ'; }catch(e){} return ''; }
 function acHasLife(m){ if(!m) return false; if(m['hitotsu.current']&&m['hitotsu.current']!=='null') return true; try{ const a=JSON.parse(m['hitotsu.archive']||'[]'); return !!(a&&a.length); }catch(e){ return false; } }
@@ -21290,7 +21290,7 @@ async function acFirst(){ const L=acLocal(); const head=await acReadHead(acPath(
     if(acSame(R,C)){ acSet(AC_REV,nrev); acSet(AC_BASE,acHashes(R)); acSet(AC_AT,Date.now()); acSet(AC_UID,acUser().uid); }
     if(!acStageReload(R,L,acMeta(nrev,R))) acToast('マイページとつながりました'); return; }
   // 別の人生どうし → 聞かずに、必ず1つにそろえる（MITSUさん「必ず同じ人生にするように」2026-11-18）。
-  //  そろえる先は「長く見守ってきたほう」（本棚の冊数 → 生まれた日が早いほう）。もう一方は消さずに「しまってある人生」へ。
+  //  そろえる先は「長く見守ってきたほう」（本棚の冊数 → 生まれた日が早いほう）。もう一方は消さずに「保管してある人生」へ。
   const useC=acOlder(C,L);
   if(useC){ await acKeep(L); try{ sessionStorage.setItem('ac.notice',JSON.stringify([acLifeName(C),acLifeName(L)])); }catch(e){} if(!acStageReload(C,L,acMeta(head.rev,C))) acNotice(acLifeName(C),acLifeName(L)); }
   else { await acKeep(C); await acPush(L); acNotice(acLifeName(L),acLifeName(C)); } }
@@ -21299,10 +21299,10 @@ function acOlder(C,L){ const c=acScore(C), l=acScore(L); if(c.a!==l.a) return c.
 function acNotice(nw,nx){ const d=acDlg(); nw=nw||'見守ってきた人生'; nx=nx||'もう一方の人生';
   d.innerHTML=`<div class="frd-in ac-in"><h2>同じ人生に そろえました</h2>
   <p class="frd-lead">これからは、どの端末でも <b>${esc(nw)}</b> の人生を見守ります。</p>
-  <p class="tiny muted">この端末にあった別の人生（${esc(nx)}）は、消さずにマイページの「しまってある人生」に入れました。</p>
+  <p class="tiny muted">この端末にあった別の人生（${esc(nx)}）は、消さずにマイページの「保管してある人生」に入れました。</p>
   <div class="frd-btns"><button class="frd-b frd-pink" id="acOk" type="button" style="grid-column:1/-1">OK</button></div></div>`;
   d.hidden=false; document.body.classList.add('frd-on'); $('#acOk').onclick=acClose; }
-// しまってある人生（選ばなかったほう）：5つまで
+// 保管してある人生（選ばなかったほう）：5つまで
 async function acKeep(m){ const { collection, getDocs, deleteDoc, doc }=FB.D; const id='k'+Date.now().toString(36); await acWriteBlob([...acPath(),'keep',id],m);
   try{ const s=await getDocs(collection(FB.db,...acPath(),'keep')); const a=s.docs.map(x=>({ id:x.id, ...x.data() })).sort((x,y)=>(y.at||0)-(x.at||0));
     for(const k of a.slice(5)){ for(let i=0;i<(k.n||1);i++) await deleteDoc(doc(FB.db,...acPath(),'keep',k.id,'c',String(i))); await deleteDoc(doc(FB.db,...acPath(),'keep',k.id)); } }catch(e){}
@@ -21348,7 +21348,7 @@ function acAgo(t){ if(!t) return ''; const s=Math.round((Date.now()-t)/1000); re
 function acHowHTML(){ return `<div class="ac-how"><p class="ac-how-t">🔰 ログインすると、人生はどうなるの？</p>
   <ol><li><b>はじめての端末</b>で「はじめて登録する」（またはGoogle）→ この端末で見守っている人生が、そのままマイページに入ります。</li>
   <li><b>2台目からの端末</b>で、同じ方法でログイン → マイページの人生が出てきます。<b>前と同じ人生の続き</b>です。</li>
-  <li>その端末にも別の人生があったときは、<b>長く見守ってきた人生</b>に必ずそろいます。もう一方は消えずに「しまってある人生」に残ります。</li></ol>
+  <li>その端末にも別の人生があったときは、<b>長く見守ってきた人生</b>に必ずそろいます。もう一方は消えずに「保管してある人生」に残ります。</li></ol>
   <p class="tiny muted">新しい端末では、「生まれる」を押す前にログインするのがおすすめです。</p></div>`; }
 function acHTML(){ const srv=typeof fbStatusHTML==='function'?fbStatusHTML():'';
   if(typeof FB==='undefined'||!FB) return `<h2>👤 マイページ</h2><p class="frd-lead">ログインすると、スマホでもパソコンでも、同じ1つの人生を見守れます。</p>${srv}<p class="tiny muted">サーバーにつながると、ログインできます。</p>${acHowHTML()}`;
@@ -21375,7 +21375,7 @@ function acHTML(){ const srv=typeof fbStatusHTML==='function'?fbStatusHTML():'';
   <p class="frd-msg" id="acMsg" role="status"></p>`; }
 async function acKeepsFill(){ const box=document.getElementById('acKeeps'); if(!box||!acIn()) return;
   try{ if(!_acKeeps) _acKeeps=await acKeepList(); }catch(e){ return; } if(!_acKeeps.length){ box.innerHTML=''; return; }
-  box.innerHTML=`<h3 class="ac-h3">しまってある人生</h3>`+_acKeeps.map(k=>`<div class="ac-keep"><span>${esc(k.nm||'人生')}<small>${esc(k.dev||'')}・${acAgo(k.at)}にしまいました</small></span><button class="frd-b" type="button" data-ackeep="${esc(k.id)}">この人生にもどす</button></div>`).join('')+`<p class="tiny muted">もどすと、すべての端末でその人生に入れかわり、いまの人生がここにしまわれます。</p>`;
+  box.innerHTML=`<h3 class="ac-h3">保管してある人生</h3>`+_acKeeps.map(k=>`<div class="ac-keep"><span>${esc(k.nm||'人生')}<small>${esc(k.dev||'')}・${acAgo(k.at)}に保管しました</small></span><button class="frd-b" type="button" data-ackeep="${esc(k.id)}">この人生にもどす</button></div>`).join('')+`<p class="tiny muted">もどすと、すべての端末でその人生に入れかわり、いまの人生がここに保管されます。</p>`;
   box.querySelectorAll('[data-ackeep]').forEach(b=>b.onclick=async()=>{ if(b.dataset.sure!=='1'){ b.dataset.sure='1'; b.textContent='もう一度押すと、もどします'; return; } b.disabled=true; acMsg('もどしています…'); try{ await acRestore(b.dataset.ackeep); }catch(e){ acMsg(acErr(e)); } }); }
 function acOpen(){ const d=acDlg(); d.innerHTML=`<div class="frd-in ac-in"><button class="frd-x" type="button" aria-label="閉じる">×</button>${acHTML()}</div>`; d.hidden=false; document.body.classList.add('frd-on');
   d.querySelector('.frd-x').onclick=acClose; const on=(id,f)=>{ const b=document.getElementById(id); if(b) b.onclick=f; };
