@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.66">
+<meta name="lifebook-version" content="v178.67">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.66 (2026-11-19) */ var LB_VER='v178.66';
+/* LIFE BOOK game version: v178.67 (2026-11-19) */ var LB_VER='v178.67';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20868,7 +20868,7 @@ try{ if(PWA_STANDALONE) store.set(KEY_PWASET,Date.now()); }catch(e){}
 window.addEventListener('appinstalled',()=>{ _pwaPrompt=null; _pwaDone=true; try{ store.set(KEY_PWASET,Date.now()); }catch(e){} pwaRefresh(); });
 if('serviceWorker' in navigator && /(github\.io|lifebookworld\.com)$/.test(location.host)) window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.66'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.67'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
@@ -24009,8 +24009,8 @@ function rvPerson(x,y,L,o){ o=o||{}; const k=(o.k||1)*({ baby:.5, toddler:.6, ch
   if(L.beard&&!o.helmet) s+=`<path d="M${F(hx-hr*.35)} ${F(hy+hr*.35)} Q${F(hx+hr*.1)} ${F(hy+hr*1.15)} ${F(hx+hr*.85)} ${F(hy+hr*.55)} Q${F(hx+hr*.4)} ${F(hy+hr*.75)} ${F(hx-hr*.2)} ${F(hy+hr*.3)}Z" fill="${hair}"/>`;
   if(L.ear&&!o.helmet) s+=rvCirc(hx-hr*.25,hy+hr*.4,1*k,'#F2C230');
   if(o.goggles) s+=rvRect(hx+1*k,hy-3.5*k,hr-.5*k,3.4*k,'#7FC4E8',1.4,` stroke="#5A4A3A" stroke-width="${F(.9*k)}"`);
-  s+=rvCirc(hx+4.6*k,hy-.8*k,1.15*k,'#3B2A24')+rvCirc(hx+5.4*k,hy+3*k,1.7*k,'#F29C9C',' opacity=".6"')+`<path d="M${F(hx+5.4*k)} ${F(hy+4.6*k)} q${F(1.6*k)} ${F(1.2*k)} ${F(3*k)} 0" stroke="#5A3A2E" stroke-width="${F(.9*k)}" fill="none" stroke-linecap="round"/>`;
-  if(L.f&&!o.goggles) s+=rvLine(hx+5.4*k,hy-1.6*k,hx+7*k,hy-2.6*k,'#3B2A24',.7*k)+rvCirc(hx+6.6*k,hy+4.4*k,.9*k,'#E8607A');
+  s+=rvCirc(hx+4.6*k,hy-.8*k,1.15*k,'#3B2A24')+rvCirc(hx+5.4*k,hy+3*k,1.7*k,'#F29C9C',' opacity=".6"')+`<path d="M${F(hx+5.4*k)} ${F(hy+4.6*k)} q${F(1.6*k)} ${F(1.2*k)} ${F(3*k)} 0" stroke="${L.f?'#E8607A':'#5A3A2E'}" stroke-width="${F(.9*k)}" fill="none" stroke-linecap="round"/>`; /* v178.67：女性は、口の線を こげ茶にしない（ヒゲに見えるため）。口紅の色の口にする */
+  if(L.f&&!o.goggles) s+=rvLine(hx+5.4*k,hy-1.6*k,hx+7*k,hy-2.6*k,'#3B2A24',.7*k);
   if(L.gl&&!o.goggles) s+=rvCirc(hx+4.9*k,hy-.8*k,2.3*k,'none',` stroke="${L.gl}" stroke-width="${F(.8*k)}"`)+rvLine(hx+2.6*k,hy-1.2*k,hx-hr*.3,hy-1.6*k,L.gl,.7*k);
   return `<g class="rv-rider">${s}</g>`; }
 

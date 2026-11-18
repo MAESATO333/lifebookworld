@@ -77,14 +77,14 @@ function face(L,hx,hy,hr,helm){ var k=hr/9, s='';
   if(L.beard&&!helm) s+=P('M'+f1(hx-hr*.35)+' '+f1(hy+hr*.35)+' Q'+f1(hx+hr*.1)+' '+f1(hy+hr*1.15)+' '+f1(hx+hr*.85)+' '+f1(hy+hr*.55)+' Q'+f1(hx+hr*.4)+' '+f1(hy+hr*.75)+' '+f1(hx-hr*.2)+' '+f1(hy+hr*.3)+'Z',L.st==='elder'?'#D9D6D2':L.hair);
   if(L.must&&!L.beard) s+='<path d="M'+f1(hx+4.4*k)+' '+f1(hy+3.4*k)+' q'+f1(2.2*k)+' '+f1(-1.4*k)+' '+f1(4.6*k)+' '+f1(.2*k)+'" stroke="'+(L.st==='elder'?'#BDB8B2':L.hair)+'" stroke-width="'+f1(1.4*k)+'" fill="none" stroke-linecap="round"/>';
   if(L.ear&&!helm) s+=C(hx-hr*.25,hy+hr*.4,1*k,L.earc);
-  if(L.f) s+=Ln(hx+5.4*k,hy-1.6*k,hx+7*k,hy-2.6*k,'#3B2A24',.7*k)+C(hx+6.6*k,hy+4.4*k,.9*k,'#E8607A');
+  if(L.f) s+=Ln(hx+5.4*k,hy-1.6*k,hx+7*k,hy-2.6*k,'#3B2A24',.7*k);
   if(L.gl) s+=C(hx+4.9*k,hy-.8*k,2.3*k,'none',' stroke="'+L.gl+'" stroke-width="'+f1(.8*k)+'"')+Ln(hx+2.6*k,hy-1.2*k,hx-hr*.3,hy-1.6*k,L.gl,.7*k);
   return s; }
 function alien(L,hx,hy,hr){ var k=hr/9; return Ln(hx-hr*.35,hy-hr*.85,hx-hr*.8,hy-hr*1.8,L.skin,1.1*k)+Ln(hx+hr*.3,hy-hr*.9,hx+hr*.55,hy-hr*1.85,L.skin,1.1*k)+C(hx-hr*.8,hy-hr*1.85,1.6*k,L.anc)+C(hx+hr*.55,hy-hr*1.9,1.6*k,L.anc)
   +'<ellipse cx="'+f1(hx+hr*.42)+'" cy="'+f1(hy-hr*.05)+'" rx="'+f1(2.2*k)+'" ry="'+f1(3*k)+'" fill="#1E1A2E"/>'+C(hx+hr*.5,hy-hr*.22,.8*k,'#FFFFFF')+(L.f?C(hx+hr*.7,hy+hr*.5,1*k,'#F49AB5'):''); }
 function tail(L,hx,hy,hr){ return P('M'+f1(hx-hr*.7)+' '+f1(hy+hr*.1)+' Q'+f1(hx-hr*1.9)+' '+f1(hy+hr*.4)+' '+f1(hx-hr*1.5)+' '+f1(hy+hr*1.6)+' Q'+f1(hx-hr*1.1)+' '+f1(hy+hr*.7)+' '+f1(hx-hr*.5)+' '+f1(hy+hr*.5)+'Z',L.hair); }
 var fn=function(str,seed){ var R0=R; if(seed!=null) R=rng(seed); try{ return str.replace(/<g class="rv-rider"([^>]*)>([\s\S]*?)<\/g>/g,function(m,at,body){ var h=/data-h="([^"]*)"/.exec(at); if(!h) return m; var a=h[1].split(',').map(Number), hx=a[0], hy=a[1], hr=a[2], helm=a[3], L=look();
-    var hc=pk(HELM); body=body.split('#010101').join(L.skin).split('#030303').join(L.shirt).split('#040404').join(L.pants).split('#050505').join(hc);
+    var hc=pk(HELM); body=body.split('#010101').join(L.skin).split('#030303').join(L.shirt).split('#040404').join(L.pants).split('#050505').join(hc); /* 女性（髪が長い人は女性）は、口の線を こげ茶にしない（ヒゲに見えるため）。口紅の色の、にっこりした口にする */ if(L.f&&!L.al){ var ix=body.indexOf('<!--H-->'); if(ix>=0) body=body.slice(0,ix)+body.slice(ix).split('#5A3A2E').join('#E8607A'); }
     body=body.replace('<!--H-->',L.al?alien(L,hx,hy,hr):helm?face(L,hx,hy,hr,1):hair(L,hx,hy,hr)+hat(L,hx,hy,hr)+face(L,hx,hy,hr,0)).replace('<!--P-->',!L.al&&helm&&L.f&&LONG[L.hs]?tail(L,hx,hy,hr):'');
     return '<g class="rv-rider"'+at+(L.al?' data-al="1"':'')+'>'+body+'</g>'; }); } finally { R=R0; } }; fn.defs=pdefs(); return fn;
 })(); var PDEFS=PP.defs;
