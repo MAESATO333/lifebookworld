@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.45">
+<meta name="lifebook-version" content="v178.46">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.45 (2026-11-18) */ var LB_VER='v178.45';
+/* LIFE BOOK game version: v178.46 (2026-11-18) */ var LB_VER='v178.46';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21496,7 +21496,18 @@ function acStart(){ if(_acStarted) return; _acStarted=true; acBtnSync(); documen
 .ac-in .ac-backb{ margin:12px 0 2px; border:2px solid #FFB3C8; color:#D9467A; font-weight:700; }
 .ac-backin{ display:block; width:100%; box-sizing:border-box; margin:14px 0 2px; padding:12px 10px; border-radius:14px; border:2px solid #FFB3C8; background:#fff; color:#D9467A; font:inherit; font-size:15px; font-weight:700; cursor:pointer; }
 .ac-fab{ position:fixed; left:12px; bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:55; padding:11px 16px; border-radius:999px; border:2px solid #fff; background:#FF8FAB; color:#fff; font:inherit; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(217,70,122,.35); }
-@media (max-width:520px){ .ac-in{ padding:14px 14px 16px; } }`;
+@media (max-width:520px){ .ac-in{ padding:14px 14px 16px; } }
+/* 上に並ぶボタン：どのページでも、大きさ・形をそろえる（2026-11-18 MITSUさん） */
+.masthead .mast-r{ flex-wrap:wrap; justify-content:flex-end; gap:8px!important; } .masthead .mastnav{ gap:8px!important; flex-wrap:wrap; } .masthead .meta{ white-space:nowrap; }
+.masthead .mastnav .nav-b,.masthead .fr-top{ box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; gap:6px; height:40px; min-width:0; margin:0!important; padding:0 14px!important; font-size:13px!important; font-weight:700; line-height:1; border-width:2px; border-radius:999px; white-space:nowrap; }
+.masthead .mastnav .nav-b{ box-shadow:0 3px 0 var(--line); } .masthead .fr-top{ box-shadow:0 3px 0 #D85878!important; } .masthead .mastnav .nav-b .ic{ transform:none!important; flex:none; }
+@media (max-width:640px){ .masthead{ justify-content:center; row-gap:12px!important; padding-block:16px 12px; } .masthead .lb-logo{ width:100%; justify-content:center; gap:10px; }
+  .masthead .lb-isle{ width:58px; height:66px; } .masthead .lb-word{ gap:3px; } .masthead .lb-t{ width:30px; height:32px; font-size:19px; border-radius:7px; } .masthead .lb-gap{ width:8px; }
+  .masthead .mast-r{ display:grid!important; grid-template-columns:repeat(3,1fr); gap:6px!important; width:100%; } .masthead .mastnav{ display:contents!important; } .masthead .mast-r .meta{ display:none; }
+  .masthead .mastnav .nav-b,.masthead .fr-top{ width:100%; height:34px; padding:0 3px!important; font-size:11px!important; gap:3px; letter-spacing:0; position:relative; }
+  .masthead .mastnav .nav-b{ box-shadow:0 2px 0 var(--line); } .masthead .fr-top{ box-shadow:0 2px 0 #D85878!important; } .masthead .fr-top::before{ width:12px; height:10px; flex:none; } .masthead .mastnav .nav-b .ic{ width:12px; height:12px; }
+  .masthead .fof-top-n{ position:absolute; top:-7px; right:-3px; min-width:16px; height:16px; padding:0 4px; font-size:10px; box-sizing:border-box; border:1.5px solid #FF8FAA; } .masthead .fof-top>span[aria-hidden]{ display:none; } .masthead .ac-dot{ top:1px; right:3px; } }
+@media (max-width:350px){ .masthead .lb-t{ width:26px; height:28px; font-size:16px; } .masthead .lb-isle{ width:48px; height:55px; } .masthead .mastnav .nav-b,.masthead .fr-top{ font-size:10px!important; gap:2px; } }`;
   const s=document.createElement('style'); s.textContent=css; document.head.appendChild(s);
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',acStart); else acStart(); })();
 </script>
