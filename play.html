@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.36">
+<meta name="lifebook-version" content="v178.37">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.36 (2026-11-18) */ var LB_VER='v178.36';
+/* LIFE BOOK game version: v178.37 (2026-11-18) */ var LB_VER='v178.37';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21323,7 +21323,9 @@ function acErr(e){ const c=String(e&&e.code||''); if(/popup-closed|cancelled-pop
   if(/operation-not-allowed|configuration-not-found/.test(c)) return 'いま準備中です。少し待ってから もう一度どうぞ。';
   if(/network/.test(c)) return '通信が不安定です。もう一度どうぞ。'; return 'うまくいきませんでした（'+c.replace('auth/','')+'）'; }
 async function acAfterLogin(){ acMsg('マイページとつないでいます…'); try{ store.set('hitotsu.fbreg',''); }catch(e){} if(typeof FB!=='undefined'&&FB) FB.uid=acUser().uid;
-  await acSync('login'); acDlgRefresh(); }
+  await acSync('login'); if(_acReloading) return; acDlgRefresh();
+  // 「つないでいます…」が残らないように、終わったら結果を出す
+  acMsg(_acLastErr?'うまくつながりませんでした。「いま保存する」を押してください。':acHasLife(acLocal())?'ログインしました。この人生はマイページに保存されています。':'ログインしました。ほかの端末で見守っている人生は、その端末でも同じ方法でログインすると、ここに出てきます。'); }
 function acGoogle(){ const U=FB.U, u=acUser(), pv=new U.GoogleAuthProvider(); pv.setCustomParameters({ prompt:'select_account' });
   // 小窓はタップのすぐあとに開かないと止められるので、待たずに呼ぶ
   const p=(u&&u.isAnonymous)?U.linkWithPopup(u,pv).catch(e=>{ if(/credential-already-in-use/.test(e&&e.code||'')){ const c=U.GoogleAuthProvider.credentialFromError(e); if(c) return U.signInWithCredential(FB.auth,c); } throw e; }):U.signInWithPopup(FB.auth,pv);
@@ -21418,6 +21420,7 @@ function acStart(){ if(_acStarted) return; _acStarted=true; acBtnSync(); documen
 .ac-l{ display:block; font-size:13px; font-weight:600; margin:8px 0; } .ac-l input{ display:block; width:100%; box-sizing:border-box; margin-top:4px; font:inherit; font-size:16px; padding:11px 12px; border-radius:12px; border:2px solid #F3C6D4; background:#fff; color:#3A2A33; }
 .ac-l input:focus{ outline:3px solid #8EC3E6; outline-offset:1px; } .frd-pink,.ac-in .frd-pink{ background:#FF8FAB; color:#fff; } .ac-card{ background:#fff; border:2px solid #FFD6E1; border-radius:16px; padding:4px 14px; margin:6px 0 10px; } .ac-card p{ margin:10px 0; line-height:1.55; } .ac-card small{ color:#8A7A84; }
 .ac-how{ background:#FFF6FA; border:2px solid #FFD6E1; border-radius:16px; padding:10px 12px; margin:8px 0 10px; } .ac-how-t{ margin:0 0 4px; font-weight:700; font-size:14px; } .ac-how ol{ margin:0; padding-left:1.3em; font-size:13px; line-height:1.6; } .ac-how li{ margin:4px 0; } .ac-how .tiny{ margin:6px 0 0; }
+.ac-in .frd-b{ background:#fff; color:#3A2A33; } .ac-in .frd-sky{ background:#D7EEFF; color:#13324A; } .ac-in .frd-pink{ background:#FF8FAB; color:#fff; } #acOut{ background:#fff; border:2px solid #FFB3C8; color:#D9467A; } .ac-in .frd-msg{ color:#2E7D5B; }
 .ac-sync{ font-size:13px; margin:6px 0; } .ac-h3{ font-size:15px; margin:14px 0 6px; } .ac-keep{ display:flex; align-items:center; gap:8px; border:2px dashed #F3C6D4; border-radius:14px; padding:8px 10px; margin:6px 0; } .ac-keep span{ flex:1; font-size:14px; line-height:1.4; } .ac-keep small{ display:block; color:#8A7A84; font-size:11px; } .ac-keep .frd-b{ width:auto; font-size:12px; padding:8px 10px; }
 .ac-big{ display:block; text-align:left; font-size:14px; padding:14px; margin:8px 0; line-height:1.5; } .ac-big b{ font-size:16px; } .ac-big small{ display:block; font-weight:400; font-size:12px; opacity:.85; } .ac-sub{ background:#fff; border:2px solid #FFB3C8; }
 .ac-note{ margin:12px auto; max-width:560px; background:#FFF6FA; border:2px solid #FFC2D0; border-radius:18px; padding:12px 14px; text-align:center; } .ac-note p{ margin:0 0 10px; font-size:14px; line-height:1.6; } .ac-note .frd-b{ display:inline-flex; padding:10px 18px; }
