@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>運営者情報｜LIFE BOOK</title>
+<style>body{margin:0}</style>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5af5f16575224c8c9596106067decbde"}'></script><!-- End Cloudflare Web Analytics -->
+<style>
+/* デザイン：空に浮かぶブロックの島の絵本。
+   ・角の丸いカードの下に「ブロックの側面」の色帯を付けて、島のような立体感を出す
+   ・ボタンはゲームの「生まれる」と同じ、ピンク×ハートの丸いボタン
+   ・文字は丸ゴシック（Zen Maru Gothic）でやわらかく、太さで強弱をつける */
+:root{
+  --bg:#F2F8FD; --surface:#FFFFFF; --ink:#22304D; --muted:#5D6B85; --line:#DCE8F3; --edge:#D3E3F1;
+  --accent:#3E68B0; --accent-soft:#E3EEFB; --ember:#E0577B; --ember-soft:#FFE6EE;
+  --pink:#FF7E9F; --pink-edge:#E0577B; --grass:#7DCB6A; --grass-edge:#56A045; --sun:#FFD95E; --sun-edge:#E6B53A; --sky:#8FD0F5; --sky-edge:#5EA9D6;
+  --sky-top:#8FD0F5; --sky-bottom:#E6F6FF; --cloud:#FFFFFF;
+  --shadow:0 18px 36px -24px rgba(34,48,77,.45);
+  --round:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --sans:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif; --serif:var(--round);
+  --gutter-l:max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r:max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#13203A; --surface:#1B2B49; --ink:#EAF0FA; --muted:#A9B6CD; --line:#2A3C5E; --edge:#0D172B;
+  --accent:#9CC2F5; --accent-soft:#22355A; --ember:#FF9DB5; --ember-soft:#3A2440;
+  --sky-top:#2C4A6E; --sky-bottom:#7FA6C8; --cloud:#DDE7F2; --shadow:0 18px 36px -24px rgba(0,0,0,.8); color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#13203A; --surface:#1B2B49; --ink:#EAF0FA; --muted:#A9B6CD; --line:#2A3C5E; --edge:#0D172B;
+  --accent:#9CC2F5; --accent-soft:#22355A; --ember:#FF9DB5; --ember-soft:#3A2440;
+  --sky-top:#2C4A6E; --sky-bottom:#7FA6C8; --cloud:#DDE7F2; --shadow:0 18px 36px -24px rgba(0,0,0,.8); color-scheme:dark; }
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.9; letter-spacing:.02em; -webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+img{max-width:100%; display:block}
+:focus-visible{outline:3px solid var(--accent); outline-offset:3px; border-radius:8px}
+.wrap{max-width:1080px; margin:0 auto; padding-left:var(--gutter-l); padding-right:var(--gutter-r)}
+.nw{white-space:nowrap}
+.inapp{background:var(--ember-soft); color:var(--ink); font-size:14px; line-height:1.7; padding-block:12px; padding-left:var(--gutter-l); padding-right:var(--gutter-r)}
+
+/* ヘッダー：上にとどまる小さな帯 */
+.top{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+.top .wrap{display:flex; align-items:center; justify-content:space-between; gap:12px; padding-block:10px}
+.mark{display:flex; align-items:center; gap:8px; font-weight:900; letter-spacing:.12em; font-size:16px; color:var(--ink); text-decoration:none; white-space:nowrap}
+.mark-isle{width:40px; height:46px; flex:none; display:block; margin:-4px 0 -2px; animation:float 5s ease-in-out infinite}
+.mark-isle .pp,.mark-isle .pet{animation:none}
+.mark-txt{display:grid; gap:3px; justify-items:start; line-height:1}
+.mark-tiles{display:flex; gap:2px; font-size:12px; font-family:"Varela Round",var(--round); font-weight:900; letter-spacing:0}
+.mark-tiles .lt{display:grid; place-items:center; width:1.6em; height:1.7em; border-radius:.38em; color:#fff; background:var(--c); box-shadow:inset 0 -3px 0 rgba(0,0,0,.12), 0 3px 0 var(--e)}
+.mark-tiles .gap{width:.3em}
+.mark-txt small{font-size:10px; margin-top:2px}
+@media (min-width:600px){ .mark-txt{display:flex; align-items:center; gap:10px} .mark-tiles{font-size:15px; gap:3px} .mark-txt small{font-size:11px; margin:0} }
+@media (max-width:400px){ .top .btn.small{font-size:12px; padding:7px 12px 6px 10px; letter-spacing:.06em} .mark-isle{width:38px} }
+.mark small{font-size:11px; letter-spacing:.06em; color:var(--muted); font-weight:500}
+
+/* ボタン：ゲームの「生まれる」とおそろいのピンク×ハート */
+.btn{position:relative; display:inline-flex; align-items:center; justify-content:center; gap:12px; white-space:nowrap; text-decoration:none; font-family:var(--round); font-weight:700; letter-spacing:.16em; color:#fff;
+  background:linear-gradient(135deg,#FF9DB5 0%,#FF7E9F 55%,#FFB38A 100%); border:0; border-radius:999px; padding:16px 34px 14px 28px; font-size:19px;
+  box-shadow:0 6px 0 var(--pink-edge), 0 12px 26px rgba(255,110,150,.35); text-shadow:0 2px 0 rgba(224,87,123,.5); transition:transform .15s, box-shadow .15s}
+.btn:hover{transform:translateY(-2px); box-shadow:0 8px 0 var(--pink-edge), 0 16px 30px rgba(255,110,150,.42)}
+.btn:active{transform:translateY(4px); box-shadow:0 2px 0 var(--pink-edge), 0 6px 14px rgba(255,110,150,.3)}
+.btn:focus-visible{outline:3px solid #FFD1DC; outline-offset:4px}
+.btn .hrt{width:26px; height:22px; flex:none; animation:beat 1.6s ease-in-out infinite; filter:drop-shadow(0 2px 0 rgba(224,87,123,.6))}
+.btn .bt{display:grid; line-height:1.25; text-align:left}
+.btn .bt small{font-size:11px; letter-spacing:.06em; font-weight:500; text-shadow:none; opacity:.95}
+.btn.small{font-size:13px; padding:7px 16px 6px 12px; gap:6px; letter-spacing:.1em; box-shadow:0 4px 0 var(--pink-edge)}
+.btn.small .hrt{width:16px; height:14px}
+.btn.small:active{box-shadow:0 1px 0 var(--pink-edge)}
+
+/* 空と島 */
+.sky{background:linear-gradient(180deg,var(--sky-top),var(--sky-bottom)); position:relative; overflow:hidden}
+.sky .clouds{position:absolute; inset:0; pointer-events:none}
+.cloud{position:absolute; fill:var(--cloud); opacity:.95}
+.c1{top:14%; width:120px; animation:drift 60s linear infinite}
+.c2{top:30%; width:80px; animation:drift 85s linear infinite -30s}
+.c3{top:8%; width:64px; animation:drift 110s linear infinite -70s; opacity:.7}
+@keyframes drift{from{transform:translateX(-160px)} to{transform:translateX(110vw)}}
+.sun{position:absolute; top:22px; right:max(22px, env(safe-area-inset-right, 0px)); width:40px; height:40px; background:var(--sun); border-radius:8px; box-shadow:0 0 0 9px rgba(255,217,94,.3); animation:sunpulse 4s ease-in-out infinite}
+@keyframes sunpulse{0%,100%{box-shadow:0 0 0 7px rgba(255,217,94,.25)} 50%{box-shadow:0 0 0 14px rgba(255,217,94,.38)}}
+.sky .wrap{position:relative; z-index:1}
+.island{position:relative; max-width:620px; margin:0 auto; padding-block:34px 6px}
+.island svg{width:100%; height:auto; display:block; animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
+
+.top-sky{background:linear-gradient(180deg,#8FD0F5 0%,#BFE6FB 55%,#E6F6FF 100%); color:#22304D}
+.sky-title{position:relative; text-align:center; padding-top:52px; display:grid; gap:14px; justify-items:center}
+/* タイトル：一文字ずつブロックの上に */
+.title{margin:0; display:flex; flex-wrap:nowrap; justify-content:center; gap:clamp(3px,1vw,10px); font-weight:900; line-height:1; font-size:clamp(22px,6.8vw,64px); letter-spacing:0}
+.title .lt{display:grid; place-items:center; width:1.28em; height:1.36em; padding-top:.06em; border-radius:.22em; color:#fff; background:var(--c); box-shadow:0 .14em 0 var(--e), 0 .3em .5em -.2em rgba(34,48,77,.35); text-shadow:0 .05em 0 var(--e); animation:tilebob 3.2s ease-in-out infinite; animation-delay:calc(var(--i) * -.37s)}
+.title .gap{width:.36em}
+@keyframes tilebob{0%,100%{transform:translateY(0)} 50%{transform:translateY(-.08em)}}
+.sub{margin:0; display:inline-block; background:rgba(255,255,255,.85); color:#3E68B0; font-weight:700; letter-spacing:.2em; font-size:clamp(13px,3.6vw,16px); padding:5px 16px 5px 20px; border-radius:999px; box-shadow:0 4px 0 rgba(94,169,214,.45)}
+.top-sky .island{padding-block:6px 0; max-width:520px}
+.worlds{position:relative; z-index:1; padding-block:6px 18px; overflow:hidden}
+.worlds-title{font-weight:700; text-align:center; font-size:clamp(14px,3.8vw,17px); letter-spacing:.08em; margin:0 0 6px; padding-inline:16px; color:#22304D}
+.drift{display:flex; width:max-content; animation:slide 70s linear infinite}
+.drift:hover{animation-play-state:paused}
+@keyframes slide{from{transform:translateX(0)} to{transform:translateX(-50%)}}
+.isle{margin:0; width:clamp(150px,36vw,230px); flex:none; text-align:center}
+.isle svg{width:100%; height:auto; display:block; animation:float 5s ease-in-out infinite}
+.isle:nth-child(3n+1) svg{animation-delay:-1.6s} .isle:nth-child(3n+2) svg{animation-delay:-3.1s}
+.isle figcaption{display:inline-grid; justify-items:center; background:#fff; border-radius:14px; padding:4px 12px 3px; font-size:11px; line-height:1.5; color:#22304D; margin-top:-8px; position:relative; max-width:92%; box-shadow:0 3px 0 #D3E3F1}
+.isle figcaption b{font-size:13px; font-weight:700}
+.isle figcaption span{color:#5D6B85}
+
+/* 開いてからの人数 */
+.world-now{position:relative; max-width:640px; margin:0 auto; padding-block:4px 30px}
+.wn-title{font-weight:700; text-align:center; color:#22304D; letter-spacing:.1em; font-size:15px; margin:0 0 12px}
+.wn-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+.wn-card{display:flex; align-items:center; gap:10px; background:#fff; border-radius:20px; padding:12px 14px; min-width:0; box-shadow:0 5px 0 #CFE3F2}
+.wn-card.wide{grid-column:1 / -1; justify-content:center}
+.wn-ico{width:54px; flex:none} .wn-card.wide .wn-ico{width:60px}
+.wn-ico svg{width:100%; height:auto; display:block}
+.wn-txt{min-width:0; display:flex; flex-wrap:wrap; align-items:baseline; gap:0 4px; color:#22304D}
+.wn-txt span{width:100%; font-size:12px; color:#5D6B85; letter-spacing:.06em; font-weight:500}
+.wn-txt b{font-weight:900; font-size:clamp(24px,7vw,34px); line-height:1.2; font-variant-numeric:tabular-nums; display:inline-block}
+.wn-card.wide .wn-txt b{font-size:clamp(20px,5.6vw,30px)}
+.wn-txt small{font-size:12px; color:#5D6B85}
+.wn-txt b.pop{animation:pop .45s ease}
+@keyframes pop{0%{transform:scale(1)} 40%{transform:scale(1.18)} 100%{transform:scale(1)}}
+.bob{animation:bob 2.4s ease-in-out infinite} .bob2{animation:bob 3s ease-in-out infinite -1s}
+@keyframes bob{0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)}}
+.wn-src{font-size:11px; color:#3E4858; text-align:center; margin:12px 0 0; line-height:1.6}
+
+/* ヒーロー */
+.hero .wrap{padding-block:40px 40px; display:grid; gap:22px; justify-items:center; text-align:center}
+.lead{font-weight:700; font-size:clamp(21px,5.6vw,34px); line-height:1.65; letter-spacing:.06em; margin:0; text-wrap:balance}
+.lead em{font-style:normal; color:var(--ember)}
+.cta{display:grid; justify-items:center; gap:12px}
+.hero-note{font-size:13px; color:var(--muted); margin:6px 0 0}
+.hero-meet{display:flex; gap:12px; align-items:center; text-align:left; max-width:480px; margin:10px auto 0; background:var(--surface); border-radius:20px; padding:12px 16px; color:inherit; text-decoration:none; font-size:14px; line-height:1.6; box-shadow:0 5px 0 var(--edge); transition:transform .15s}
+.hero-meet:hover{transform:translateY(-2px)}
+.hero-meet b{color:var(--ember)}
+
+/* 目次：ブロックのボタン */
+.toc .wrap{padding-block:10px 20px}
+.toc h2{font-size:14px; font-weight:700; letter-spacing:.3em; color:var(--muted); margin:0 0 12px; text-align:center}
+.toc ol{list-style:none; margin:0 auto; padding:0; max-width:980px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+.toc li:last-child:nth-child(odd){grid-column:1 / -1}
+.toc li a{display:flex; align-items:center; gap:12px; height:100%; padding:12px 14px; background:var(--surface); border-radius:18px; text-decoration:none; color:var(--ink); box-shadow:0 5px 0 var(--edge); transition:transform .15s, box-shadow .15s}
+.toc li a:hover{transform:translateY(-2px); box-shadow:0 7px 0 var(--edge)}
+.toc li a:active{transform:translateY(3px); box-shadow:0 2px 0 var(--edge)}
+.toc .no{flex:none; display:grid; place-items:center; width:40px; height:40px; border-radius:11px; background:var(--c); box-shadow:0 4px 0 var(--e); color:#fff; font-weight:900; font-size:18px; text-shadow:0 2px 0 var(--e)}
+.toc .t{display:grid; line-height:1.4; font-weight:700; font-size:15px; min-width:0}
+.toc .t small{font-size:11px; font-weight:500; color:var(--muted); letter-spacing:.1em}
+.toc .dots,.toc .pg{display:none}
+
+/* ブロックの色（5色） */
+.c-pink{--c:#FF8FAB; --e:#E0577B} .c-sun{--c:#FFC94A; --e:#D9A12A} .c-grass{--c:#7DCB6A; --e:#56A045} .c-sky{--c:#6DBDEB; --e:#3F95C9} .c-lila{--c:#B39CF0; --e:#8A72CF}
+
+/* 章 */
+.chapter{padding-block:64px 16px}
+.ch-head{display:grid; justify-items:center; gap:10px; margin-bottom:30px; text-align:center}
+.ch-no{display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; letter-spacing:.2em; color:var(--muted)}
+.ch-no::before{content:""; width:14px; height:14px; border-radius:4px; background:var(--c,#7DCB6A); box-shadow:0 3px 0 var(--e,#56A045); margin-bottom:3px}
+.ch-title{font-weight:900; font-size:clamp(26px,6.6vw,38px); letter-spacing:.08em; margin:0; line-height:1.4; text-wrap:balance}
+.ch-rule{display:none}
+.prose{max-width:36em; margin:0 auto}
+.prose p{margin:0 0 1.1em}
+.lead-card{max-width:760px; margin:0 auto; background:var(--surface); border-radius:26px; padding:26px clamp(20px,5vw,40px) 10px; box-shadow:0 6px 0 var(--edge)}
+.prose .big{font-weight:700; font-size:clamp(18px,4.8vw,22px); line-height:1.9; color:var(--ink)}
+.lead-card p{color:var(--muted)}
+.lead-card .big{color:var(--ink)}
+
+/* 数字のブロック */
+.facts{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:26px auto; max-width:760px}
+.fact{background:var(--c); color:#fff; padding:16px 8px 14px; text-align:center; min-width:0; border-radius:20px; box-shadow:0 6px 0 var(--e)}
+.fact b{display:block; font-weight:900; font-size:clamp(26px,7vw,40px); line-height:1.2; font-variant-numeric:tabular-nums; text-shadow:0 2px 0 var(--e)}
+.fact b small{font-size:.45em; margin-left:2px}
+.fact span{display:block; font-size:12px; line-height:1.6; margin-top:6px; font-weight:500}
+
+/* 絵のカード */
+.art{border-radius:20px; overflow:hidden; background:#E6F6FF; line-height:0; aspect-ratio:360/220; max-width:100%}
+.art svg{width:100%; height:100%; display:block}
+.ages{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 12px; max-width:980px; margin:30px auto 0}
+.age{margin:0; min-width:0; background:var(--surface); border-radius:22px; padding:8px 8px 12px; box-shadow:0 5px 0 var(--edge)}
+.age figcaption{font-size:13px; margin:10px 6px 0; line-height:1.6; display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 8px}
+.age figcaption b{font-weight:900; font-size:13px; color:#fff; background:var(--accent); border-radius:999px; padding:1px 10px}
+.cards{display:grid; grid-template-columns:minmax(0,1fr); gap:20px; max-width:980px; margin:0 auto}
+.card{min-width:0; display:grid; gap:4px; align-content:start; background:var(--surface); border-radius:26px; padding:10px 10px 18px; box-shadow:0 6px 0 var(--edge)}
+.card .body{padding:10px 10px 0}
+.card h3{display:flex; align-items:center; gap:10px; font-weight:900; font-size:19px; letter-spacing:.04em; margin:0 0 6px; line-height:1.4}
+.card h3::before{content:""; flex:none; width:14px; height:14px; border-radius:4px; background:var(--c); box-shadow:0 3px 0 var(--e); margin-bottom:3px}
+.card p{margin:0; font-size:15px; color:var(--muted); line-height:1.85}
+.orb{animation:glow 2.6s ease-in-out infinite; transform-origin:250px 44px}
+@keyframes glow{0%,100%{opacity:.75; transform:scale(1)} 50%{opacity:1; transform:scale(1.15)}}
+@media (min-width:640px){ .cards{grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px} .card:first-child{grid-column:1 / -1} }
+@media (min-width:980px){ .cards{grid-template-columns:repeat(6,minmax(0,1fr))} .card{grid-column:span 2} .card:nth-child(-n+2){grid-column:span 3} .ages{grid-template-columns:repeat(4,minmax(0,1fr))} }
+
+/* 遊び方 */
+.steps{list-style:none; padding:0; margin:0 auto; max-width:680px; counter-reset:s; display:grid; gap:14px}
+.steps li{counter-increment:s; display:grid; grid-template-columns:44px minmax(0,1fr); gap:2px 14px; padding:14px 16px; background:var(--surface); border-radius:20px; box-shadow:0 5px 0 var(--edge)}
+.steps li::before{content:counter(s); grid-row:span 2; display:grid; place-items:center; width:44px; height:44px; border-radius:12px; background:#7DCB6A; box-shadow:0 4px 0 #56A045; color:#fff; font-weight:900; font-size:20px; text-shadow:0 2px 0 #56A045}
+.steps li:nth-child(5n+2)::before{background:#6DBDEB; box-shadow:0 4px 0 #3F95C9; text-shadow:0 2px 0 #3F95C9}
+.steps li:nth-child(5n+3)::before{background:#FF8FAB; box-shadow:0 4px 0 #E0577B; text-shadow:0 2px 0 #E0577B}
+.steps li:nth-child(5n+4)::before{background:#FFC94A; box-shadow:0 4px 0 #D9A12A; text-shadow:0 2px 0 #D9A12A}
+.steps li:nth-child(5n+5)::before{background:#B39CF0; box-shadow:0 4px 0 #8A72CF; text-shadow:0 2px 0 #8A72CF}
+.steps b{font-weight:900; font-size:17px; letter-spacing:.03em; align-self:center}
+.steps p{margin:0; font-size:14px; color:var(--muted); line-height:1.8}
+
+/* 紹介した人と、人生で出会う */
+.meet{background:linear-gradient(180deg,var(--bg),var(--ember-soft) 30%,var(--accent-soft)); margin-top:48px}
+.meet-lead{font-weight:700; font-size:clamp(17px,4.6vw,23px); line-height:1.9; text-align:center; margin:0 auto 14px; max-width:640px}
+.meet-lead em{font-style:normal; color:var(--ember)}
+.pair{display:grid; grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr); align-items:center; max-width:620px; margin:0 auto}
+.pair .isle{width:auto}
+.pair .heart{width:54px; height:auto; animation:beat 1.6s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}45%{transform:scale(1.12)}}
+.notes{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; max-width:620px; margin:18px auto 24px}
+.note{display:flex; gap:10px; align-items:center; background:var(--surface); border-radius:18px; padding:10px 12px; box-shadow:0 5px 0 var(--edge); min-width:0; animation:notepop 5s ease-in-out infinite}
+.note:nth-child(2){animation-delay:-2.5s}
+@keyframes notepop{0%,80%,100%{transform:translateY(0)} 86%{transform:translateY(-4px)} 92%{transform:translateY(0)}}
+.note small{display:block; font-size:11px; color:var(--muted); letter-spacing:.06em}
+.note b{display:block; font-size:14px; line-height:1.5}
+.bell{flex:none; width:32px; height:32px; border-radius:10px; box-shadow:0 3px 0 var(--pink-edge); background:var(--pink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%23fff' d='M3 0h2v1h1v2h1v2h1v1H0V5h1V3h1V1h1zM3 6h2v1H3z'/%3E%3C/svg%3E") center/18px no-repeat}
+.meet-steps{list-style:none; counter-reset:m; padding:0; max-width:620px; margin:0 auto; display:grid; gap:12px}
+.meet-steps li{counter-increment:m; position:relative; background:var(--surface); border-radius:18px; padding:12px 14px 12px 58px; box-shadow:0 5px 0 var(--edge)}
+.meet-steps li::before{content:counter(m); position:absolute; left:14px; top:13px; width:30px; height:30px; border-radius:9px; background:var(--pink); box-shadow:0 3px 0 var(--pink-edge); color:#fff; font-weight:900; display:grid; place-items:center; font-size:15px}
+.meet-steps b{display:block; font-weight:900; font-size:16px}
+.meet-steps li>span{font-size:14px; color:var(--muted)}
+.meet-last{text-align:center; font-weight:700; font-size:16px; line-height:1.9; margin:24px auto 0}
+@media (max-width:520px){.notes{grid-template-columns:1fr}.pair{grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr)}.pair .heart{width:36px}}
+@media (min-width:521px){br.sp{display:none}}
+.tbd{display:inline-block; font-size:11px; letter-spacing:.08em; color:var(--ember); background:var(--ember-soft); border-radius:999px; padding:0 8px; line-height:1.8; vertical-align:2px; margin-left:6px; font-weight:700}
+
+/* よくある質問 */
+.faq{max-width:720px; margin:0 auto; display:grid; gap:12px}
+.faq details{background:var(--surface); border-radius:18px; box-shadow:0 5px 0 var(--edge); padding:0 18px}
+.faq summary{cursor:pointer; list-style:none; padding:16px 40px 16px 0; position:relative; font-weight:700; font-size:16px; line-height:1.6}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"＋"; position:absolute; right:0; top:14px; width:28px; height:28px; display:grid; place-items:center; border-radius:9px; background:var(--accent-soft); color:var(--accent); font-weight:900; font-size:14px}
+.faq details[open] summary::after{content:"－"; background:var(--pink); color:#fff}
+.faq .a{padding:0 0 16px; color:var(--muted); font-size:15px}
+.faq .a p{margin:0}
+
+/* 運営者（別ページ） */
+.info{max-width:720px; margin:0 auto; background:var(--surface); border-radius:22px; box-shadow:0 5px 0 var(--edge); padding:6px 20px}
+.info div{display:grid; grid-template-columns:7.5em minmax(0,1fr); gap:12px; padding:14px 0; border-bottom:1px solid var(--line); font-size:15px}
+.info div:last-child{border-bottom:0}
+.info dt{color:var(--muted); font-size:13px; padding-top:2px; font-weight:700}
+.info dd{margin:0; overflow-wrap:anywhere}
+
+/* 最後の呼びかけ */
+.closing{margin-top:64px}
+.closing .wrap{padding-block:48px 64px; text-align:center; display:grid; gap:24px; justify-items:center}
+.closing p{font-weight:700; font-size:clamp(17px,4.6vw,26px); line-height:1.8; margin:0; letter-spacing:.05em; text-wrap:balance; color:#22304D}
+.closing .cloud{opacity:.6}
+footer{font-size:12px; color:var(--muted); background:var(--bg)}
+footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px; justify-content:space-between; align-items:center}
+.foot-link{color:var(--muted); font-size:11px; text-decoration:underline; text-underline-offset:2px}
+
+/* 丸い字は見出し・ボタン・ラベルだけ。本文は読みやすいゴシック */
+.title,.sub,.mark,.btn,.worlds-title,.wn-title,.wn-txt b,.lead,.toc h2,.toc .no,.toc .t,.ch-no,.ch-title,.fact b,.age figcaption b,.card h3,.steps li::before,.steps b,.meet-lead,.meet-steps b,.meet-steps li::before,.faq summary,.meet-last,.closing p,.isle figcaption b,.note b{font-family:var(--round)}
+.prose .big{font-family:var(--sans); font-weight:700}
+/* 絵の動き（少しずつ） */
+.scene > g[fill="#FFFFFF"]{animation:cloudsway 9s ease-in-out infinite alternate}
+.scene > g[fill="#FFFFFF"]:nth-of-type(2n){animation-duration:12s; animation-delay:-4s}
+.scene > g[fill="#FFFFFF"]:nth-of-type(3n){animation-duration:7s; animation-delay:-2s}
+@keyframes cloudsway{from{translate:-10px 0} to{translate:14px 0}}
+.scene > rect[opacity=".25"]{transform-box:fill-box; transform-origin:center; animation:sunglow 4s ease-in-out infinite}
+@keyframes sunglow{0%,100%{scale:1; opacity:.25} 50%{scale:1.25; opacity:.45}}
+.scene > g[transform="translate(0 18)"]{animation:islefloat 6s ease-in-out infinite}
+@keyframes islefloat{0%,100%{translate:0 0} 50%{translate:0 -4px}}
+.pp{animation:walk 7s ease-in-out infinite}
+.pp:nth-of-type(2n){animation-delay:-2.3s; animation-duration:8.5s; animation-direction:reverse}
+.pp:nth-of-type(3n){animation-delay:-4.1s; animation-duration:6.2s}
+/* 島の上を、斜めの道にそって行ったり来たり。歩くたびに小さく弾む */
+@keyframes walk{
+  0%{translate:0 0} 6%{translate:1.0px -1.2px} 12%{translate:2.1px 1.0px} 18%{translate:3.1px 0.6px} 24%{translate:4.2px 2.1px}
+  30%{translate:5.2px 1.6px} 36%{translate:6.3px 3.1px} 44%{translate:6.3px 3.1px}
+  50%{translate:5.2px 1.6px} 56%{translate:4.2px 2.1px} 62%{translate:3.1px 0.6px} 68%{translate:2.1px 1.0px} 74%{translate:1.0px -1.2px} 80%{translate:0 0}
+  86%{translate:0 -3px} 92%{translate:0 0} 100%{translate:0 0}}
+.pet{animation:petwalk 4.5s ease-in-out infinite}
+@keyframes petwalk{
+  0%,100%{translate:0 0} 10%{translate:-2px -2px} 20%{translate:-4px 2px} 30%{translate:-6px -1px} 40%{translate:-8px 4px} 50%{translate:-8px 4px}
+  60%{translate:-6px -1px} 70%{translate:-4px 2px} 80%{translate:-2px -2px} 90%{translate:0 0}}
+.shelf > g > g:nth-child(n+7):nth-child(-n+17){transform-box:fill-box; transform-origin:50% 100%; animation:bookwig 5s ease-in-out infinite}
+.shelf > g > g:nth-child(2n){animation-delay:-1.3s}
+.shelf > g > g:nth-child(3n){animation-delay:-2.6s; animation-duration:6.5s}
+@keyframes bookwig{0%,70%,100%{translate:0 0; rotate:0deg} 78%{translate:0 -3px; rotate:-2deg} 86%{translate:0 0; rotate:1deg} 92%{rotate:0deg}}
+.wn-card.wide .wn-ico svg{animation:bob 4s ease-in-out infinite}
+
+@media (min-width:860px){
+  .toc ol{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .toc li:last-child:nth-child(odd){grid-column:auto}
+  .toc li a{flex-direction:column; text-align:center; padding:16px 10px}
+  .toc .t{justify-items:center}
+  .island{padding-block:46px 10px}
+}
+@media (max-width:420px){ .fact span{font-size:11px} .btn{font-size:17px; padding:14px 26px 12px 22px} }
+@media (prefers-reduced-motion:reduce){
+  .island svg,.cloud,.bob,.bob2,.wn-txt b.pop,.orb,.drift,.isle svg,.pair .heart,.scene > g,.scene > rect,.pp,.pet,.shelf > g > g,.wn-ico svg,.title .lt,.btn .hrt,.mark-isle,.note,.sun{animation:none}
+  .worlds{overflow-x:auto}
+  html{scroll-behavior:auto}
+  .btn,.toc li a,.hero-meet{transition:none}
+}
+</style>
+<style>.back{display:inline-block; margin:18px 0 0; font-size:13px; color:var(--muted)} .company-main{padding-bottom:40px}</style>
+</head>
+<body>
+<main class="company-main">
+  <div class="wrap"><a class="back" href="./">← LIFE BOOK のページにもどる</a></div>
+  <!-- 運営者情報 -->
+  <section class="chapter" id="company">
+    <div class="wrap">
+      <header class="ch-head">
+        <span class="ch-no">LIFE BOOK</span>
+        <h2 class="ch-title">運営者情報</h2>
+        <div class="ch-rule"></div>
+      </header>
+      <dl class="info">
+        <div><dt>サービス名</dt><dd>LIFE BOOK（ライフブック）</dd></div>
+        <div><dt>運営者</dt><dd>（準備中）<span class="tbd">確認中</span></dd></div>
+        <div><dt>所在地</dt><dd>（準備中）<span class="tbd">確認中</span></dd></div>
+        <div><dt>お問い合わせ</dt><dd>（準備中）<span class="tbd">確認中</span></dd></div>
+        <div><dt>主な統計の出典</dt><dd>Gapminder（世界の人口・寿命・所得など）、文部科学省、厚生労働省ほか。ゲームの中の振り返りに、出典の一覧があります。</dd></div>
+        <div><dt>プライバシー</dt><dd>遊んだ記録は、遊ぶ人のブラウザの中にだけ保存されます。訪問者数を知るために Cloudflare Web Analytics を使っています。Cookieは使わず、お名前など個人を特定する情報は集めません。友だち紹介でつながるために、呼び名とランダムな記号を Google Firebase に保存します。本名・メール・位置情報は保存しません。<span class="tbd">確認中</span></dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span>© LIFE BOOK</span><span>人生のヒントが、ここにある</span></div></footer>
+</body>
+</html>

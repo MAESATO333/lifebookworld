@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>LIFE BOOK 管理者ページ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F8FD; --card:#FFFFFF; --ink:#1F2A3C; --ink2:#55637A; --muted:#8792A6; --line:#DCE6F0;
+  --pink:#E8667E; --pink2:#FF8FAB; --pinksoft:#FDE7EC; --bar:#E8667E; --barsoft:#F6B9C5;
+  --round:"Zen Maru Gothic",system-ui,sans-serif; --sans:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#13203A; --card:#1B2A47; --ink:#EEF3FA; --ink2:#B9C5D8; --muted:#8C9AB2; --line:#2C3D5E;
+  --pink:#FF8FAB; --pink2:#FFB0C3; --pinksoft:#3A2740; --bar:#FF8FAB; --barsoft:#7A4A5C; } }
+*{ box-sizing:border-box; }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.7; }
+.wrap{ max-width:980px; margin:0 auto; padding:20px 16px 60px; }
+header{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+h1{ font-family:var(--round); font-weight:900; font-size:22px; margin:0; letter-spacing:.02em; }
+h1 small{ display:block; font-size:12px; font-weight:700; color:var(--muted); letter-spacing:.1em; }
+h2{ font-family:var(--round); font-size:18px; margin:0 0 4px; }
+.sub{ color:var(--muted); font-size:13px; margin:0 0 14px; }
+.btn{ font-family:var(--round); font-weight:700; font-size:15px; border:0; border-radius:999px; padding:10px 22px; cursor:pointer; background:var(--pink); color:#fff; text-decoration:none; display:inline-block; }
+.btn.ghost{ background:transparent; color:var(--pink); box-shadow:inset 0 0 0 2px var(--pink); }
+.btn:focus-visible{ outline:3px solid var(--pink2); outline-offset:2px; }
+.card{ background:var(--card); border-radius:18px; padding:20px; margin-bottom:16px; box-shadow:0 1px 0 var(--line); }
+.center{ text-align:center; padding:48px 20px; }
+.tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:16px; }
+.tile{ background:var(--card); border-radius:16px; padding:14px 16px; }
+.tile .k{ font-size:13px; color:var(--ink2); }
+.tile .v{ font-family:var(--round); font-weight:900; font-size:32px; line-height:1.2; }
+.tile .v small{ font-size:14px; font-weight:700; margin-left:2px; }
+.tile .s{ font-size:12px; color:var(--muted); }
+.seg{ display:inline-flex; background:var(--bg); border-radius:999px; padding:3px; gap:2px; flex-wrap:wrap; }
+.seg button{ font-family:var(--sans); font-size:13px; border:0; background:transparent; color:var(--ink2); padding:6px 12px; border-radius:999px; cursor:pointer; }
+.seg button[aria-pressed="true"]{ background:var(--card); color:var(--ink); font-weight:700; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.row{ display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-bottom:12px; }
+/* 日ごとの棒 */
+.days{ position:relative; display:flex; align-items:flex-end; gap:2px; height:180px; border-bottom:1px solid var(--line); padding-top:8px; }
+.days .d{ flex:1 1 0; min-width:2px; height:100%; display:flex; align-items:flex-end; cursor:default; position:relative; }
+.days .d i{ display:block; width:100%; background:var(--bar); border-radius:4px 4px 0 0; min-height:0; }
+.days .d:hover i, .days .d:focus i{ background:var(--pink2); }
+.axis{ display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:4px; }
+.tip{ position:fixed; pointer-events:none; background:var(--ink); color:var(--bg); font-size:12px; padding:6px 10px; border-radius:8px; white-space:nowrap; z-index:9; display:none; }
+/* 横棒 */
+.hb{ display:grid; grid-template-columns:minmax(80px,10em) 1fr 3.5em; gap:6px 10px; align-items:center; font-size:14px; }
+.hb .n{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--ink2); }
+.hb .b{ height:14px; background:var(--bg); border-radius:4px; overflow:hidden; }
+.hb .b i{ display:block; height:100%; background:var(--bar); border-radius:0 4px 4px 0; }
+.hb .c{ text-align:right; font-variant-numeric:tabular-nums; }
+.two{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media (max-width:720px){ .two{ grid-template-columns:1fr; } }
+table{ width:100%; border-collapse:collapse; font-size:14px; }
+th,td{ text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+th{ font-size:12px; color:var(--muted); font-weight:500; }
+td.num, th.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.tablewrap{ overflow-x:auto; }
+.groups{ display:flex; flex-direction:column; gap:10px; }
+.grp{ border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+.grp .h{ font-size:12px; color:var(--muted); margin-bottom:4px; }
+.chip{ display:inline-block; background:var(--pinksoft); color:var(--ink); border-radius:999px; padding:2px 10px; margin:2px 4px 2px 0; font-size:13px; }
+.chip b{ color:var(--pink); font-weight:700; margin-left:4px; }
+.empty{ color:var(--muted); font-size:14px; padding:12px 0; }
+.note{ font-size:12px; color:var(--muted); margin-top:10px; }
+.err{ color:var(--pink); font-weight:700; }
+.who{ font-size:13px; color:var(--ink2); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+[hidden]{ display:none !important; }
+/* Over Soul Message */
+.osm-card{ border:2px solid #CDB8F5; }
+.osm-card h2{ color:#8A5CD6; }
+textarea{ width:100%; font-family:var(--sans); font-size:16px; line-height:1.8; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:12px 14px; resize:vertical; }
+textarea:focus{ outline:2px solid var(--pink2); }
+.osm-item{ border-top:1px dashed var(--line); padding:10px 0; display:flex; gap:12px; align-items:flex-start; }
+.osm-item .tx{ flex:1; min-width:0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.osm-item .dt{ font-size:12px; color:var(--muted); display:block; }
+.btn.small{ font-size:13px; padding:6px 14px; }
+/* LIFE BOOKのニュース */
+.news-card{ border:2px solid #F5C77A; }
+.news-card h2{ color:#C98A1E; }
+.news-card input[type=text]{ width:100%; font-family:var(--sans); font-size:16px; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin-bottom:8px; }
+.news-card input[type=text]:focus{ outline:2px solid var(--pink2); }
+.osm-item .tx b{ display:block; }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><small>LIFE BOOK</small>管理者ページ</h1>
+    <div class="who" id="who" hidden><span id="whoName"></span><button class="btn ghost" id="logout" type="button">ログアウト</button></div>
+  </header>
+
+  <div class="card center" id="gate">
+    <h2>運営者だけが見られるページです</h2>
+    <p class="sub">登録したGoogleアカウントでログインしてください。</p>
+    <button class="btn" id="login" type="button">Googleでログイン</button>
+    <p id="gateMsg" class="note"></p>
+  </div>
+
+  <main id="main" hidden>
+    <div class="row">
+      <div class="seg" id="range" role="group" aria-label="期間">
+        <button type="button" data-r="7">7日</button><button type="button" data-r="30" aria-pressed="true">30日</button><button type="button" data-r="90">90日</button><button type="button" data-r="0">ぜんぶ</button>
+      </div>
+      <span class="note" id="updated"></span>
+    </div>
+
+    <section class="card osm-card" id="osmCard">
+      <h2>Over Soul Message</h2>
+      <p class="sub">ここに書いて「送る」を押すと、ゲームのホームの「人生のヒント」のすぐ上に、参加者みんなに表示されます。いちばん新しいメッセージが大きく出て、前のものは「これまでのメッセージ」にたまります。</p>
+      <textarea id="osmText" rows="4" maxlength="400" placeholder="魂に響くメッセージを書いてください（400字まで・改行できます）"></textarea>
+      <div class="row" style="margin:8px 0 0"><span class="note" id="osmCount" style="margin:0">0 / 400字</span><button class="btn" id="osmSend" type="button">送る</button></div>
+      <p class="note" id="osmMsg"></p>
+      <h2 style="font-size:15px;margin-top:14px">送ったメッセージ</h2>
+      <div id="osmList"><p class="empty">読みこみ中…</p></div>
+    </section>
+
+    <section class="card news-card" id="newsCard">
+      <h2>✨ LIFE BOOKのニュース</h2>
+      <p class="sub">ここに書いて「のせる」を押すと、ゲームのホームの「LIFE BOOKのニュース」に、参加者みんなに表示されます。新しいものから3つが出て、のこりは「これまでのニュース」にたまります。</p>
+      <input type="text" id="newsTitle" maxlength="60" placeholder="題（60字まで）">
+      <textarea id="newsBody" rows="4" maxlength="600" placeholder="説明（600字まで・改行できます）"></textarea>
+      <div class="row" style="margin:8px 0 0"><span class="note" id="newsCount" style="margin:0">0 / 600字</span><button class="btn" id="newsSend" type="button">のせる</button></div>
+      <p class="note" id="newsMsg"></p>
+      <h2 style="font-size:15px;margin-top:14px">のせたニュース</h2>
+      <div id="newsList"><p class="empty">読みこみ中…</p></div>
+    </section>
+
+    <div class="tiles" id="tiles"></div>
+
+    <section class="card">
+      <div class="row">
+        <div><h2>日ごとの推移</h2><p class="sub" id="dayNote" style="margin:0"></p></div>
+        <div class="seg" id="metric" role="group" aria-label="表示する数">
+          <button type="button" data-m="o" aria-pressed="true">遊んだ人</button><button type="button" data-m="b">生まれた人生</button><button type="button" data-m="d">一生を終えた</button><button type="button" data-m="f">紹介でつながった</button>
+        </div>
+      </div>
+      <div class="days" id="days" role="img"></div>
+      <div class="axis"><span id="axL"></span><span id="axR"></span></div>
+    </section>
+
+    <section class="card">
+      <h2>紹介のつながり</h2>
+      <p class="sub">紹介でつながった人どうしを、ひとつの輪にまとめています。名前はゲームの中の呼び名です（呼び名が無い人は「名前なし」）。</p>
+      <div id="friends"></div>
+    </section>
+
+    <div class="two">
+      <section class="card">
+        <h2>生まれた国</h2>
+        <p class="sub">期間中に生まれた人生の国（多い順に15か国）</p>
+        <div id="countries"></div>
+      </section>
+      <section class="card">
+        <h2>寿命の長さ</h2>
+        <p class="sub" id="ageNote">期間中に一生を終えた人生の、亡くなった年齢</p>
+        <div id="ages"></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>迷う場面での判断</h2>
+      <p class="sub">遊ぶ人が「インスピレーションを贈る」か「見守る」かを選んだ回数と、贈ったときに本人に届いた割合</p>
+      <div class="tablewrap"><table id="votes"></table></div>
+    </section>
+
+    <section class="card">
+      <h2>サイトの訪問者数</h2>
+      <p class="sub">紹介サイトやゲームのページを見た人の数は、Cloudflare の画面で見られます。</p>
+      <a class="btn" href="https://dash.cloudflare.com/?to=/:account/web-analytics" target="_blank" rel="noopener">Cloudflare で訪問者数を見る</a>
+    </section>
+
+    <p class="note">「遊んだ人」はゲームをひらいた端末の数を1日ごとに数えたものです（同じ人が別の日にひらくと、それぞれの日に1と数えます）。数は名前を含まない記録から作っています。</p>
+  </main>
+</div>
+<div class="tip" id="tip"></div>
+
+<script type="module">
+const FB_CONFIG={ apiKey:'AIzaSyAIRsa8yqxJAQymZYMShzFxGCjOhidhMTs', authDomain:'lifebook-dcae9.firebaseapp.com', projectId:'lifebook-dcae9', storageBucket:'lifebook-dcae9.firebasestorage.app', messagingSenderId:'707474989249', appId:'1:707474989249:web:d44ee7d10b4a658fd73440' };
+const base='https://www.gstatic.com/firebasejs/10.14.1/';
+const [A,U,D]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);
+const app=A.initializeApp(FB_CONFIG,'admin'); const auth=U.getAuth(app); const db=D.getFirestore(app);
+if(window.FB_EMU){ U.connectAuthEmulator(auth,'http://127.0.0.1:'+FB_EMU.auth,{ disableWarnings:true }); D.connectFirestoreEmulator(db,'127.0.0.1',FB_EMU.fs); window.__adm={ U, auth }; }
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString('ja-JP');
+const JST=9*3600000, DAYMS=86400000;
+const dk=ms=>new Date(ms+JST).toISOString().slice(0,10);           // 日本時間の日付
+const dayStart=k=>Date.parse(k+'T00:00:00+09:00');
+const addDay=(k,n)=>dk(dayStart(k)+n*DAYMS+3600000);
+const md=k=>{ const [,m,d]=k.split('-'); return (+m)+'/'+(+d); };
+
+const CHOICE={ bully:'いじめを見かけた', lesson:'習いごとをやめたい', broke:'親の器を割った', steal:'万引きに誘われた', parentfight:'進路で親と大げんか', teenwork:'家計のために働くか', leave:'都会へ出るか', abroad:'海外で学ぶか', confess:'気持ちを伝えるか', transfer:'遠くへの転勤', friendcall:'夜の友だちの電話', kidpath:'子どもの進路', checkup:'体の不調と病院', sibcall:'きょうだいとの仲直り', livewith:'子どもと同居するか', community:'近所の集まり', letter:'昔の人へ手紙を書くか',
+  care:'夢の仕事か親の介護か', lovefamily:'反対された結婚', friendtruth:'親友に本当のことを言うか', whistle:'職場の不正', donor:'きょうだいへの腎臓提供', dream:'やりたいことへの挑戦', reconcile:'自分を傷つけた親の世話', lend:'親友にお金を貸すか' };
+
+let DAYS={}, FR={ pairs:[], names:{} }, RANGE=30, METRIC='o', loadedAt=0;
+
+// ---- ログイン ----
+$('#login').onclick=async()=>{ $('#gateMsg').textContent=''; try{ await U.signInWithPopup(auth,new U.GoogleAuthProvider()); }catch(e){ $('#gateMsg').innerHTML='<span class="err">ログインできませんでした</span>（'+esc(e.code||e.message)+'）'; } };
+$('#logout').onclick=()=>U.signOut(auth);
+U.onAuthStateChanged(auth,async user=>{
+  if(!user||user.isAnonymous){ $('#gate').hidden=false; $('#main').hidden=true; $('#who').hidden=true; return; }
+  $('#whoName').textContent=user.displayName||user.email||''; $('#who').hidden=false;
+  $('#gate').querySelector('h2').textContent='読みこみ中…'; $('#login').hidden=true;
+  try{ await loadAll(); $('#gate').hidden=true; $('#main').hidden=false; draw(); osmLoad(); newsLoad(); }
+  catch(e){ $('#gate').querySelector('h2').textContent='このアカウントでは見られません'; $('#login').hidden=false;
+    $('#gateMsg').innerHTML=e&&e.code==='permission-denied'?'運営者として登録したGoogleアカウントでログインしてください。':'<span class="err">読みこめませんでした</span>（'+esc(e.code||e.message)+'）'; console.warn(e); }
+});
+
+// ---- Over Soul Message（os/board = { m:[{i,t,d}] } 新しい順・最大30件） ----
+let OSM=[], osmArm=0;
+async function osmLoad(){ const { doc, getDoc }=D;
+  try{ const s=await getDoc(doc(db,'os','board')); OSM=s.exists()?(s.data().m||[]):[]; osmDraw(); }
+  catch(e){ $('#osmList').innerHTML=e&&e.code==='permission-denied'?'<p class="empty">まだ使えません。Firebase のルールを新しいものに貼り替えると使えるようになります。</p>':'<p class="empty">読みこめませんでした（'+esc(e.code||e.message)+'）</p>'; } }
+function osmDraw(){ const dt=ms=>{ const d=new Date(ms); return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); };
+  $('#osmList').innerHTML=OSM.length?OSM.map((x,k)=>`<div class="osm-item"><div class="tx"><span class="dt">${dt(x.d)}${k===0?'　（いま表示中）':''}</span>${esc(x.t)}</div><button class="btn ghost small" type="button" data-del="${esc(x.i)}">消す</button></div>`).join(''):'<p class="empty">まだ送ったメッセージはありません</p>';
+  $('#osmList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>osmDel(b)); }
+async function osmSave(m){ const { doc, setDoc }=D; await setDoc(doc(db,'os','board'),{ m:m.slice(0,30) }); OSM=m.slice(0,30); osmDraw(); }
+$('#osmText').oninput=()=>{ $('#osmCount').textContent=$('#osmText').value.length+' / 400字'; };
+$('#osmSend').onclick=async()=>{ const t=$('#osmText').value.trim(); if(!t){ $('#osmMsg').innerHTML='<span class="err">メッセージを書いてください</span>'; return; }
+  if(Date.now()-osmArm>6000){ osmArm=Date.now(); $('#osmSend').textContent='みんなに送る（もう一度押す）'; $('#osmMsg').textContent='送ると、すぐに参加者みんなのゲームに表示されます。'; setTimeout(()=>{ if(Date.now()-osmArm>=6000) $('#osmSend').textContent='送る'; },6100); return; }
+  osmArm=0; $('#osmSend').disabled=true;
+  try{ const { doc, getDoc }=D; const s=await getDoc(doc(db,'os','board')); const now=s.exists()?(s.data().m||[]):[];
+    await osmSave([{ i:'m'+Date.now().toString(36), t:t.slice(0,400), d:Date.now() }].concat(now));
+    $('#osmText').value=''; $('#osmCount').textContent='0 / 400字'; $('#osmMsg').textContent='送りました。ゲームをひらくと表示されます。'; }
+  catch(e){ $('#osmMsg').innerHTML='<span class="err">送れませんでした</span>（'+esc(e.code||e.message)+'）'; }
+  finally{ $('#osmSend').disabled=false; $('#osmSend').textContent='送る'; } };
+async function osmDel(b){ if(b.dataset.arm!=='1'){ b.dataset.arm='1'; b.textContent='本当に消す'; setTimeout(()=>{ b.dataset.arm=''; b.textContent='消す'; },5000); return; }
+  b.disabled=true; try{ await osmSave(OSM.filter(x=>x.i!==b.dataset.del)); $('#osmMsg').textContent='消しました。'; }catch(e){ b.disabled=false; $('#osmMsg').innerHTML='<span class="err">消せませんでした</span>（'+esc(e.code||e.message)+'）'; } }
+
+// ---- LIFE BOOKのニュース（os/news = { n:[{i,d,t,b}] } 新しい順・最大50件） ----
+let NEWS=[], newsArm=0;
+const newsDt=ms=>{ const d=new Date(ms); return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); };
+async function newsLoad(){ const { doc, getDoc }=D;
+  try{ const s=await getDoc(doc(db,'os','news')); NEWS=s.exists()?(s.data().n||[]):[]; newsDraw(); }
+  catch(e){ $('#newsList').innerHTML='<p class="empty">読みこめませんでした（'+esc(e.code||e.message)+'）</p>'; } }
+function newsDraw(){
+  $('#newsList').innerHTML=NEWS.length?NEWS.map((x,k)=>`<div class="osm-item"><div class="tx"><span class="dt">${newsDt(x.d)}${k<3?'　（いま表示中）':''}</span><b>${esc(x.t)}</b>${esc(x.b||'')}</div><button class="btn ghost small" type="button" data-ndel="${esc(x.i)}">消す</button></div>`).join(''):'<p class="empty">まだのせたニュースはありません</p>';
+  $('#newsList').querySelectorAll('[data-ndel]').forEach(b=>b.onclick=()=>newsDel(b)); }
+async function newsSave(n){ const { doc, setDoc }=D; await setDoc(doc(db,'os','news'),{ n:n.slice(0,50) }); NEWS=n.slice(0,50); newsDraw(); }
+$('#newsBody').oninput=()=>{ $('#newsCount').textContent=$('#newsBody').value.length+' / 600字'; };
+$('#newsSend').onclick=async()=>{ const t=$('#newsTitle').value.trim(), b=$('#newsBody').value.trim(); if(!t){ $('#newsMsg').innerHTML='<span class="err">題を書いてください</span>'; return; }
+  if(Date.now()-newsArm>6000){ newsArm=Date.now(); $('#newsSend').textContent='みんなにのせる（もう一度押す）'; $('#newsMsg').textContent='のせると、すぐに参加者みんなのゲームに表示されます。'; setTimeout(()=>{ if(Date.now()-newsArm>=6000) $('#newsSend').textContent='のせる'; },6100); return; }
+  newsArm=0; $('#newsSend').disabled=true;
+  try{ const { doc, getDoc }=D; const s=await getDoc(doc(db,'os','news')); const now=s.exists()?(s.data().n||[]):[];
+    await newsSave([{ i:'n'+Date.now().toString(36), d:Date.now(), t:t.slice(0,60), b:b.slice(0,600) }].concat(now));
+    $('#newsTitle').value=''; $('#newsBody').value=''; $('#newsCount').textContent='0 / 600字'; $('#newsMsg').textContent='のせました。ゲームをひらくと表示されます。'; }
+  catch(e){ $('#newsMsg').innerHTML='<span class="err">のせられませんでした</span>（'+esc(e.code||e.message)+'）'; }
+  finally{ $('#newsSend').disabled=false; $('#newsSend').textContent='のせる'; } };
+async function newsDel(b){ if(b.dataset.arm!=='1'){ b.dataset.arm='1'; b.textContent='本当に消す'; setTimeout(()=>{ b.dataset.arm=''; b.textContent='消す'; },5000); return; }
+  b.disabled=true; try{ await newsSave(NEWS.filter(x=>x.i!==b.dataset.ndel)); $('#newsMsg').textContent='消しました。'; }catch(e){ b.disabled=false; $('#newsMsg').innerHTML='<span class="err">消せませんでした</span>（'+esc(e.code||e.message)+'）'; } }
+
+// ---- 読みこみ ----
+// 過ぎた日は sum/{日付} にまとめて保存し、次からはまとめだけを読む（読み取りの回数を少なくするため）
+async function loadAll(){
+  const { collection, getDocs, query, where, orderBy, doc, setDoc, Timestamp, collectionGroup }=D;
+  const sums={}; (await getDocs(collection(db,'sum'))).forEach(s=>{ sums[s.id]=s.data(); });
+  const keys=Object.keys(sums).sort(); const last=keys[keys.length-1];
+  const from=last?dayStart(addDay(last,1)):0;
+  const evs=await getDocs(query(collection(db,'ev'),where('ts','>=',Timestamp.fromMillis(from)),orderBy('ts')));
+  const fresh={};
+  evs.forEach(s=>{ const e=s.data(); if(!e.ts) return; const k=dk(e.ts.toMillis()); const x=fresh[k]||(fresh[k]={ ou:{}, b:0, d:0, ages:{}, cty:{}, v:{} });
+    if(e.t==='o') x.ou[e.u]=1;
+    else if(e.t==='b'){ x.b++; const n=e.n||e.c||'不明'; x.cty[n]=(x.cty[n]||0)+1; x.ou[e.u]=1; }
+    else if(e.t==='d'){ x.d++; const a=e.a|0; x.ages[a]=(x.ages[a]||0)+1; }
+    else if(e.t==='v'&&e.q){ const v=x.v[e.q]||(x.v[e.q]={ I:0, W:0, H:0 }); if(e.p==='I'){ v.I++; if(e.h) v.H++; } else v.W++; } });
+  const today=dk(Date.now());
+  for(const [k,x] of Object.entries(fresh)){ const o={ o:Object.keys(x.ou).length, b:x.b, d:x.d, ages:x.ages, cty:x.cty, v:x.v }; delete x.ou; Object.assign(x,o);
+    if(k<today) try{ await setDoc(doc(db,'sum',k),o); }catch(e){ console.warn('まとめを保存できませんでした',k,e); } }
+  DAYS=Object.assign({},sums,fresh);
+  // 紹介：受け箱 ids/{受け取る人}/inbox/{届け主}
+  const pairs={}, names={};
+  (await getDocs(collectionGroup(db,'inbox'))).forEach(s=>{ const to=s.ref.parent.parent.id, d=s.data(), from=String(d.from||s.id);
+    if(d.by) names[from]=d.by; const key=[from,to].sort().join('|'); const t=+d.t||0; const p=pairs[key];
+    if(!p) pairs[key]={ a:from, b:to, t }; else if(t&&(!p.t||t<p.t)) p.t=t; });
+  FR={ pairs:Object.values(pairs), names };
+  // Gateway の乗り物の帯：友だち同士が一緒に乗る絵のために、Higher Self名と「だれとだれが友だちか」だけを os/parade に（記号は入れない）
+  try{ const idx={}, n=[], e=[]; const at=id=>{ if(!(id in idx)){ idx[id]=n.length; n.push(String(names[id]).slice(0,20)); } return idx[id]; };
+    for(const p of Object.values(pairs)){ if(!names[p.a]||!names[p.b]) continue; e.push([at(p.a),at(p.b)]); }
+    if(e.length) await setDoc(doc(db,'os','parade'),{ j:JSON.stringify({ n, e }), t:Date.now() });
+  }catch(err){ console.warn('乗り物の帯の友だちを保存できませんでした',err); }
+  loadedAt=Date.now();
+}
+
+// ---- 期間 ----
+function rangeKeys(){ const today=dk(Date.now()); let first;
+  if(RANGE) first=addDay(today,-(RANGE-1));
+  else { const ks=Object.keys(DAYS).concat(FR.pairs.filter(p=>p.t).map(p=>dk(p.t))).sort(); first=ks[0]||today; }
+  const out=[]; for(let k=first; k<=today; k=addDay(k,1)) out.push(k); return out; }
+
+function draw(){
+  const ks=rangeKeys(), inR=new Set(ks);
+  const tot={ o:0, b:0, d:0, f:0 }, ages={}, cty={}, v={}; const per={};
+  for(const k of ks){ const x=DAYS[k]||{}; per[k]={ o:x.o||0, b:x.b||0, d:x.d||0, f:0 };
+    tot.o+=x.o||0; tot.b+=x.b||0; tot.d+=x.d||0;
+    for(const [a,n] of Object.entries(x.ages||{})) ages[a]=(ages[a]||0)+n;
+    for(const [c,n] of Object.entries(x.cty||{})) cty[c]=(cty[c]||0)+n;
+    for(const [q,o] of Object.entries(x.v||{})){ const t=v[q]||(v[q]={ I:0, W:0, H:0 }); t.I+=o.I||0; t.W+=o.W||0; t.H+=o.H||0; } }
+  for(const p of FR.pairs){ if(!p.t) continue; const k=dk(p.t); if(inR.has(k)){ per[k].f++; tot.f++; } }
+  const today=dk(Date.now()), td=per[today]||{};
+  const rl=RANGE?`この${RANGE}日`:'これまで';
+  $('#tiles').innerHTML=[
+    ['遊んだ人（のべ）',tot.o,'人',`今日 ${fmt(td.o)}人`],
+    ['生まれた人生',tot.b,'人',`今日 ${fmt(td.b)}人`],
+    ['一生を終えた人生',tot.d,'人',`今日 ${fmt(td.d)}人`],
+    ['紹介でつながった組',tot.f,'組',`ぜんぶで ${fmt(FR.pairs.length)}組`],
+  ].map(([k,n,u,s])=>`<div class="tile"><div class="k">${k}</div><div class="v">${fmt(n)}<small>${u}</small></div><div class="s">${rl}　${s}</div></div>`).join('');
+  $('#updated').textContent='読みこみ '+new Date(loadedAt).toLocaleString('ja-JP',{ month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+
+  // 日ごと
+  const lab={ o:'遊んだ人', b:'生まれた人生', d:'一生を終えた人生', f:'紹介でつながった組' }, unit={ o:'人', b:'人', d:'人', f:'組' };
+  const vals=ks.map(k=>per[k][METRIC]); const mx=Math.max(1,...vals);
+  $('#days').innerHTML=ks.map((k,i)=>`<div class="d" tabindex="0" data-tip="${md(k)}（${'日月火水木金土'[new Date(dayStart(k)+JST).getUTCDay()]}）　${lab[METRIC]} ${fmt(vals[i])}${unit[METRIC]}"><i style="height:${vals[i]/mx*100}%"></i></div>`).join('');
+  $('#days').setAttribute('aria-label',`${lab[METRIC]}の日ごとの数。いちばん多い日は${fmt(mx)}${unit[METRIC]}`);
+  $('#axL').textContent=md(ks[0]); $('#axR').textContent=md(ks[ks.length-1]);
+  $('#dayNote').textContent=`${lab[METRIC]}・いちばん多い日 ${fmt(Math.max(0,...vals))}${unit[METRIC]}`;
+
+  // 国
+  const cl=Object.entries(cty).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  $('#countries').innerHTML=cl.length?hbars(cl,'人'):'<p class="empty">まだ記録がありません</p>';
+  // 寿命（10歳ごと）
+  const bk=[]; let n=0, sum=0; for(let b=0; b<=100; b+=10){ let c=0; for(const [a,x] of Object.entries(ages)){ const ai=+a; if((b===100?ai>=100:ai>=b&&ai<b+10)){ c+=x; } } bk.push([b===100?'100歳〜':b===0?'0〜9歳':`${b}代`,c]); }
+  for(const [a,x] of Object.entries(ages)){ n+=x; sum+=(+a)*x; }
+  $('#ages').innerHTML=n?hbars(bk,'人'):'<p class="empty">まだ記録がありません</p>';
+  $('#ageNote').textContent=n?`期間中に一生を終えた${fmt(n)}人の、亡くなった年齢（平均 ${(sum/n).toFixed(1)}歳）`:'期間中に一生を終えた人生の、亡くなった年齢';
+  // 迷う場面
+  const vl=Object.entries(v).sort((a,b)=>(b[1].I+b[1].W)-(a[1].I+a[1].W));
+  const pct=(a,b)=>b?Math.round(a/b*100)+'%':'—';
+  $('#votes').innerHTML=vl.length?`<thead><tr><th>場面</th><th class="num">回数</th><th class="num">贈った</th><th class="num">見守った</th><th class="num">贈って届いた</th></tr></thead><tbody>`+
+    vl.map(([q,o])=>`<tr><td>${esc(CHOICE[q]||q)}</td><td class="num">${fmt(o.I+o.W)}</td><td class="num">${pct(o.I,o.I+o.W)}</td><td class="num">${pct(o.W,o.I+o.W)}</td><td class="num">${pct(o.H,o.I)}</td></tr>`).join('')+'</tbody>'
+    :'<tbody><tr><td class="empty">まだ記録がありません</td></tr></tbody>';
+  drawFriends();
+}
+function hbars(list,u){ const mx=Math.max(1,...list.map(x=>x[1]));
+  return '<div class="hb">'+list.map(([k,n])=>`<span class="n" title="${esc(k)}">${esc(k)}</span><span class="b" data-tip="${esc(k)}　${fmt(n)}${u}"><i style="width:${n/mx*100}%"></i></span><span class="c">${fmt(n)}</span>`).join('')+'</div>'; }
+
+// 紹介：つながった人どうしを輪（グループ）にまとめる
+function drawFriends(){ const P=FR.pairs; if(!P.length){ $('#friends').innerHTML='<p class="empty">まだ紹介でつながった人はいません</p>'; return; }
+  const par={}; const f=x=>{ while(par[x]!==x){ par[x]=par[par[x]]; x=par[x]; } return x; };
+  const deg={}; for(const p of P){ for(const x of [p.a,p.b]){ if(!(x in par)) par[x]=x; } par[f(p.a)]=f(p.b); deg[p.a]=(deg[p.a]||0)+1; deg[p.b]=(deg[p.b]||0)+1; }
+  const g={}; for(const x of Object.keys(par)){ const r=f(x); (g[r]||(g[r]={ m:[], t:0 })).m.push(x); }
+  for(const p of P){ const r=f(p.a); g[r].t=Math.max(g[r].t,p.t||0); }
+  const nm=id=>FR.names[id]||'名前なし';
+  const groups=Object.values(g).sort((a,b)=>b.m.length-a.m.length||b.t-a.t);
+  const people=Object.keys(par).length;
+  $('#friends').innerHTML=`<p class="sub" style="margin-top:-6px">${fmt(people)}人・${fmt(P.length)}組・${fmt(groups.length)}つの輪</p><div class="groups">`+
+    groups.slice(0,40).map((x,i)=>`<div class="grp"><div class="h">輪 ${i+1}　${x.m.length}人${x.t?'　最近つながった日 '+md(dk(x.t)):''}</div>`+
+      x.m.sort((a,b)=>deg[b]-deg[a]).map(id=>`<span class="chip">${esc(nm(id))}<b title="つながっている人数">${deg[id]}</b></span>`).join('')+'</div>').join('')+
+    (groups.length>40?`<p class="note">ほか ${groups.length-40}つの輪</p>`:'')+'</div><p class="note">名前の横の数字は、その人がつながっている人数です。</p>'; }
+
+// ---- 操作 ----
+document.querySelectorAll('#range button').forEach(b=>b.onclick=()=>{ RANGE=+b.dataset.r; document.querySelectorAll('#range button').forEach(x=>x.setAttribute('aria-pressed',x===b)); draw(); });
+document.querySelectorAll('#metric button').forEach(b=>b.onclick=()=>{ METRIC=b.dataset.m; document.querySelectorAll('#metric button').forEach(x=>x.setAttribute('aria-pressed',x===b)); draw(); });
+const tip=$('#tip');
+const showTip=(el,x,y)=>{ tip.textContent=el.dataset.tip; tip.style.display='block'; const w=tip.offsetWidth; tip.style.left=Math.max(8,Math.min(innerWidth-w-8,x-w/2))+'px'; tip.style.top=(y-40)+'px'; };
+document.addEventListener('pointermove',e=>{ const el=e.target.closest('[data-tip]'); if(el) showTip(el,e.clientX,e.clientY); else tip.style.display='none'; });
+document.addEventListener('focusin',e=>{ const el=e.target.closest('[data-tip]'); if(el){ const r=el.getBoundingClientRect(); showTip(el,r.left+r.width/2,r.top); } });
+document.addEventListener('focusout',()=>{ tip.style.display='none'; });
+</script>
+</body>
+</html>
