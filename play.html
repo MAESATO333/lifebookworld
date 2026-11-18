@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.35">
+<meta name="lifebook-version" content="v178.36">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.35 (2026-11-18) */ var LB_VER='v178.35';
+/* LIFE BOOK game version: v178.36 (2026-11-18) */ var LB_VER='v178.36';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21212,8 +21212,8 @@ setInterval(flPhListen,4000); setTimeout(flPhListen,1800);
 //  ・変わったときだけ、少しまとめて送る（5分に1回まで＋画面を閉じるとき）。開いたとき・戻ってきたときに、ほかの端末の分を受けとる。
 //  ・受けとった記録は sessionStorage に置いて読み直し、acct-in.js（<head>）がゲームより先に入れる（あとからだと、ゲームの保存で上書きされるため）。
 //  ・両方で変わっていたとき：今の人生は「先へ進んでいるほう」、本棚と友だちは合わせる、ほかはこの端末のほう。
-//  ・はじめてのログインで、この端末とマイページに別の人生があるときは、聞かずに「長く見守ってきたほう」に必ず揃える。もう一方は「保管してある人生」に残す（消さない）。
-//  ・ログインしていない端末で、はじめて「生まれる」を押したときは、ほかの端末で見守っていないか先にたずねる（別の人生が生まれないように）。
+//  ・初めてのログインで、この端末とマイページに別の人生があるときは、聞かずに「長く見守ってきたほう」に必ず揃える。もう一方は「保管してある人生」に残す（消さない）。
+//  ・ログインしていない端末で、初めて「生まれる」を押したときは、ほかの端末で見守っていないか先にたずねる（別の人生が生まれないように）。
 const AC_UID='ac.uid', AC_REV='ac.rev', AC_BASE='ac.base', AC_AT='ac.at', AC_CHUNK=900000;
 let _acReloading=false, _acBusy=false, _acStarted=false, _acPullAt=0, _acLastErr='', _acKeeps=null, _acState='';
 function acSkip(k){ return /^(firebase:|ac\.|lb\.|gw\.seen|mbx\.lastStrip$|hmiDeck$|hitotsu\.(fbreg|fbpush|pwaSet|dev|mvNo|news$|sky\.|nw\.|nwjp\.|stat|space\.))/.test(k); }
@@ -21280,7 +21280,7 @@ async function acSync(why){ if(!acIn()||_acBusy||_acReloading) return; _acBusy=t
     _acLastErr=''; }
   catch(e){ _acLastErr=String(e&&(e.code||e.message)||e).slice(0,80); try{ console.warn('[account]',e); }catch(_){} }
   finally{ _acBusy=false; acDlgRefresh(); } }
-// はじめてログインしたとき
+// 初めてログインしたとき
 async function acFirst(){ const L=acLocal(); const head=await acReadHead(acPath());
   if(!head){ await acPush(L); acToast('この端末の記録を、マイページに入れました'); return; }
   const C=await acReadBlob(acPath(),head);
@@ -21346,7 +21346,7 @@ function acClose(){ const d=document.getElementById('acDlg'); if(d) d.hidden=tru
 function acMsg(t){ const m=document.getElementById('acMsg'); if(m) m.textContent=t; }
 function acAgo(t){ if(!t) return ''; const s=Math.round((Date.now()-t)/1000); return s<60?'さっき':s<3600?Math.floor(s/60)+'分前':s<86400?Math.floor(s/3600)+'時間前':Math.floor(s/86400)+'日前'; }
 function acHowHTML(){ return `<div class="ac-how"><p class="ac-how-t">🔰 ログインすると、人生はどうなるの？</p>
-  <ol><li><b>はじめての端末</b>で「はじめて登録する」（またはGoogle）→ この端末で見守っている人生が、そのままマイページに入ります。</li>
+  <ol><li><b>初めての端末</b>で「初めて登録する」（またはGoogle）→ この端末で見守っている人生が、そのままマイページに入ります。</li>
   <li><b>2台目からの端末</b>で、同じ方法でログイン → マイページの人生が出てきます。<b>前と同じ人生の続き</b>です。</li>
   <li>その端末にも別の人生があったときは、<b>長く見守ってきた人生</b>に必ず揃います。もう一方は消えずに「保管してある人生」に残ります。</li></ol>
   <p class="tiny muted">新しい端末では、「生まれる」を押す前にログインするのがおすすめです。</p></div>`; }
@@ -21358,7 +21358,7 @@ function acHTML(){ const srv=typeof fbStatusHTML==='function'?fbStatusHTML():'';
   <p class="ac-or"><span>または メールアドレスで</span></p>
   <label class="ac-l">メールアドレス<input id="acEm" type="email" autocomplete="email" inputmode="email" maxlength="120"></label>
   <label class="ac-l">パスワード（6文字以上）<input id="acPw" type="password" autocomplete="current-password" maxlength="64"></label>
-  <div class="frd-btns"><button class="frd-b frd-pink" id="acLogin" type="button">ログインする</button><button class="frd-b frd-sky" id="acNew" type="button">はじめて登録する</button></div>
+  <div class="frd-btns"><button class="frd-b frd-pink" id="acLogin" type="button">ログインする</button><button class="frd-b frd-sky" id="acNew" type="button">初めて登録する</button></div>
   <p class="tiny"><button class="linkish" id="acForgot" type="button">パスワードを忘れたとき</button></p>
   <p class="frd-msg" id="acMsg" role="status">${esc(_acLastErr)}</p>
   <p class="tiny muted">ログインしなくても、今までどおり遊べます。預かるのは、ゲームの記録とログイン用のメールアドレスだけです。</p>`;
@@ -21394,14 +21394,14 @@ function acIntroNote(){ try{ if(acIn()||(typeof st!=='undefined'&&st)||(typeof v
   const n=document.createElement('div'); n.className='ac-note'; n.setAttribute('role','note');
   n.innerHTML='<p>ほかの端末で、もう人生を見守っていますか？<br><b>👤 マイページ</b>からログインすると、同じ人生の続きが見られます。</p><button class="frd-b frd-pink" type="button">マイページを開く</button>';
   n.querySelector('button').onclick=acOpen; app.prepend(n); }catch(e){} }
-// ログインしていない端末で、はじめて「生まれる」を押したとき：ほかの端末で見守っていないか先にたずねる
+// ログインしていない端末で、初めて「生まれる」を押したとき：ほかの端末で見守っていないか先にたずねる
 function acBornGuard(e){ const b=e.target&&e.target.closest&&e.target.closest('#bornBtn,#bornBtn2'); if(!b||b.disabled) return;
   if(acIn()||acHasLife(acLocal())||acGet('ac.bornOK',0)||!/^https?:$/.test(location.protocol)) return;
   e.preventDefault(); e.stopImmediatePropagation(); const d=acDlg();
   d.innerHTML=`<div class="frd-in ac-in"><button class="frd-x" type="button" aria-label="閉じる">×</button><h2>ほかの端末で、もう見守っていますか？</h2>
   <p class="frd-lead">スマホやパソコンで、もう人生を見守っている人は、ここで生まれずに <b>👤 マイページ</b>からログインしてください。同じ人生の続きが見られます。</p>
   <button class="frd-b frd-pink ac-big" id="acBgIn" type="button" style="text-align:center">はい、ログインする</button>
-  <button class="frd-b ac-big ac-sub" id="acBgNew" type="button" style="text-align:center">いいえ、はじめてです（生まれる）</button></div>`;
+  <button class="frd-b ac-big ac-sub" id="acBgNew" type="button" style="text-align:center">いいえ、初めてです（生まれる）</button></div>`;
   d.hidden=false; document.body.classList.add('frd-on'); d.querySelector('.frd-x').onclick=acClose;
   $('#acBgIn').onclick=acOpen; $('#acBgNew').onclick=()=>{ acSet('ac.bornOK',1); acClose(); b.click(); }; }
 function acStart(){ if(_acStarted) return; _acStarted=true; acBtnSync(); document.addEventListener('click',acBornGuard,true);
