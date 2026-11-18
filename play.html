@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.57">
+<meta name="lifebook-version" content="v178.58">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.57 (2026-11-19) */ var LB_VER='v178.57';
+/* LIFE BOOK game version: v178.58 (2026-11-19) */ var LB_VER='v178.58';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -19580,12 +19580,20 @@ function flIsOne(g){ const b=flDecode(g.b); return b.items.length===1&&b.ves==='
 function flGotCount(){ let c=store.get('fl.gotN',null); if(!c){ const L=store.get(KEY_FLGOT,[]); c={ b:L.filter(g=>!flIsOne(g)).length, o:L.filter(flIsOne).length }; store.set('fl.gotN',c); } return c; }
 function flGotCountHTML(){ const c=flGotCount(); if(!c.b&&!c.o) return ''; return `<p class="fl-cnt">💐 もらった花束 <b>${c.b}</b>　🌷 もらった一輪 <b>${c.o}</b>　（ぜんぶで ${c.b+c.o}）</p>`; }
 function flTileHTML(){ const rm=store.get(KEY_FLROOM,null), got=store.get(KEY_FLGOT,[]); const un=got.filter(g=>!g.seen).length;
-  return `<section class="hm-tile fl-tile"><h3>💐 お花${un?`<span class="fl-new">${un}</span>`:''}</h3><div class="fl-tile-in">${flNewListHTML(got)}${flGotCountHTML()}${rm&&rm.items&&rm.items.length?`<div class="fl-tile-art">${flArt(rm.items,rm.ves)}</div><p class="tiny">${flTable().length>1?`テーブルに${flTable().length}こ飾っています（いちばん新しいのは：${esc(flNames(rm.items))}）`:`部屋に飾っています：${esc(flNames(rm.items))}（${FL_VES[rm.ves==='wrap'?'vase':rm.ves]||''}）`}</p><div class="fl-tile-b"><button type="button" class="mp-btn" data-fl-photo="1">📷 写真に撮る</button><button type="button" class="mp-btn fl-b2" data-fl-change="1">🔄 飾るお花を変える</button><button type="button" class="linkish" data-fl-clear="1">片づける</button></div>`:'<p class="tiny muted">好きなお花をえらんで、部屋に飾ったり、花束にして友だちに贈ったりできます。</p>'}
+  return `<section class="hm-tile fl-tile"><h3>💐 お花${un?`<span class="fl-new">${un}</span>`:''}</h3><div class="fl-tile-in">${flNewListHTML(got)}${flPhNewListHTML()}${flGotCountHTML()}${rm&&rm.items&&rm.items.length?`<div class="fl-tile-art">${flArt(rm.items,rm.ves)}</div><p class="tiny">${flTable().length>1?`テーブルに${flTable().length}こ飾っています（いちばん新しいのは：${esc(flNames(rm.items))}）`:`部屋に飾っています：${esc(flNames(rm.items))}（${FL_VES[rm.ves==='wrap'?'vase':rm.ves]||''}）`}</p><div class="fl-tile-b"><button type="button" class="mp-btn" data-fl-photo="1">📷 写真に撮る</button><button type="button" class="mp-btn fl-b2" data-fl-change="1">🔄 飾るお花を変える</button><button type="button" class="linkish" data-fl-clear="1">片づける</button></div>`:'<p class="tiny muted">好きなお花をえらんで、部屋に飾ったり、花束にして友だちに贈ったりできます。</p>'}
     ${flBig().length?`<div class="fl-tile-art fl-big-tile">${flBigArt(flBig())}</div><p class="tiny">💐 大きな花瓶：もらった花束 ${flBig().length}こを生けています</p>`:''}${flShelf().length?`<p class="tiny">🪴 棚の花びん：${flShelf().length}/${FL_SHELF_MAX}こ</p>`:''}${!(rm&&rm.items&&rm.items.length)&&flShelf().length?'<div class="fl-tile-b"><button type="button" class="mp-btn" data-fl-photo="1">📷 写真に撮る</button></div>':''}<div class="fl-tile-b"><button type="button" class="mp-btn" data-fl-open="pick">💐 お花をえらぶ</button><button type="button" class="mp-btn fl-b2" data-fl-open="shelf">🪴 棚</button><button type="button" class="mp-btn fl-b2" data-fl-open="got">💌 届いたお花${got.length?`（${got.length}）`:''}</button>${(()=>{ const n=store.get(KEY_FLALB,[]).length; return n?`<button type="button" class="mp-btn fl-b2" data-fl-open="album">📖 花束アルバム（${n}）</button>`:''; })()}</div></div></section>`; }
 // v178.56（MITSUさん 2026-11-19）：届いたお花を、お花のスペースに文章で出す（だれから・花束か一輪か）。「届いたお花」を開くと消える
 function flNewN(){ try{ return (store.get(KEY_FLGOT,[])||[]).filter(g=>g&&!g.seen).length; }catch(e){ return 0; } }
 function flNewListHTML(got){ try{ const L=(got||[]).filter(g=>g&&!g.seen).reverse(); if(!L.length) return ''; const when=t=>typeof pgWhen==='function'?pgWhen(t):'';
   return `<button type="button" class="pg-hmb fl-hmb" data-fl-open="got">💐 お花が <b>${L.length}件</b> 届いています</button><ul class="fl-newl">${L.slice(0,5).map(g=>`<li>💐 <b>${esc(g.by)}さん</b>から、${flIsOne(g)?'一輪のお花':'花束'}${g.h?'と俳句':''}が届きました${g.o?`（${esc(g.o)}）`:''}<small>${when(g.t)}</small></li>`).join('')}${L.length>5?`<li class="pg-more">ほかに ${L.length-5}件</li>`:''}</ul>`; }catch(e){ return ''; } }
+// v178.58（MITSUさん 2026-11-19）：届いた写真（お花の写真・Gateway の写真）も、しるしと文章で すぐ分かるように。「花束アルバム」を開くと消える
+// はじめての時は、この1日に届いた分を「新しい」に数える
+try{ if(store.get('fl.phViewedT',null)==null) store.set('fl.phViewedT',Date.now()-864e5); }catch(e){}
+function flPhNewList(){ try{ const vt=+store.get('fl.phViewedT',0)||0; const a=(store.get(KEY_FLPHGOT,[])||[]).filter(x=>x&&(x.rt||x.t||0)>vt).map(x=>({ by:x.fromBy||'友だち', t:x.t, rt:x.rt||x.t, gw:0 }));
+  const b=(store.get('gw.got',[])||[]).filter(x=>x&&(x.rt||x.t||0)>vt).map(x=>({ by:x.fromBy||'友だち', t:x.t, rt:x.rt||x.t, gw:1 })); return a.concat(b).sort((x,y)=>(y.rt||0)-(x.rt||0)); }catch(e){ return []; } }
+function flPhNewN(){ return flPhNewList().length; }
+function flPhNewListHTML(){ try{ const L=flPhNewList(); if(!L.length) return ''; const when=t=>typeof pgWhen==='function'?pgWhen(t):'';
+  return `<button type="button" class="pg-hmb fl-hmb" data-fl-open="album">📷 写真が <b>${L.length}枚</b> 届いています</button><ul class="fl-newl">${L.slice(0,5).map(g=>`<li>📷 <b>${esc(g.by)}さん</b>から、${g.gw?'Gateway の写真':'お花の写真'}が届きました<small>${when(g.t)}</small></li>`).join('')}${L.length>5?`<li class="pg-more">ほかに ${L.length-5}枚</li>`:''}</ul>`; }catch(e){ return ''; } }
 function flPlace(){ try{ const app=document.getElementById('app'); if(!app||typeof page==='undefined'||page!=='home'||app.querySelector('.fl-tile')) return; const t=app.querySelector('.hm-mypet'); if(!t) return; const box=document.createElement('div'); box.innerHTML=flTileHTML(); t.after(box.firstElementChild); }catch(e){} }
 (function(){ if(typeof render1!=='function') return; const _r=render1; render1=function(){ const r=_r.apply(this,arguments); flPlace(); return r; }; })();
 setTimeout(flPlace,0);
@@ -20387,16 +20395,16 @@ function gwHash(){ const m=/[#&]gwsend=(\d+)/.exec(location.hash||''); if(!m) re
 window.addEventListener('hashchange',gwHash); setTimeout(gwHash,900);
 // --- 受けとる（お花の写真と同じ場所に届く。p が 'GW1:' で始まるもの） ---
 function gwRecv(docId,x){ try{ const seen=store.get(GW_SEEN,[]); if(!seen.includes(docId)){ const rec=JSON.parse(String(x.p).slice(4)); if(rec&&typeof rec==='object'){
-      store.set(GW_SEEN,seen.concat([docId]).slice(-300)); store.set(GW_GOT,(store.get(GW_GOT,[])||[]).concat([{ id:docId, rec, fromBy:String(x.by||'友だち').slice(0,20), t:+x.t||Date.now() }]).slice(-60));
+      store.set(GW_SEEN,seen.concat([docId]).slice(-300)); store.set(GW_GOT,(store.get(GW_GOT,[])||[]).concat([{ id:docId, rec, fromBy:String(x.by||'友だち').slice(0,20), t:+x.t||Date.now(), rt:Date.now() }]).slice(-60));
       try{ if(typeof pgToast==='function') pgToast(`${String(x.by||'友だち').slice(0,20)}さんから、Gateway の写真が届きました💌（「💐 お花」の写真で見られます）`); }catch(_){}
-      try{ const dl=document.getElementById('flDlg'); if(dl&&!dl.hidden&&typeof flOpen==='function') flOpen(); }catch(_){} } }
+      try{ const dl=document.getElementById('flDlg'); if(dl&&!dl.hidden&&typeof flOpen==='function') flOpen(); else if(typeof flRefreshTile==='function') flRefreshTile(); }catch(_){} try{ if(typeof mqBadgeSync==='function') mqBadgeSync(); }catch(_){} } }
   }catch(e){} try{ FB.D.deleteDoc(FB.D.doc(FB.db,'ids',myId(),'photo',docId)); }catch(_){} }
 // お花のアルバムに「Gateway の写真」をならべる
 if(typeof flAlbumHTML==='function'){ const A=flAlbumHTML; flAlbumHTML=function(){ let h=A.apply(this,arguments); try{
   const G=(store.get(GW_GOT,[])||[]).slice().reverse(), M=gwAlbum().slice(0,12);
   if(G.length) h+=`<p class="fl-lb">🌊 友だちから届いた Gateway の写真（${G.length}枚）</p><ul class="fl-alb">${G.map(g=>`<li><figure>${gwPhHTML('g:'+g.id)}<figcaption><b>${esc(g.fromBy)}さん</b>から・${typeof flPhDate==='function'?flPhDate(g.t):''}</figcaption></figure></li>`).join('')}</ul>`;
   if(M.length) h+=`<p class="fl-lb">🌊 わたしの Gateway の写真</p><ul class="fl-alb">${M.map(r=>`<li><figure>${gwPhHTML('a:'+r.t)}<figcaption>${typeof flPhDate==='function'?flPhDate(r.t):''}</figcaption></figure><button type="button" class="mp-btn fl-b2 fl-phbtn" data-gwsend="${esc(String(r.t))}">💌 Higher Self に送る</button></li>`).join('')}</ul>`;
-  if(G.length||M.length) setTimeout(()=>gwFill(document.getElementById('flDlg')),0); }catch(e){} return h; }; }
+  if(G.length||M.length) setTimeout(()=>gwFill(document.getElementById('flDlg')),0); }catch(e){} try{ store.set('fl.phViewedT',Date.now()); if(typeof mqBadgeSync==='function') setTimeout(mqBadgeSync,0); }catch(e){} return h; }; }
 (function(){ const s=document.createElement('style'); s.textContent='.gw-ph{ min-height:60px; border-radius:12px; overflow:hidden; background:#EAF6FB; } .gw-ph svg,.gw-ph img,.gw-ph canvas{ display:block; width:100%; height:auto; } .gw-ph .tiny{ margin:0; padding:18px 10px; text-align:center; } .gw-send .gw-ph{ margin:6px 0 10px; } .gw-tos{ display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 6px; } .gw-msg{ margin:10px 0 4px; padding:8px 12px; border-radius:12px; background:#FFF3D6; color:#8A5A10; font-weight:700; font-size:14px; }'; document.head.appendChild(s); })();
 // v178.11: Gateway の乗り物の帯に、ペットも乗れるように。自分と友だちのペット（名前・種類・飼い主の Higher Self 名）を小さく保存
 // 'hitotsu.gwPets' = [{ n:名前, s:'dog'などの種類, o:飼い主の Higher Self 名, me:1/0 }]（最大30。虹の橋をわたった子は入れない）
@@ -21211,7 +21219,7 @@ async function flPhSend(to,ph,msg,many){ const fr=flFriends().find(f=>f.id===to)
   flOpen(); }
 let _flPL=false;
 function flPhListen(){ if(_flPL||!flOn()) return; _flPL=true; const { collection, onSnapshot, deleteDoc }=FB.D;
-  onSnapshot(collection(FB.db,'ids',myId(),'photo'),snap=>{ const got=[]; snap.forEach(d=>{ const x=d.data()||{}; if(typeof x.p!=='string') return; if(x.p.startsWith('GW1:')){ if(typeof gwRecv==='function') gwRecv(d.id,x); return; } got.push(Object.assign(flPhDecode(x.p),{ id:d.id, fromBy:String(x.by||'友だち').slice(0,20), m:String(x.m||'').slice(0,30), t:+x.t||Date.now() })); });
+  onSnapshot(collection(FB.db,'ids',myId(),'photo'),snap=>{ const got=[]; snap.forEach(d=>{ const x=d.data()||{}; if(typeof x.p!=='string') return; if(x.p.startsWith('GW1:')){ if(typeof gwRecv==='function') gwRecv(d.id,x); return; } got.push(Object.assign(flPhDecode(x.p),{ id:d.id, fromBy:String(x.by||'友だち').slice(0,20), m:String(x.m||'').slice(0,30), t:+x.t||Date.now(), rt:Date.now() })); });
     if(!got.length) return; const seen=store.get('fl.phSeen',[]); const nu=got.filter(g=>!seen.includes(g.id)&&(g.items.length||g.sh.length||g.bg.length));
     if(nu.length){ store.set('fl.phSeen',seen.concat(nu.map(g=>g.id)).slice(-300)); store.set(KEY_FLPHGOT,store.get(KEY_FLPHGOT,[]).concat(nu).slice(-60));
       try{ if(typeof pgToast==='function') pgToast(`${nu[0].fromBy}さんから、お花の写真が届きました💌`); }catch(_){}
@@ -21434,14 +21442,16 @@ function acBindPanes(d){ d.querySelectorAll('[data-actab]').forEach(b=>b.onclick
   d.querySelectorAll('[data-acarc]').forEach(b=>b.onclick=()=>{ const a=(store.get(KEY_ARC,[])||[])[+b.dataset.acarc]; if(!a) return; acClose(); viewing={ seed:a.seed, country:a.country, force:a.force||null, choice:a.choice, bs:a.bs||null }; render(); window.scrollTo(0,0); acFromStart('arc'); }); }
 // ---- 上のボタン2段目：下のほうにある遊びを、すぐ開けるように（携帯は下に長いので）（2026-11-18 MITSUさん） ----
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-mq]'); if(!b) return; e.preventDefault(); const q=b.dataset.mq;
-  try{ if(q==='channel'){ albumOpen=true; goLife(); setTimeout(()=>{ const al=document.querySelector('.album')||document.querySelector('.album-btn'); if(al) al.scrollIntoView({ block:'start' }); },80); } else if(q==='pet') mpOpen(); else if(q==='flower') flOpen(flNewN()?'got':undefined); else if(q==='ride') ridesOpen(); else if(q==='earth') eaOpenDialog();
+  try{ if(q==='channel'){ albumOpen=true; goLife(); setTimeout(()=>{ const al=document.querySelector('.album')||document.querySelector('.album-btn'); if(al) al.scrollIntoView({ block:'start' }); },80); } else if(q==='pet') mpOpen(); else if(q==='flower') flOpen(flNewN()?'got':flPhNewN()?'album':undefined); else if(q==='ride') ridesOpen(); else if(q==='earth') eaOpenDialog();
     else if(q==='diary'){ if(page!=='home'||viewing){ viewing=null; page='home'; render(); } setTimeout(()=>{ const d=document.querySelector('.hm-daily-top')||document.querySelector('.hm-daily'); if(d) d.scrollIntoView({ block:'start' }); },120); } }catch(err){ console.warn(err); } });
 setInterval(()=>{ try{ const q=document.getElementById('mastQ'); if(q){ const on=!!(typeof cur!=='undefined'&&cur&&cur.P); if(q.hidden===on) q.hidden=!on; } }catch(e){} },700);
 // v178.56（MITSUさん 2026-11-19）：いちばん上の「ペット」「お花」のボタンに、届いたプレゼントの数を出す（🎁＋数）。見たら消える
 function mqBadgeSync(){ try{ const set=(q,n,what)=>{ const b=document.querySelector('#mastQ [data-mq="'+q+'"]'); if(!b) return; let i=b.querySelector('.mq-n');
     if(!n){ if(i) i.remove(); b.removeAttribute('aria-label'); return; } if(!i){ i=document.createElement('i'); i.className='mq-n'; i.setAttribute('aria-hidden','true'); b.appendChild(i); }
-    const t='🎁'+(n>99?'99+':n); if(i.textContent!==t) i.textContent=t; b.setAttribute('aria-label',what+'（プレゼントが'+n+'件 届いています）'); };
-  set('pet',typeof pgNewCount==='function'?pgNewCount():0,'ペット'); set('flower',typeof flNewN==='function'?flNewN():0,'お花'); }catch(e){} }
+    const t=typeof n==='string'?n:'🎁'+(n>99?'99+':n); if(i.textContent!==t) i.textContent=t; b.setAttribute('aria-label',what+'（'+(typeof n==='string'?'お花や写真':'プレゼント')+'が 届いています）'); };
+  set('pet',typeof pgNewCount==='function'?pgNewCount():0,'ペット');
+  const fl=typeof flNewN==='function'?flNewN():0, ph=typeof flPhNewN==='function'?flPhNewN():0, c=x=>x>99?'99+':x; /* v178.58：お花は 💐＋数、写真は 📷＋数 */
+  set('flower',(fl?'💐'+c(fl):'')+(ph?'📷'+c(ph):''),'お花'); }catch(e){} }
 setInterval(mqBadgeSync,1500); setTimeout(mqBadgeSync,800);
 try{ document.head.insertAdjacentHTML('beforeend','<style>.masthead .mast-q .fr-top{ position:relative; } .mq-n{ position:absolute; top:-8px; right:-4px; z-index:2; min-width:18px; height:18px; box-sizing:border-box; padding:0 5px; border-radius:999px; background:#fff; color:#D9467A; border:1.5px solid #E86A88; font-style:normal; font-size:11px; font-weight:700; line-height:15px; white-space:nowrap; box-shadow:0 1px 4px rgba(0,0,0,.25); animation:mqPop 1.6s ease-in-out infinite; } @keyframes mqPop{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.12); } } @media (prefers-reduced-motion:reduce){ .mq-n{ animation:none; } }'
   +'.pg-newl,.fl-newl{ list-style:none; margin:0 0 10px; padding:0; display:grid; gap:6px; } .pg-newl li,.fl-newl li{ background:#FFF0F5; color:#3A2A33; border-radius:10px; padding:8px 12px; font-size:14px; line-height:1.6; box-shadow:inset 3px 0 0 #E86A88; } .pg-newl li b,.fl-newl li b{ color:#C2476B; } .pg-newl small,.fl-newl small{ display:block; font-size:12px; color:#8A7A84; } .pg-newl li.pg-more,.fl-newl li.pg-more{ background:none; box-shadow:none; padding:0 4px; font-size:12px; color:#8A7A84; } .fl-hmb{ margin-bottom:8px; }</style>'); }catch(e){}
