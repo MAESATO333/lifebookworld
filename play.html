@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.40">
+<meta name="lifebook-version" content="v178.41">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.40 (2026-11-18) */ var LB_VER='v178.40';
+/* LIFE BOOK game version: v178.41 (2026-11-18) */ var LB_VER='v178.41';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21313,7 +21313,7 @@ async function acRestore(id){ const { doc, deleteDoc }=FB.D; const path=[...acPa
   for(let i=0;i<(head.n||1);i++) await deleteDoc(doc(FB.db,...path,'c',String(i))); await deleteDoc(doc(FB.db,...path));
   const rev=await acPush(K); acStageReload(K,L,acMeta(rev,K)); }
 // ---- ログイン ----
-function acErr(e){ const c=String(e&&e.code||''); if(/popup-closed|cancelled-popup/.test(c)) return 'ログインの画面が閉じられました。';
+function acErr(e){ const c=String(e&&e.code||''); if(/argument-error|missing-password|missing-email/.test(c)) return 'メールアドレスとパスワードを、もう一度入れてください。'; if(/popup-closed|cancelled-popup/.test(c)) return 'ログインの画面が閉じられました。';
   if(/popup-blocked/.test(c)) return 'ログインの小さな画面が開けませんでした。もう一度押してください。';
   if(/email-already-in-use|credential-already-in-use/.test(c)) return 'このメールアドレスは、もう登録されています。「ログインする」を押してください。';
   if(/invalid-email/.test(c)) return 'メールアドレスの形が正しくありません。';
@@ -21337,7 +21337,10 @@ async function acEmail(mode){ const U=FB.U, em=($('#acEm').value||'').trim(), pw
   try{ const u=acUser();
     if(mode==='new'){ const c=U.EmailAuthProvider.credential(em,pw); if(u&&u.isAnonymous) await U.linkWithCredential(u,c); else await U.createUserWithEmailAndPassword(FB.auth,em,pw); }
     else await U.signInWithEmailAndPassword(FB.auth,em,pw);
-    await acAfterLogin(); }catch(e){ acMsg(acErr(e)); } }
+    await acAfterLogin(); }catch(e){ const c=String(e&&e.code||'');
+    // Gmail のアドレスでうまくいかないときは、Googleで登録されていることが多い
+    if(mode!=='new'&&/@(gmail|googlemail)\.com$/i.test(em)&&/wrong-password|invalid-credential|user-not-found|invalid-login|argument-error|account-exists/.test(c)){ acMsg('このアドレスは、Googleでログインしたアドレスかもしれません。上の「Googleでログイン」を押してください。'); return; }
+    acMsg(acErr(e)); } }
 async function acReset(){ const em=($('#acEm').value||'').trim(); if(!em){ acMsg('上の欄にメールアドレスを入れてから、もう一度押してください。'); return; }
   try{ await FB.U.sendPasswordResetEmail(FB.auth,em); acMsg('パスワードを決め直すメールを送りました。メールを開いてください。'); }catch(e){ acMsg(acErr(e)); } }
 async function acLogout(){ if(!confirmInline()) return; await acSync('hide'); try{ await FB.U.signOut(FB.auth); }catch(e){}
