@@ -77,11 +77,11 @@
   --gutter-r:max(16px, env(safe-area-inset-right, 0px));
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#13203A; --surface:#1B2B49; --ink:#EAF0FA; --muted:#A9B6CD; --line:#2A3C5E; --edge:#0D172B;
+  --bg:#13203A; --surface:#1B2B49; --ink:#F4F7FC; --muted:#E2E9F5; --line:#2A3C5E; --edge:#0D172B;
   --accent:#9CC2F5; --accent-soft:#22355A; --ember:#FF9DB5; --ember-soft:#3A2440;
   --sky-top:#2C4A6E; --sky-bottom:#7FA6C8; --cloud:#DDE7F2; --shadow:0 18px 36px -24px rgba(0,0,0,.8); color-scheme:dark; } }
 :root[data-theme="dark"]{
-  --bg:#13203A; --surface:#1B2B49; --ink:#EAF0FA; --muted:#A9B6CD; --line:#2A3C5E; --edge:#0D172B;
+  --bg:#13203A; --surface:#1B2B49; --ink:#F4F7FC; --muted:#E2E9F5; --line:#2A3C5E; --edge:#0D172B;
   --accent:#9CC2F5; --accent-soft:#22355A; --ember:#FF9DB5; --ember-soft:#3A2440;
   --sky-top:#2C4A6E; --sky-bottom:#7FA6C8; --cloud:#DDE7F2; --shadow:0 18px 36px -24px rgba(0,0,0,.8); color-scheme:dark; }
 
@@ -397,7 +397,18 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
  html.lb-land body.lb-land-show .top .gnav a{box-sizing:border-box; justify-content:center; height:40px; padding:0 8px!important; font-size:13px!important; white-space:nowrap}
 
 </style>
-<meta name="lifebook-version" content="v178.65">
+<meta name="lifebook-version" content="v178.66">
+<style>
+/* 2026-11-19（MITSUさん）：暗い画面設定のとき、文章が白くて薄く、読みにくかったのを直す。文章の色を明るく・少し太くして、ハッキリ読めるように */
+@media (prefers-color-scheme: dark){
+  :where(:root:not([data-theme="light"])) :where(p,li,dd){font-weight:500}
+  :root:not([data-theme="light"]) .closing p{color:#fff; text-shadow:0 1px 4px rgba(8,16,36,.65)}
+}
+:where(:root[data-theme="dark"]) :where(p,li,dd){font-weight:500}
+:root[data-theme="dark"] .closing p{color:#fff; text-shadow:0 1px 4px rgba(8,16,36,.65)}
+.cities .worlds-sub{color:#7A5310!important; font-weight:700}
+.worlds .worlds-sub,.parade .worlds-sub{color:#213E75!important; font-weight:700}
+</style>
 </head>
 <body>
 
@@ -1146,7 +1157,7 @@ document.querySelectorAll('[data-go]').forEach(a => { a.href = GAME_URL + a.data
 </script>
 <script>
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.65'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.66'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
