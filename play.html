@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.72">
+<meta name="lifebook-version" content="v178.73">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.72 (2026-11-19) */ var LB_VER='v178.72';
+/* LIFE BOOK game version: v178.73 (2026-11-19) */ var LB_VER='v178.73';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20906,7 +20906,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.g
 try{ document.head.insertAdjacentHTML('beforeend','<style>.lbs{ position:fixed; inset:0; z-index:9600; background:rgba(40,25,40,.6); display:flex; align-items:center; justify-content:center; padding:16px; } .lbs-in{ box-sizing:border-box; width:min(520px,100%); max-height:92vh; overflow:auto; background:#FFFDFE; color:#3A2E38; border-radius:22px; padding:14px 16px 18px; box-shadow:0 10px 30px rgba(0,0,0,.3); text-align:center; } .lbs-h{ margin:4px 0 10px; font-size:18px; color:#C2476B; } .lbs-pv{ border-radius:14px; overflow:hidden; background:#F6EEF2; min-height:80px; display:grid; place-items:center; } .lbs-pv img{ display:block; width:100%; height:auto; -webkit-touch-callout:default; } .lbs-wait{ margin:0; padding:22px 12px; font-size:14px; color:#6F626B; } .lbs-b{ display:grid; gap:10px; margin:12px 0 6px; } .lbs-go,.lbs-sv,.lbs-x{ box-sizing:border-box; display:flex; align-items:center; justify-content:center; width:100%; min-height:46px; padding:0 14px; border-radius:999px; font:inherit; font-size:15px; font-weight:700; text-decoration:none; cursor:pointer; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; } .lbs-n{ margin:6px 2px 10px; font-size:12.5px; line-height:1.6; color:#6F626B; min-height:1em; } .lbs-x{ margin-top:4px; } .ph-share{ display:block; margin:6px auto 0; font-size:12.5px; } body .fl-alb li .mp-btn.fl-phbtn{ border:2px solid #E86A88!important; background:#FF8FAA!important; color:#fff!important; box-shadow:0 3px 0 #D85878!important; }</style>'); }catch(e){}
 
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.72'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.73'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }

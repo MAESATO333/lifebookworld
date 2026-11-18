@@ -397,7 +397,7 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
  html.lb-land body.lb-land-show .top .gnav a{box-sizing:border-box; justify-content:center; height:40px; padding:0 8px!important; font-size:13px!important; white-space:nowrap}
 
 </style>
-<meta name="lifebook-version" content="v178.72">
+<meta name="lifebook-version" content="v178.73">
 <style>
 /* 2026-11-19（MITSUさん）：暗い画面設定のとき、文章が白くて薄く、読みにくかったのを直す。文章の色を明るく・少し太くして、ハッキリ読めるように */
 @media (prefers-color-scheme: dark){
@@ -408,6 +408,14 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
 :root[data-theme="dark"] .closing p{color:#fff; text-shadow:0 1px 4px rgba(8,16,36,.65)}
 .cities .worlds-sub{color:#7A5310!important; font-weight:700}
 .worlds .worlds-sub,.parade .worlds-sub{color:#213E75!important; font-weight:700}
+</style>
+<style>
+/* 2026-11-19（MITSUさん）：海辺の街の下のピンクのボタン（写真・動く写真・アップ・アルバム）は、4つとも同じ長さ・同じ形・同じ色にして、幅を小さく */
+.pd-cam{display:grid!important; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px!important; max-width:420px!important; margin:0 0 0 auto!important; padding:8px 12px 0!important; justify-content:normal}
+.pd-cam .pd-msg{grid-column:1/-1; text-align:right}
+.pd-cam .pd-btn{box-sizing:border-box; display:flex; align-items:center; justify-content:center; gap:3px; width:100%; min-width:0; height:36px; padding:0 4px!important; font-size:12px!important; line-height:1; white-space:nowrap; overflow:hidden; border-radius:999px; background:#F06C9B!important; color:#fff!important; border:0}
+.pd-cam .pd-btn.on{background:#C2476B!important}
+@media (max-width:360px){ .pd-cam{gap:4px!important; padding-inline:8px!important} .pd-cam .pd-btn{font-size:10px!important; gap:1px; padding:0 2px!important} }
 </style>
 </head>
 <body>
@@ -492,7 +500,7 @@ requestAnimationFrame(step);
       <p class="worlds-title">友だちや、友だちの友だちが交差する街</p>
       <p class="worlds-sub">バスや電車、船や飛行機に、Higher Self の名前が乗っています</p>
       <div class="pd-frame"><div id="parade" class="pd-view"></div><div id="pdFlash" class="pd-flash" aria-hidden="true"></div></div>
-      <div class="pd-cam"><span id="pdMsg" class="pd-msg" role="status" aria-live="polite"></span><button type="button" id="pdShot" class="pd-btn">📷 写真を撮る</button><button type="button" id="pdMovie" class="pd-btn">🎬 動く写真を撮る</button><button type="button" id="pdPick" class="pd-btn">🔍 選んでアップで撮る</button><button type="button" id="pdAlb" class="pd-btn pd-btn2">📒 アルバム<span></span></button></div>
+      <div class="pd-cam"><span id="pdMsg" class="pd-msg" role="status" aria-live="polite"></span><button type="button" id="pdShot" class="pd-btn" aria-label="写真を撮る">📷 写真</button><button type="button" id="pdMovie" class="pd-btn" aria-label="動く写真を撮る">🎬 動く写真</button><button type="button" id="pdPick" class="pd-btn" aria-label="選んでアップで撮る">🔍 アップ</button><button type="button" id="pdAlb" class="pd-btn" aria-label="アルバム">📒 アルバム<span></span></button></div>
       <div id="pdAlbum" class="pd-modal" hidden role="dialog" aria-modal="true" aria-label="Gateway アルバム"><div class="pd-box"><div class="pd-head"><b>📒 Gateway アルバム</b><button type="button" class="pd-btn" data-close>← もどる</button></div><p class="pd-note">海辺の街で撮った写真です。このブラウザの中にだけ入っています。</p><div id="pdGrid" class="pd-grid"></div><button type="button" id="pdMore" class="pd-btn pd-btn2" hidden>もっと見る</button></div></div>
       <div id="pdTalk" class="pd-modal" hidden role="dialog" aria-modal="true" aria-label="海辺の街の会話"><div class="pd-box pd-tbox"><div class="pd-head"><b>💬 海辺の街の会話</b><button type="button" class="pd-btn" data-close>← もどる</button></div><p class="pd-lab"></p><div class="pd-lines"></div><p class="pd-note">※ 海辺の街の中の、想像の会話です。本当のメッセージではありません。</p></div></div>
     </div>
@@ -872,7 +880,7 @@ function shot(){ if(!S) return null; var c=[]; lanes.forEach(function(l){ l.cars
   while(JSON.stringify(rec).length>990&&rec.c.length){ var i=-1; for(var q=0;q<rec.c.length;q++) if(!rec.c[q][5]&&!rec.c[q][7]){ i=q; break; } rec.c.splice(i<0?rec.c.length-1:i,1); } // 友だちに送れる大きさ（1000文字まで）
   return rec; }
 var cam=document.getElementById('pdShot'), albB=document.getElementById('pdAlb'), msg=document.getElementById('pdMsg'), dlg=document.getElementById('pdAlbum'), grid=document.getElementById('pdGrid'), more=document.getElementById('pdMore'), flash=document.getElementById('pdFlash'), shown=0, mt=0;
-function albCount(){ var n=alb().length; if(albB) albB.querySelector('span').textContent=n?'（'+n+'）':''; }
+function albCount(){ var n=alb().length; if(albB) albB.querySelector('span').textContent=n?' '+n:''; }
 function say(t){ if(!msg) return; msg.textContent=t; clearTimeout(mt); mt=setTimeout(function(){ msg.textContent=''; },3500); }
 if(cam) cam.addEventListener('click',function(){ var r=shot(); if(!r||!r.c.length){ say('乗り物が来たら、もう一度押してください。'); return; } var a=alb(); a.unshift(r); if(!albSet(a)){ say('アルバムに入れられませんでした（保存する場所がいっぱいかもしれません）。'); return; }
   if(flash){ flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); } say('📷 パシャ！ アルバムに入れました。'); albCount(); });
@@ -892,7 +900,7 @@ if(dlg) dlg.addEventListener('click',function(ev){ var t=ev.target; if(t===dlg||
 document.addEventListener('keydown',function(ev){ if(ev.key==='Escape'&&dlg&&!dlg.hidden) closeAlb(); });
 // ---- 🔍 ひとつの乗り物・ひとり・話しているふたりを、アップで撮る（えらぶ間は止めて軽くする） ----
 var pickB=document.getElementById('pdPick'), picking=false;
-function pickMode(on){ picking=on; box.classList.toggle('pick',on); if(pickB){ pickB.classList.toggle('on',on); pickB.textContent=on?'✕ やめる':'🔍 選んでアップで撮る'; } if(on){ stop(); say('撮りたい乗り物や人を、押してください。'); } else { say(''); go(); } }
+function pickMode(on){ picking=on; box.classList.toggle('pick',on); if(pickB){ pickB.classList.toggle('on',on); pickB.textContent=on?'✕ やめる':'🔍 アップ'; } if(on){ stop(); say('撮りたい乗り物や人を、押してください。'); } else { say(''); go(); } }
 if(pickB) pickB.addEventListener('click',function(){ pickMode(!picking); });
 function bbOf(c){ var b=c.e.getBBox(), k=c.k||1; return {x:c.x+b.x*k,y:c.y+b.y*k,w:b.width*k,h:b.height*k}; }
 function closeShot(c){ var set=[c], tk=null; TK.forEach(function(t){ if(t.a===c||t.b===c) tk=t; }); if(tk) set=[tk.a,tk.b];
@@ -1166,7 +1174,7 @@ document.querySelectorAll('[data-go]').forEach(a => { a.href = GAME_URL + a.data
 </script>
 <script>
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.72'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.73'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
