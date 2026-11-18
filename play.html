@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.32">
+<meta name="lifebook-version" content="v178.33">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.32 (2026-11-18) */ var LB_VER='v178.32';
+/* LIFE BOOK game version: v178.33 (2026-11-18) */ var LB_VER='v178.33';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -16092,7 +16092,10 @@ function safeFoodApply(P,L){ if(!P||!L||!L.years) return L;
 (function(){ const g=(typeof window!=='undefined'&&window)||globalThis;
   const wrap=(name,pos)=>{ const f=g[name]; if(typeof f!=='function'||f._fsW) return; const w=function(){ const out=f.apply(this,arguments); try{ const P=arguments[0], L=pos==='ret'?out:arguments[1]; safeFoodApply(P,L); }catch(e){} return out; }; w._fsW=1; g[name]=w; };
   wrap('simulate','ret');
-  ['birthSitApply','momentsApply','mpLifeApply','petExtraApply','fort2Apply','petBreedApply','siblingsApply','dreamApply','friendMeet'].forEach(n=>wrap(n,'arg'));
+  const all=()=>['birthSitApply','momentsApply','mpLifeApply','petExtraApply','fort2Apply','petBreedApply','siblingsApply','dreamApply','friendMeet'].forEach(n=>wrap(n,'arg'));
+  all();
+  // ui.js より後ろのファイルで作られる関数（ペット・夢・友だちなど）も、ページを読み終えたら包む
+  try{ if(typeof document!=='undefined'&&document.addEventListener) document.addEventListener('DOMContentLoaded',all); }catch(e){}
 })();
 // ===== 画面 =====
 const DAY=86400000;
