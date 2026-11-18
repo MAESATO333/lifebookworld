@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.63">
+<meta name="lifebook-version" content="v178.64">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.63 (2026-11-19) */ var LB_VER='v178.63';
+/* LIFE BOOK game version: v178.64 (2026-11-19) */ var LB_VER='v178.64';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21447,7 +21447,7 @@ function acBindPanes(d){ d.querySelectorAll('[data-actab]').forEach(b=>b.onclick
 (function(){ try{ const h=document.querySelector('.masthead'), logo=h&&h.querySelector('.lb-logo'); if(!logo) return; const b=document.createElement('button'); b.type='button'; b.className='lb-landbtn';
   const set=on=>{ document.body.classList.toggle('lb-land-show',!!on); b.textContent=on?'✕ ボタンをかくす':'☰ ボタンを出す'; b.setAttribute('aria-expanded',on?'true':'false'); };
   b.addEventListener('click',()=>set(!document.body.classList.contains('lb-land-show'))); logo.after(b); set(false);
-  const mq=window.matchMedia('(orientation:landscape) and (max-height:500px) and (pointer:coarse)'); const f=()=>set(false); if(mq.addEventListener) mq.addEventListener('change',f); else if(mq.addListener) mq.addListener(f); }catch(e){ try{ console.warn('[landbtn]',e); }catch(_){} } })();
+  window.addEventListener('lb-land-change',()=>set(false)); (function(){ try{ var de=document.documentElement; var chk=function(){ var sw=Math.min(screen.width||9999,screen.height||9999); var touch=(navigator.maxTouchPoints||0)>0||('ontouchstart' in window); var land=false; try{ if(typeof window.orientation==='number') land=Math.abs(window.orientation)===90; else if(screen.orientation&&screen.orientation.type) land=/landscape/.test(screen.orientation.type); else land=window.innerWidth>window.innerHeight; }catch(e){ land=window.innerWidth>window.innerHeight; } if(!land&&window.innerWidth>window.innerHeight*1.25&&typeof window.orientation!=='number'&&!(screen.orientation&&screen.orientation.type)) land=true; var on=!!(touch&&sw<=540&&land); if(de.classList.contains('lb-land')!==on){ de.classList.toggle('lb-land',on); try{ window.dispatchEvent(new Event('lb-land-change')); }catch(e){} } }; chk(); window.addEventListener('resize',chk); window.addEventListener('orientationchange',function(){ chk(); setTimeout(chk,200); setTimeout(chk,600); }); try{ if(screen.orientation&&screen.orientation.addEventListener) screen.orientation.addEventListener('change',chk); }catch(e){} document.addEventListener('visibilitychange',chk); }catch(e){} })(); }catch(e){ try{ console.warn('[landbtn]',e); }catch(_){} } })();
 // ---- 上のボタン2段目：下のほうにある遊びを、すぐ開けるように（携帯は下に長いので）（2026-11-18 MITSUさん） ----
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-mq]'); if(!b) return; e.preventDefault(); const q=b.dataset.mq;
   try{ if(q==='channel'){ albumOpen=true; goLife(); setTimeout(()=>{ const al=document.querySelector('.album')||document.querySelector('.album-btn'); if(al) al.scrollIntoView({ block:'start' }); },80); } else if(q==='pet') mpOpen(); else if(q==='flower') flOpen(flNewN()?'got':flPhNewN()?'album':undefined); else if(q==='ride') ridesOpen(); else if(q==='earth') eaOpenDialog();
@@ -21559,15 +21559,16 @@ body .btn:disabled,body .mp-btn:disabled,body .rv-btn:disabled,body .mbx-pbtn:di
 .gsz-in,.pa-in,.frn,.frn-born,.ac-note,.rvx{ color:#3A2E38; }
 /* v178.60（MITSUさん 2026-11-19）：携帯を横にしている間は、上のピンクのボタンを全部かくす（街の風景などを広く見て楽しむため）。ロゴの右の「☰ ボタンを出す」で出せて、出したときは12個とも同じ大きさ・同じ形（6個×2段）。縦にもどすと、いつもの並び。パソコン・タブレットはそのまま */
 .lb-landbtn{ display:none; }
-@media (orientation:landscape) and (max-height:500px) and (pointer:coarse){
- .masthead{ position:static!important; padding-block:8px 6px!important; row-gap:8px!important; }
- .masthead .mast-r,.masthead .mast-q{ display:none!important; }
- .lb-landbtn{ display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; margin-left:auto; height:40px; padding:0 16px; border-radius:999px; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; font:inherit; font-size:13px; font-weight:700; line-height:1; white-space:nowrap; cursor:pointer; }
- body.lb-land-show .masthead .mast-r,body.lb-land-show .masthead .mast-q:not([hidden]){ display:grid!important; grid-auto-flow:row!important; grid-template-columns:repeat(6,minmax(0,1fr))!important; grid-auto-columns:auto!important; gap:8px!important; width:100%; margin:0!important; }
- body.lb-land-show .masthead .mastnav{ display:contents!important; } body.lb-land-show .masthead .meta{ display:none!important; }
- body.lb-land-show .masthead .mastnav .nav-b,body.lb-land-show .masthead .fr-top{ box-sizing:border-box; display:flex!important; flex-direction:row!important; align-items:center; justify-content:center; gap:4px; width:100%!important; min-width:0; height:40px!important; min-height:0!important; margin:0!important; padding:0 4px!important; font-size:12px!important; line-height:1!important; border-radius:999px!important; white-space:nowrap; overflow:hidden; }
- body.lb-land-show .masthead .fr-top .mb-l{ font-size:12px!important; line-height:1!important; }
-}
+/* 携帯を横にしているかどうかは、画面の大きさではなく、携帯そのもの（さわれる画面・短い辺が540px以下・横向き）で見分けて、html に lb-land を付ける（メディアクエリだと、効かない携帯があった） */
+ html.lb-land .masthead{ position:static!important; padding-block:8px 6px!important; row-gap:8px!important; }
+ html.lb-land .masthead .mast-r,html.lb-land .masthead .mast-q{ display:none!important; }
+ html.lb-land .lb-landbtn{ display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; margin-left:auto; height:40px; padding:0 16px; border-radius:999px; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; font:inherit; font-size:13px; font-weight:700; line-height:1; white-space:nowrap; cursor:pointer; }
+ html.lb-land body.lb-land-show .masthead .mast-r,html.lb-land body.lb-land-show .masthead .mast-q:not([hidden]){ display:grid!important; grid-auto-flow:row!important; grid-template-columns:repeat(6,minmax(0,1fr))!important; grid-auto-columns:auto!important; gap:8px!important; width:100%; margin:0!important; }
+ html.lb-land body.lb-land-show .masthead .mastnav{ display:contents!important; }
+ html.lb-land body.lb-land-show .masthead .meta{ display:none!important; }
+ html.lb-land body.lb-land-show .masthead .mastnav .nav-b,html.lb-land body.lb-land-show .masthead .fr-top{ box-sizing:border-box; display:flex!important; flex-direction:row!important; align-items:center; justify-content:center; gap:4px; width:100%!important; min-width:0; height:40px!important; min-height:0!important; margin:0!important; padding:0 4px!important; font-size:12px!important; line-height:1!important; border-radius:999px!important; white-space:nowrap; overflow:hidden; }
+ html.lb-land body.lb-land-show .masthead .fr-top .mb-l{ font-size:12px!important; line-height:1!important; }
+
 /* v178.59（MITSUさん 2026-11-19）：Life Home の「お花」「街ブラ」のカードに並ぶボタンは、全部ピンク・全部同じ大きさにそろえる（白いボタンは無し）。もどすときは、この5行を消す */
 body .fl-tile .fl-tile-b,body .mbx-tile .mbx-tf{ display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:10px 8px; align-items:center; }
 @media (max-width:640px){ body .fl-tile .fl-tile-b,body .mbx-tile .mbx-tf{ grid-template-columns:repeat(2,minmax(0,1fr)); } }

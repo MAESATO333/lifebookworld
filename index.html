@@ -387,15 +387,15 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
 <style>
 /* 2026-11-19（MITSUさん）：携帯を横にしている間は、上のボタン（Gateway・Life Home・Life Record・人生をはじめる）をかくして、街の風景を広く見せる。ロゴの右の「☰ ボタンを出す」で出し入れ。縦にもどすと、いつもの並び。パソコン・タブレットはそのまま */
 .lb-landbtn{display:none}
-@media (orientation:landscape) and (max-height:500px) and (pointer:coarse){
-  header.top{position:static!important}
-  .top .wrap{flex-wrap:wrap!important; row-gap:8px!important; padding-block:6px!important}
-  .top .gnav,.top .btn.small{display:none!important}
-  .lb-landbtn{display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; margin-left:auto; height:40px; padding:0 16px; border-radius:999px; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; font:inherit; font-family:var(--round); font-size:13px; font-weight:700; line-height:1; white-space:nowrap; cursor:pointer}
-  body.lb-land-show .top .btn.small{display:inline-flex!important; align-items:center; box-sizing:border-box; height:40px; margin:0}
-  body.lb-land-show .top .gnav{display:grid!important; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px!important; order:3!important; width:100%!important; overflow:visible; padding:0 0 4px}
-  body.lb-land-show .top .gnav a{box-sizing:border-box; justify-content:center; height:40px; padding:0 8px!important; font-size:13px!important; white-space:nowrap}
-}
+/* 携帯を横にしているかどうかは、画面の大きさではなく、携帯そのもの（さわれる画面・短い辺が540px以下・横向き）で見分けて、html に lb-land を付ける（メディアクエリだと、効かない携帯があった） */
+ html.lb-land header.top{position:static!important}
+ html.lb-land .top .wrap{flex-wrap:wrap!important; row-gap:8px!important; padding-block:6px!important}
+ html.lb-land .top .gnav,html.lb-land .top .btn.small{display:none!important}
+ html.lb-land .lb-landbtn{display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; margin-left:auto; height:40px; padding:0 16px; border-radius:999px; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; font:inherit; font-family:var(--round); font-size:13px; font-weight:700; line-height:1; white-space:nowrap; cursor:pointer}
+ html.lb-land body.lb-land-show .top .btn.small{display:inline-flex!important; align-items:center; box-sizing:border-box; height:40px; margin:0}
+ html.lb-land body.lb-land-show .top .gnav{display:grid!important; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px!important; order:3!important; width:100%!important; overflow:visible; padding:0 0 4px}
+ html.lb-land body.lb-land-show .top .gnav a{box-sizing:border-box; justify-content:center; height:40px; padding:0 8px!important; font-size:13px!important; white-space:nowrap}
+
 </style>
 </head>
 <body>
@@ -1141,7 +1141,7 @@ document.querySelectorAll('[data-go]').forEach(a => { a.href = GAME_URL + a.data
 (function(){ try{ var w=document.querySelector('header.top .wrap'), m=w&&w.querySelector('.mark'); if(!m) return; var b=document.createElement('button'); b.type='button'; b.className='lb-landbtn';
   var set=function(on){ document.body.classList.toggle('lb-land-show',!!on); b.textContent=on?'✕ ボタンをかくす':'☰ ボタンを出す'; b.setAttribute('aria-expanded',on?'true':'false'); };
   b.addEventListener('click',function(){ set(!document.body.classList.contains('lb-land-show')); }); m.parentNode.insertBefore(b,m.nextSibling); set(false);
-  var mq=window.matchMedia('(orientation:landscape) and (max-height:500px) and (pointer:coarse)'); var f=function(){ set(false); }; if(mq.addEventListener) mq.addEventListener('change',f); else if(mq.addListener) mq.addListener(f); }catch(e){} })();
+  window.addEventListener('lb-land-change',function(){ set(false); }); (function(){ try{ var de=document.documentElement; var chk=function(){ var sw=Math.min(screen.width||9999,screen.height||9999); var touch=(navigator.maxTouchPoints||0)>0||('ontouchstart' in window); var land=false; try{ if(typeof window.orientation==='number') land=Math.abs(window.orientation)===90; else if(screen.orientation&&screen.orientation.type) land=/landscape/.test(screen.orientation.type); else land=window.innerWidth>window.innerHeight; }catch(e){ land=window.innerWidth>window.innerHeight; } if(!land&&window.innerWidth>window.innerHeight*1.25&&typeof window.orientation!=='number'&&!(screen.orientation&&screen.orientation.type)) land=true; var on=!!(touch&&sw<=540&&land); if(de.classList.contains('lb-land')!==on){ de.classList.toggle('lb-land',on); try{ window.dispatchEvent(new Event('lb-land-change')); }catch(e){} } }; chk(); window.addEventListener('resize',chk); window.addEventListener('orientationchange',function(){ chk(); setTimeout(chk,200); setTimeout(chk,600); }); try{ if(screen.orientation&&screen.orientation.addEventListener) screen.orientation.addEventListener('change',chk); }catch(e){} document.addEventListener('visibilitychange',chk); }catch(e){} })(); }catch(e){} })();
 </script>
 </body>
 </html>
