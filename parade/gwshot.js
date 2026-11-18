@@ -211,11 +211,13 @@ function sayG(cx,by,tx,fs){ function e2(t){ return String(t).replace(/[&<>]/g,fu
 // 写真（小さなメモ）から、その場面の絵をもう一度つくる。host はページの中にある箱（名前のふだの位置を測るため）
 function gwRender(rec,D,host){ var wide=!!rec.w, bg=wide?D.bgW:D.bgN, v=bg.vb.split(' ').map(Number), X0=v[0], W=v[2];
   var tr='<rect x="'+X0+'" y="118" width="'+W+'" height="4" fill="#9AA3AE"/>'; for(var px=X0+14;px<X0+W;px+=46) tr+='<rect x="'+px+'" y="122" width="5" height="48" fill="#B4BCC6" opacity=".85"/>';
-  var cars=''; rec.c.forEach(function(c){ var sp=D.spr[c[0]]; if(!sp) return; var g=PP(sp.g,c[4]); cars+='<g class="gw-car" transform="translate('+c[1]+' '+c[2]+')'+(c[6]?' scale('+c[6]+')':'')+'">'+bodyWrap(g,sp.w,c[3])+'</g>'; });
+  var cars=''; rec.c.forEach(function(c,ci){ var sp=D.spr[c[0]]; if(!sp) return; var g=PP(sp.g,c[4]); cars+='<g class="gw-car" data-i="'+ci+'" transform="translate('+c[1]+' '+c[2]+')'+(c[6]?' scale('+c[6]+')':'')+'">'+bodyWrap(g,sp.w,c[3])+'</g>'; });
   host.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" class="gw-photo" viewBox="'+(rec.z?rec.z.join(' '):bg.vb)+'" preserveAspectRatio="xMidYMid slice" role="img" aria-label="海辺の街の写真">'+PDEFS+'<g>'+PP(bg.inner,rec.b)+'</g>'+tr+cars+'</svg>';
   var gs=host.querySelectorAll('.gw-car'), j=0; rec.c.forEach(function(c){ if(!D.spr[c[0]]) return; var e=gs[j++]; if(c[8]&&e) try{ pdPose(e,D.spr[c[0]].w,(c[8]&1)?-c[3]:c[3],c[8]&2); }catch(er){} if(c[5]&&e) try{ HS(e,wide?4.4:6.6,c[5]); }catch(er){} if(c[7]&&e) try{ c[7][0]===-2?HS.walkPet(e,wide?4.4:6.6,null,c[7],D.spr[c[0]].w):HS.pet(e,wide?4.4:6.6,null,c[7]); }catch(er){} });
   if(rec.q&&gs[rec.q[1]]) try{ var se=gs[rec.q[1]], bb=se.getBBox(), fs=rec.z?Math.max(3,rec.z[3]/22):(wide?4.6:6.8), g=document.createElementNS('http://www.w3.org/2000/svg','g'); g.innerHTML=sayG(bb.x+bb.width/2,bb.y-fs*.7,String(rec.q[0]).slice(0,24),fs); se.appendChild(g); }catch(er){}
+  if(rec.s&&rec.s.length) try{ gwMovieLoad(function(M){ try{ M.play(host.firstChild,rec); }catch(er){} }); }catch(er){} /* 🎬 動く写真：アルバムの中で動かす */
   return host.firstChild; }
+var _gwmQ=null; function gwMovieLoad(cb){ if(window.GWMovie){ cb(window.GWMovie); return; } if(!_gwmQ){ _gwmQ=[]; var sc=document.createElement('script'); sc.src=BASE+'gwmovie.js'; sc.onload=function(){ var q=_gwmQ; _gwmQ=null; if(window.GWMovie) q.forEach(function(f){ f(window.GWMovie); }); }; sc.onerror=function(){ _gwmQ=null; }; document.head.appendChild(sc); } _gwmQ.push(cb); }
 
 var DD=null, Q=null; function data(){ if(DD) return Promise.resolve(DD); if(!Q) Q=fetch(BASE+'parade.json').then(function(r){ return r.json(); }).then(function(d){ DD=d; return d; }); return Q; }
 try{ var st=document.createElement('style'); st.textContent='.gw-photo{display:block;width:100%;height:auto}.gw-photo .pd-sb{display:none}'; document.head.appendChild(st); }catch(e){}

@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.71">
+<meta name="lifebook-version" content="v178.72">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.71 (2026-11-19) */ var LB_VER='v178.71';
+/* LIFE BOOK game version: v178.72 (2026-11-19) */ var LB_VER='v178.72';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20406,8 +20406,8 @@ function gwRecv(docId,x){ try{ const seen=store.get(GW_SEEN,[]); if(!seen.includ
 // お花のアルバムに「Gateway の写真」をならべる
 if(typeof flAlbumHTML==='function'){ const A=flAlbumHTML; flAlbumHTML=function(){ let h=A.apply(this,arguments); try{
   const G=(store.get(GW_GOT,[])||[]).slice().reverse(), M=gwAlbum().slice(0,12);
-  if(G.length) h+=`<p class="fl-lb">🌊 友だちから届いた Gateway の写真（${G.length}枚）</p><ul class="fl-alb">${G.map(g=>`<li><figure>${gwPhHTML('g:'+g.id)}<figcaption><b>${esc(g.fromBy)}さん</b>から・${typeof flPhDate==='function'?flPhDate(g.t):''}</figcaption></figure><button type="button" class="mp-btn fl-b2 fl-phbtn" data-lbshare="li">📤 SNS にシェア</button></li>`).join('')}</ul>`;
-  if(M.length) h+=`<p class="fl-lb">🌊 わたしの Gateway の写真</p><ul class="fl-alb">${M.map(r=>`<li><figure>${gwPhHTML('a:'+r.t)}<figcaption>${typeof flPhDate==='function'?flPhDate(r.t):''}</figcaption></figure><button type="button" class="mp-btn fl-b2 fl-phbtn" data-gwsend="${esc(String(r.t))}">💌 Higher Self に送る</button><button type="button" class="mp-btn fl-b2 fl-phbtn" data-lbshare="li">📤 SNS にシェア</button></li>`).join('')}</ul>`;
+  if(G.length) h+=`<p class="fl-lb">🌊 友だちから届いた Gateway の写真（${G.length}枚）</p><ul class="fl-alb">${G.map(g=>`<li><figure>${gwPhHTML('g:'+g.id)}<figcaption><b>${esc(g.fromBy)}さん</b>から・${typeof flPhDate==='function'?flPhDate(g.t):''}</figcaption></figure>${g.rec&&g.rec.s&&g.rec.s.length?'<button type="button" class="mp-btn fl-b2 fl-phbtn" data-gwmovie="li">📤 SNS にシェア・保存</button>':'<button type="button" class="mp-btn fl-b2 fl-phbtn" data-lbshare="li">📤 SNS にシェア</button>'}</li>`).join('')}</ul>`;
+  if(M.length) h+=`<p class="fl-lb">🌊 わたしの Gateway の写真</p><ul class="fl-alb">${M.map(r=>`<li><figure>${gwPhHTML('a:'+r.t)}<figcaption>${typeof flPhDate==='function'?flPhDate(r.t):''}</figcaption></figure><button type="button" class="mp-btn fl-b2 fl-phbtn" data-gwsend="${esc(String(r.t))}">💌 Higher Self に送る</button>${r.s&&r.s.length?'<button type="button" class="mp-btn fl-b2 fl-phbtn" data-gwmovie="li">📤 SNS にシェア・保存</button>':'<button type="button" class="mp-btn fl-b2 fl-phbtn" data-lbshare="li">📤 SNS にシェア</button>'}</li>`).join('')}</ul>`;
   if(G.length||M.length) setTimeout(()=>gwFill(document.getElementById('flDlg')),0); }catch(e){} try{ store.set('fl.phViewedT',Date.now()); if(typeof mqBadgeSync==='function') setTimeout(mqBadgeSync,0); }catch(e){} return h; }; }
 (function(){ const s=document.createElement('style'); s.textContent='.gw-ph{ min-height:60px; border-radius:12px; overflow:hidden; background:#EAF6FB; } .gw-ph svg,.gw-ph img,.gw-ph canvas{ display:block; width:100%; height:auto; } .gw-ph .tiny{ margin:0; padding:18px 10px; text-align:center; } .gw-send .gw-ph{ margin:6px 0 10px; } .gw-tos{ display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 6px; } .gw-msg{ margin:10px 0 4px; padding:8px 12px; border-radius:12px; background:#FFF3D6; color:#8A5A10; font-weight:700; font-size:14px; }'; document.head.appendChild(s); })();
 // v178.11: Gateway の乗り物の帯に、ペットも乗れるように。自分と友だちのペット（名前・種類・飼い主の Higher Self 名）を小さく保存
@@ -20883,11 +20883,11 @@ async function lbShareSvgImg(svg){ var vb=svg.viewBox&&svg.viewBox.baseVal, r=sv
   var xml=new XMLSerializer().serializeToString(c); var im=await lbShareLoadImg('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml)); return { im:im, w:w, h:h }; }
 async function lbShareMake(el){ var src=null, w=0, h=0; var tag=el.tagName.toLowerCase();
   if(tag==='canvas'){ src=el; w=el.width; h=el.height; } else if(tag==='img'){ if(!el.complete||!el.naturalWidth) await lbShareLoadImg(el.src); src=el; w=el.naturalWidth; h=el.naturalHeight; } else { var o=await lbShareSvgImg(el); src=o.im; w=o.w; h=o.h; }
-  var W=1200, H=Math.max(1,Math.round(W*h/w)), band=64; if(H>2400){ H=2400; W=Math.round(H*w/h); }
-  var cv=document.createElement('canvas'); cv.width=W; cv.height=H+band; var x=cv.getContext('2d'); var bg='#FFFFFF'; try{ for(var e=el.parentElement;e&&e!==document.body;e=e.parentElement){ var b=getComputedStyle(e).backgroundColor; if(b&&b!=='transparent'&&!/rgba\([^)]*,\s*0\)$/.test(b)){ bg=b; break; } } }catch(_){}
+  var W=1200, H=Math.max(1,Math.round(W*h/w)); if(H>2400){ H=2400; W=Math.round(H*w/h); }
+  var cv=document.createElement('canvas'); cv.width=W; cv.height=H; var x=cv.getContext('2d'); var bg='#FFFFFF'; try{ for(var e=el.parentElement;e&&e!==document.body;e=e.parentElement){ var b=getComputedStyle(e).backgroundColor; if(b&&b!=='transparent'&&!/rgba\([^)]*,\s*0\)$/.test(b)){ bg=b; break; } } }catch(_){}
   x.fillStyle=bg; x.fillRect(0,0,W,H); var flip=false; try{ flip=!!el.closest('.mbx-flip'); }catch(_){}
   x.save(); if(flip){ x.translate(W,0); x.scale(-1,1); } x.drawImage(src,0,0,W,H); x.restore();
-  x.fillStyle='#FFF5F8'; x.fillRect(0,H,W,band); x.fillStyle='#D9467A'; x.font='700 30px "Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif'; x.textBaseline='middle'; x.fillText('LIFE BOOK',28,H+band/2+1); x.fillStyle='#8A6A78'; x.font='500 24px "Hiragino Sans",sans-serif'; x.textAlign='right'; x.fillText('lifebookworld.com',W-28,H+band/2+1);
+  /* 下に、小さく・うすく「LIFE BOOK」（目立ちすぎないように） */ var fs=Math.max(13,Math.round(W/46)); x.save(); x.font='700 '+fs+'px "Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif'; x.textAlign='right'; x.textBaseline='alphabetic'; x.globalAlpha=.55; x.shadowColor='rgba(30,20,40,.55)'; x.shadowBlur=Math.round(fs/3); x.fillStyle='#FFFFFF'; x.fillText('LIFE BOOK',W-Math.round(fs*.8),H-Math.round(fs*.7)); x.restore();
   var blob=await new Promise(function(ok){ cv.toBlob(function(b){ ok(b); },'image/png'); }); if(!blob) throw new Error('blob'); return blob; }
 function lbShareClose(){ var d=document.getElementById('lbShare'); if(d){ try{ var u=d.dataset.url; if(u) URL.revokeObjectURL(u); }catch(e){} d.remove(); } }
 function lbShareOpen(el){ lbShareClose(); var d=document.createElement('div'); d.id='lbShare'; d.className='lbs'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','写真を SNS にシェア');
@@ -20906,7 +20906,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.g
 try{ document.head.insertAdjacentHTML('beforeend','<style>.lbs{ position:fixed; inset:0; z-index:9600; background:rgba(40,25,40,.6); display:flex; align-items:center; justify-content:center; padding:16px; } .lbs-in{ box-sizing:border-box; width:min(520px,100%); max-height:92vh; overflow:auto; background:#FFFDFE; color:#3A2E38; border-radius:22px; padding:14px 16px 18px; box-shadow:0 10px 30px rgba(0,0,0,.3); text-align:center; } .lbs-h{ margin:4px 0 10px; font-size:18px; color:#C2476B; } .lbs-pv{ border-radius:14px; overflow:hidden; background:#F6EEF2; min-height:80px; display:grid; place-items:center; } .lbs-pv img{ display:block; width:100%; height:auto; -webkit-touch-callout:default; } .lbs-wait{ margin:0; padding:22px 12px; font-size:14px; color:#6F626B; } .lbs-b{ display:grid; gap:10px; margin:12px 0 6px; } .lbs-go,.lbs-sv,.lbs-x{ box-sizing:border-box; display:flex; align-items:center; justify-content:center; width:100%; min-height:46px; padding:0 14px; border-radius:999px; font:inherit; font-size:15px; font-weight:700; text-decoration:none; cursor:pointer; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; } .lbs-n{ margin:6px 2px 10px; font-size:12.5px; line-height:1.6; color:#6F626B; min-height:1em; } .lbs-x{ margin-top:4px; } .ph-share{ display:block; margin:6px auto 0; font-size:12.5px; } body .fl-alb li .mp-btn.fl-phbtn{ border:2px solid #E86A88!important; background:#FF8FAA!important; color:#fff!important; box-shadow:0 3px 0 #D85878!important; }</style>'); }catch(e){}
 
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.71'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.72'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }

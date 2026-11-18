@@ -397,7 +397,7 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
  html.lb-land body.lb-land-show .top .gnav a{box-sizing:border-box; justify-content:center; height:40px; padding:0 8px!important; font-size:13px!important; white-space:nowrap}
 
 </style>
-<meta name="lifebook-version" content="v178.71">
+<meta name="lifebook-version" content="v178.72">
 <style>
 /* 2026-11-19（MITSUさん）：暗い画面設定のとき、文章が白くて薄く、読みにくかったのを直す。文章の色を明るく・少し太くして、ハッキリ読めるように */
 @media (prefers-color-scheme: dark){
@@ -492,7 +492,7 @@ requestAnimationFrame(step);
       <p class="worlds-title">友だちや、友だちの友だちが交差する街</p>
       <p class="worlds-sub">バスや電車、船や飛行機に、Higher Self の名前が乗っています</p>
       <div class="pd-frame"><div id="parade" class="pd-view"></div><div id="pdFlash" class="pd-flash" aria-hidden="true"></div></div>
-      <div class="pd-cam"><span id="pdMsg" class="pd-msg" role="status" aria-live="polite"></span><button type="button" id="pdShot" class="pd-btn">📷 写真を撮る</button><button type="button" id="pdPick" class="pd-btn">🔍 選んでアップで撮る</button><button type="button" id="pdAlb" class="pd-btn pd-btn2">📒 アルバム<span></span></button></div>
+      <div class="pd-cam"><span id="pdMsg" class="pd-msg" role="status" aria-live="polite"></span><button type="button" id="pdShot" class="pd-btn">📷 写真を撮る</button><button type="button" id="pdMovie" class="pd-btn">🎬 動く写真を撮る</button><button type="button" id="pdPick" class="pd-btn">🔍 選んでアップで撮る</button><button type="button" id="pdAlb" class="pd-btn pd-btn2">📒 アルバム<span></span></button></div>
       <div id="pdAlbum" class="pd-modal" hidden role="dialog" aria-modal="true" aria-label="Gateway アルバム"><div class="pd-box"><div class="pd-head"><b>📒 Gateway アルバム</b><button type="button" class="pd-btn" data-close>← もどる</button></div><p class="pd-note">海辺の街で撮った写真です。このブラウザの中にだけ入っています。</p><div id="pdGrid" class="pd-grid"></div><button type="button" id="pdMore" class="pd-btn pd-btn2" hidden>もっと見る</button></div></div>
       <div id="pdTalk" class="pd-modal" hidden role="dialog" aria-modal="true" aria-label="海辺の街の会話"><div class="pd-box pd-tbox"><div class="pd-head"><b>💬 海辺の街の会話</b><button type="button" class="pd-btn" data-close>← もどる</button></div><p class="pd-lab"></p><div class="pd-lines"></div><p class="pd-note">※ 海辺の街の中の、想像の会話です。本当のメッセージではありません。</p></div></div>
     </div>
@@ -782,10 +782,11 @@ function sayG(cx,by,tx,fs){ function e2(t){ return String(t).replace(/[&<>]/g,fu
 // 写真（小さなメモ）から、その場面の絵をもう一度つくる。host はページの中にある箱（名前のふだの位置を測るため）
 function gwRender(rec,D,host){ var wide=!!rec.w, bg=wide?D.bgW:D.bgN, v=bg.vb.split(' ').map(Number), X0=v[0], W=v[2];
   var tr='<rect x="'+X0+'" y="118" width="'+W+'" height="4" fill="#9AA3AE"/>'; for(var px=X0+14;px<X0+W;px+=46) tr+='<rect x="'+px+'" y="122" width="5" height="48" fill="#B4BCC6" opacity=".85"/>';
-  var cars=''; rec.c.forEach(function(c){ var sp=D.spr[c[0]]; if(!sp) return; var g=PP(sp.g,c[4]); cars+='<g class="gw-car" transform="translate('+c[1]+' '+c[2]+')'+(c[6]?' scale('+c[6]+')':'')+'">'+bodyWrap(g,sp.w,c[3])+'</g>'; });
+  var cars=''; rec.c.forEach(function(c,ci){ var sp=D.spr[c[0]]; if(!sp) return; var g=PP(sp.g,c[4]); cars+='<g class="gw-car" data-i="'+ci+'" transform="translate('+c[1]+' '+c[2]+')'+(c[6]?' scale('+c[6]+')':'')+'">'+bodyWrap(g,sp.w,c[3])+'</g>'; });
   host.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" class="gw-photo" viewBox="'+(rec.z?rec.z.join(' '):bg.vb)+'" preserveAspectRatio="xMidYMid slice" role="img" aria-label="海辺の街の写真">'+PDEFS+'<g>'+PP(bg.inner,rec.b)+'</g>'+tr+cars+'</svg>';
   var gs=host.querySelectorAll('.gw-car'), j=0; rec.c.forEach(function(c){ if(!D.spr[c[0]]) return; var e=gs[j++]; if(c[8]&&e) try{ pdPose(e,D.spr[c[0]].w,(c[8]&1)?-c[3]:c[3],c[8]&2); }catch(er){} if(c[5]&&e) try{ HS(e,wide?4.4:6.6,c[5]); }catch(er){} if(c[7]&&e) try{ c[7][0]===-2?HS.walkPet(e,wide?4.4:6.6,null,c[7],D.spr[c[0]].w):HS.pet(e,wide?4.4:6.6,null,c[7]); }catch(er){} });
   if(rec.q&&gs[rec.q[1]]) try{ var se=gs[rec.q[1]], bb=se.getBBox(), fs=rec.z?Math.max(3,rec.z[3]/22):(wide?4.6:6.8), g=document.createElementNS('http://www.w3.org/2000/svg','g'); g.innerHTML=sayG(bb.x+bb.width/2,bb.y-fs*.7,String(rec.q[0]).slice(0,24),fs); se.appendChild(g); }catch(er){}
+  if(rec.s&&rec.s.length&&window.GWMovie) try{ GWMovie.play(host.firstChild,rec); }catch(er){} /* 🎬 動く写真：アルバムの中で動かす */
   return host.firstChild; }
 /*PDSHARED-END*/
 var box=document.getElementById('parade'); if(!box||!window.fetch) return;
@@ -861,6 +862,11 @@ var AK='hitotsu.gwAlbum';
 function alb(){ try{ var a=JSON.parse(localStorage.getItem(AK)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
 function albSet(a){ try{ localStorage.setItem(AK,JSON.stringify(a.slice(0,60))); return true; }catch(e){ return false; } }
 function rc(k){ var r=[k.si,+k.x.toFixed(1),+k.y.toFixed(1),k.dir,k.seed], x=[k.e._tag||0,k.k||0,k.e._pet||0,k.st||0]; while(x.length&&!x[x.length-1]) x.pop(); return r.concat(x); }
+// 🎬 動く写真：写真と同じ小さなメモに、乗り物ごとの速さ（s）と長さ（m 秒）を足すだけ。動画のファイルは作らないので軽い。これから画面に入ってくる乗り物も入れる
+function shotMovie(){ if(!S) return null; var DM=8, c=[], sp=[]; lanes.forEach(function(l){ l.cars.forEach(function(k){ if(k.si==null) return; var x1=k.x+k.dir*(k.sp||0)*DM, lo=Math.min(k.x,x1), hi=Math.max(k.x,x1)+k.w; if(hi<X0-2||lo>X0+W+2) return; c.push(rc(k)); sp.push(+(k.sp||0).toFixed(1)); }); });
+  var rec={v:1,w:wideNow?1:0,b:BGS,c:c,s:sp,m:DM,t:Date.now()};
+  while(JSON.stringify(rec).length>990&&rec.c.length){ var i=-1; for(var q=0;q<rec.c.length;q++) if(!rec.c[q][5]&&!rec.c[q][7]){ i=q; break; } if(i<0) i=rec.c.length-1; rec.c.splice(i,1); rec.s.splice(i,1); }
+  return rec; }
 function shot(){ if(!S) return null; var c=[]; lanes.forEach(function(l){ l.cars.forEach(function(k){ if(k.x>X0+W+2||k.x+k.w<X0-2||k.si==null) return; c.push(rc(k)); }); });
   var rec={v:1,w:wideNow?1:0,b:BGS,c:c,t:Date.now()};
   while(JSON.stringify(rec).length>990&&rec.c.length){ var i=-1; for(var q=0;q<rec.c.length;q++) if(!rec.c[q][5]&&!rec.c[q][7]){ i=q; break; } rec.c.splice(i<0?rec.c.length-1:i,1); } // 友だちに送れる大きさ（1000文字まで）
@@ -870,9 +876,12 @@ function albCount(){ var n=alb().length; if(albB) albB.querySelector('span').tex
 function say(t){ if(!msg) return; msg.textContent=t; clearTimeout(mt); mt=setTimeout(function(){ msg.textContent=''; },3500); }
 if(cam) cam.addEventListener('click',function(){ var r=shot(); if(!r||!r.c.length){ say('乗り物が来たら、もう一度押してください。'); return; } var a=alb(); a.unshift(r); if(!albSet(a)){ say('アルバムに入れられませんでした（保存する場所がいっぱいかもしれません）。'); return; }
   if(flash){ flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); } say('📷 パシャ！ アルバムに入れました。'); albCount(); });
+var movB=document.getElementById('pdMovie');
+if(movB) movB.addEventListener('click',function(){ var r=shotMovie(); if(!r||!r.c.length){ say('乗り物が来たら、もう一度押してください。'); return; } var a=alb(); a.unshift(r); if(!albSet(a)){ say('アルバムに入れられませんでした（保存する場所がいっぱいかもしれません）。'); return; }
+  if(flash){ flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); } say('🎬 動く写真を、アルバムに入れました。'); albCount(); });
 function fmt(t){ var d=new Date(t); return d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate()+' '+d.getHours()+':'+('0'+d.getMinutes()).slice(-2); }
 function page(){ var a=alb(), end=Math.min(a.length,shown+4);
-  for(var i=shown;i<end;i++){ var r=a[i], f=document.createElement('figure'); f.className='pd-ph'; f.innerHTML='<div class="pd-ph-img'+(r.w&&!r.z?'':' n')+'"></div><figcaption><span>'+fmt(r.t)+'</span><a class="pd-btn" href="play.html#gwsend='+r.t+'">💌 Higher Self に送る</a><button type="button" class="pd-btn pd-btn2" data-del="'+r.t+'">消す</button></figcaption>'; grid.appendChild(f); try{ gwRender(r,D,f.firstChild); }catch(e){} }
+  for(var i=shown;i<end;i++){ var r=a[i], f=document.createElement('figure'); f.className='pd-ph'; f.innerHTML='<div class="pd-ph-img'+(r.w&&!r.z?'':' n')+'"></div><figcaption><span>'+fmt(r.t)+'</span><a class="pd-btn" href="play.html#gwsend='+r.t+'">💌 Higher Self に送る</a>'+(r.s&&r.s.length?'<button type="button" class="pd-btn" data-gwmovie="figure">📤 シェア・保存</button>':'')+'<button type="button" class="pd-btn pd-btn2" data-del="'+r.t+'">消す</button></figcaption>'; grid.appendChild(f); try{ gwRender(r,D,f.firstChild); }catch(e){} }
   shown=end; more.hidden=shown>=a.length; if(!a.length) grid.innerHTML='<p class="pd-empty">まだ写真がありません。海辺の街で、いいなと思った場面で 📷 を押してください。</p>'; }
 function openAlb(){ if(!D||!dlg) return; if(dlg.parentNode!==document.body) document.body.appendChild(dlg); grid.innerHTML=''; shown=0; dlg.hidden=false; document.body.style.overflow='hidden'; page(); }
 function closeAlb(){ dlg.hidden=true; grid.innerHTML=''; document.body.style.overflow=''; }
@@ -1157,12 +1166,13 @@ document.querySelectorAll('[data-go]').forEach(a => { a.href = GAME_URL + a.data
 </script>
 <script>
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.71'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.72'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
   function chk(){ try{ var a=document.activeElement; if(busy||document.hidden||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return; busy=true; fetch('version.json?_='+Date.now(),{cache:'no-store'}).then(function(r){ return r.ok?r.json():null; }).then(function(j){ busy=false; if(j&&j.v&&j.v!==CUR) go(j.v); }).catch(function(){ busy=false; }); }catch(e){ busy=false; } }
   setTimeout(chk,1200); document.addEventListener('visibilitychange',function(){ if(!document.hidden) chk(); }); window.addEventListener('pageshow',chk); window.addEventListener('focus',chk); }catch(e){} })();
 </script>
+<script src="parade/gwmovie.js" defer></script>
 </body>
 </html>
