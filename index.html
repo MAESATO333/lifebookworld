@@ -397,7 +397,7 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
  html.lb-land body.lb-land-show .top .gnav a{box-sizing:border-box; justify-content:center; height:40px; padding:0 8px!important; font-size:13px!important; white-space:nowrap}
 
 </style>
-<meta name="lifebook-version" content="v178.80">
+<meta name="lifebook-version" content="v178.81">
 <style>
 /* 2026-11-19（MITSUさん）：暗い画面設定のとき、文章が白くて薄く、読みにくかったのを直す。文章の色を明るく・少し太くして、ハッキリ読めるように */
 @media (prefers-color-scheme: dark){
@@ -420,6 +420,10 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
 <style>
 /* 2026-11-19（MITSUさん）：ペットの文章の「19種類の動物・519品種」「名前は自分でつけられて」を、ピンクの太字で目立たせる */
 .card p b.pk,b.pk{color:var(--ember); font-weight:800}
+</style>
+<style>
+/* 2026-11-19（MITSUさん）：出会いのハート（かわいいので）を、さいごの一文の上にも */
+.closing .cl-heart{width:44px; height:auto; margin-bottom:-8px}
 </style>
 </head>
 <body>
@@ -1084,7 +1088,7 @@ document.addEventListener('visibilitychange',function(){ document.hidden?stop():
       <svg class="cloud c2" viewBox="0 0 60 22"><rect x="0" y="9" width="60" height="13" rx="2"/><rect x="18" y="0" width="26" height="12" rx="2"/></svg>
     </div>
     <div class="wrap">
-      <p><span class="nw">まだ誰も読んだことのない一冊が、</span><br><span class="nw">いま、どこかで始まろうとしています。</span></p>
+      <svg class="heart cl-heart" viewBox="0 0 7 6" shape-rendering="crispEdges" aria-hidden="true"><path fill="#E0566B" d="M1 0h2v1h1V0h2v1h1v2H6v1H5v1H4v1H3V5H2V4H1V3H0V1h1z"/><path fill="#fff" opacity=".7" d="M1 1h1v1H1z"/></svg><p><span class="nw">まだ誰も読んだことのない一冊が、</span><br><span class="nw">いま、どこかで始まろうとしています。</span></p>
       <a class="btn" data-play href="https://claude.ai/artifact/WHnbmhguGutawJGLFydF75" target="_blank" rel="noopener"><svg class="hrt" viewBox="0 0 28 24" shape-rendering="crispEdges" aria-hidden="true"><path fill="#fff" d="M4 0h8v4h4V0h8v4h4v8h-4v4h-4v4h-4v4h-4v-4H8v-4H4v-4H0V4h4z"/></svg><span class="bt">人生をはじめる<small>あたらしい いのちが、はじまります</small></span></a>
     </div>
   </section>
@@ -1178,13 +1182,13 @@ document.querySelectorAll('[data-go]').forEach(a => { a.href = GAME_URL + a.data
 </script>
 <script>
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.80'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.81'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
   function chk(){ try{ var a=document.activeElement; if(busy||document.hidden||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return; busy=true; fetch('version.json?_='+Date.now(),{cache:'no-store'}).then(function(r){ return r.ok?r.json():null; }).then(function(j){ busy=false; if(j&&j.v&&j.v!==CUR) go(j.v); }).catch(function(){ busy=false; }); }catch(e){ busy=false; } }
   setTimeout(chk,1200); document.addEventListener('visibilitychange',function(){ if(!document.hidden) chk(); }); window.addEventListener('pageshow',chk); window.addEventListener('focus',chk); }catch(e){} })();
 </script>
-<script src="parade/gwmovie.js?v=v178.80" defer></script>
+<script src="parade/gwmovie.js?v=v178.81" defer></script>
 </body>
 </html>
