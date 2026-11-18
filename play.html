@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.42">
+<meta name="lifebook-version" content="v178.43">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.42 (2026-11-18) */ var LB_VER='v178.42';
+/* LIFE BOOK game version: v178.43 (2026-11-18) */ var LB_VER='v178.43';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -12580,7 +12580,7 @@ function eaAlbumHTML(){ const got=new Set(eaCollected()); const ids=Object.keys(
     <h3 class="ea-sh">きょうの世界の名所（${today.length}か所）</h3><p class="tiny muted">世界の国々に実在する遺跡・名所・自然です。毎日、ちがう場所に入れかわります。</p><div class="ea-grid">${today.map(id=>card(id,false)).join('')}</div>
     <h3 class="ea-sh">集めた絵はがき（${mine.length}枚）</h3><div class="ea-grid">${mine.map(id=>card(id,true)).join('')}</div>`; }
 function eaOpenDialog(){ if(document.getElementById('eaOv')) return; const d=document.createElement('div'); d.id='eaOv'; d.className='mt-ov'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','地球の名所');
-  d.innerHTML=`<div class="mt-card ea-dlg"><h2>地球の名所</h2><p class="tiny muted">世界の名所を、地図から描いた絵はがきで見られます。</p>${eaAlbumHTML()}<div class="mt-btns"><button type="button" class="mt-close" id="eaX">とじる</button></div></div>`;
+  d.innerHTML=`<div class="mt-card ea-dlg"><h2>地球の名所</h2><p class="tiny muted">世界の名所を、地図から描いた絵はがきで見られます。</p>${eaAlbumHTML()}<div class="mt-btns"><button type="button" class="mt-close" id="eaX">← 戻る</button></div></div>`;
   document.body.appendChild(d); const close=()=>d.remove(); d.querySelector('#eaX').onclick=close; d.addEventListener('click',e=>{ if(e.target===d) close(); }); }
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('#eaOpen'); if(b) eaOpenDialog(); });
 
@@ -21325,7 +21325,7 @@ function acErr(e){ const c=String(e&&e.code||''); if(/argument-error|missing-pas
 async function acAfterLogin(){ try{ sessionStorage.setItem('ac.reopen','1'); }catch(e){} acMsg('マイページとつないでいます…'); try{ store.set('hitotsu.fbreg',''); }catch(e){} if(typeof FB!=='undefined'&&FB) FB.uid=acUser().uid;
   await acSync('login'); if(_acReloading) return; try{ sessionStorage.removeItem('ac.reopen'); }catch(e){} acDlgRefresh();
   // 「つないでいます…」が残らないように、終わったら結果を出す
-  acMsg(_acLastErr?'うまくつながりませんでした。「いま保存する」を押してください。':acHasLife(acLocal())?'ログインしました。この人生はマイページに保存されています。':'ログインしました。ほかの端末で見守っている人生は、その端末でも同じ方法でログインすると、ここに出てきます。'); }
+  acMsg(_acLastErr?'うまくつながりませんでした。「保存する」を押してください。':acHasLife(acLocal())?'ログインしました。この人生はマイページに保存されています。':'ログインしました。ほかの端末で見守っている人生は、その端末でも同じ方法でログインすると、ここに出てきます。'); }
 function acGoogle(){ const U=FB.U, u=acUser(), pv=new U.GoogleAuthProvider(); pv.setCustomParameters({ prompt:'select_account' });
   // 小窓はタップのすぐあとに開かないと止められるので、待たずに呼ぶ
   const p=(u&&u.isAnonymous)?U.linkWithPopup(u,pv,U.browserPopupRedirectResolver).catch(e=>{ if(/credential-already-in-use/.test(e&&e.code||'')){ const c=U.GoogleAuthProvider.credentialFromError(e); if(c) return U.signInWithCredential(FB.auth,c); } throw e; }):U.signInWithPopup(FB.auth,pv,U.browserPopupRedirectResolver);
@@ -21371,7 +21371,8 @@ function acHTML(){ const srv=typeof fbStatusHTML==='function'?fbStatusHTML():'';
   <p class="tiny muted">ログインしなくても、今までどおり遊べます。預かるのは、ゲームの記録とログイン用のメールアドレスだけです。</p>`;
   const u=acUser(), how=(u.providerData||[]).some(p=>p.providerId==='google.com')?'Google':'メール';
   const P=typeof cur!=='undefined'&&cur&&cur.P?cur.P:null; const arc=(store.get(KEY_ARC,[])||[]).length; const at=acGet(AC_AT,0);
-  const T=[['life','🌱','人生'],['album','📷','アルバム'],['pet','🐾','ペット'],['shelf','📚','本棚'],['friends','👥','友だち']];
+  let frN=0; try{ frN=(store.get(KEY_FRIEND,[])||[]).filter(f=>f&&f.id&&f.id!==myId()).length; }catch(e){}
+  const T=[['life','🌱','人生'],['album','📷','アルバム'],['pet','🐾','ペット'],['shelf','📚','本棚'],['friends','👥',`友だち<i class="ac-tn">${frN}人</i>`]];
   const tabs=`<div class="ac-tabs" role="tablist">${T.map(t=>`<button type="button" role="tab" class="ac-tab${_acTab===t[0]?' on':''}" aria-selected="${_acTab===t[0]}" data-actab="${t[0]}"><span aria-hidden="true">${t[1]}</span>${t[2]}</button>`).join('')}</div>`;
   let pane=''; try{ pane=_acTab==='album'?acAlbumPane():_acTab==='pet'?acPetPane():_acTab==='shelf'?acShelfPane():_acTab==='friends'?acFriendsPane():''; }catch(e){ pane='<p class="tiny muted">うまく表示できませんでした。</p>'; }
   return `<h2>👤 マイページ</h2>${tabs}${_acTab==='life'?`  <div class="ac-card"><p><small>ログイン中（${how}）</small><br><b>${esc(u.email||'')}</b></p>
@@ -21380,8 +21381,8 @@ function acHTML(){ const srv=typeof fbStatusHTML==='function'?fbStatusHTML():'';
   <p class="ac-sync">${_acBusy?'☁️ 記録を合わせています…':_acLastErr?`⚠️ ${esc(_acLastErr)}`:`☁️ 記録はマイページに保存されています${at?`（${acAgo(at)}）`:''}`}</p>
   <p class="tiny muted">ほかの端末でも、同じ方法でログインすると、この人生の続きを見守れます。</p>
   <div id="acKeeps"></div>
-  <div class="frd-btns"><button class="frd-b frd-sky" id="acNow" type="button">いま保存する</button><button class="frd-b" id="acOut" type="button">ログアウト</button></div>
-  <p class="frd-msg" id="acMsg" role="status"></p>`:pane+'<p class="frd-msg" id="acMsg" role="status"></p>'}`; }
+  <div class="frd-btns"><button class="frd-b frd-sky" id="acNow" type="button">保存する</button><button class="frd-b" id="acOut" type="button">ログアウト</button></div>
+  <p class="frd-msg" id="acMsg" role="status"></p>`:pane+'<p class="frd-msg" id="acMsg" role="status"></p><button class="frd-b ac-backb" type="button" data-achome="1">← マイページへ戻る</button>'}`; }
 async function acKeepsFill(){ const box=document.getElementById('acKeeps'); if(!box||!acIn()) return;
   try{ if(!_acKeeps) _acKeeps=await acKeepList(); }catch(e){ return; } if(!_acKeeps.length){ box.innerHTML=''; return; }
   box.innerHTML=`<h3 class="ac-h3">保管してある人生</h3>`+_acKeeps.map(k=>`<div class="ac-keep"><span>${esc(k.nm||'人生')}<small>${esc(k.dev||'')}・${acAgo(k.at)}に保管しました</small></span><button class="frd-b" type="button" data-ackeep="${esc(k.id)}">この人生にもどす</button></div>`).join('')+`<p class="tiny muted">もどすと、すべての端末でその人生に入れかわり、いまの人生がここに保管されます。</p>`;
@@ -21411,14 +21412,33 @@ function acShelfPane(){ const arc=store.get(KEY_ARC,[])||[]; if(!arc.length) ret
 function acFriendsPane(){ const L=(store.get(KEY_FRIEND,[])||[]).filter(f=>f&&f.id&&f.id!==myId());
   const btn=`<button class="frd-b frd-pink ac-wide" type="button" data-acgo="invite">💗 友だちに紹介する</button>`;
   if(!L.length) return `<p class="ac-empty">まだ、つながっている友だちはいません。</p>${btn}`;
-  return `<p class="tiny muted">つながっている友だち ${L.length}人</p><div class="ac-list">${L.map(f=>{ let ch=''; try{ if(f.s!=null){ const P=makeBirth(f.s,{ country:f.c||null, force:f.f||null }); ch=`Channel：${P.full}（${P.country.name}）`; } }catch(e){}
+  return `<p class="ac-cnt">👥 つながっている友だち <b>${L.length}</b>人</p><div class="ac-list">${L.map(f=>{ let ch=''; try{ if(f.s!=null){ const P=makeBirth(f.s,{ country:f.c||null, force:f.f||null }); ch=`Channel：${P.full}（${P.country.name}）`; } }catch(e){}
     return `<div class="ac-li"><b>👤 ${esc(f.by||'なまえなし')}さん</b><small>${esc(ch)}</small></div>`; }).join('')}</div>${btn}`; }
 function acBindPanes(d){ d.querySelectorAll('[data-actab]').forEach(b=>b.onclick=()=>{ _acTab=b.dataset.actab; acOpen(); });
-  d.querySelectorAll('[data-acgo]').forEach(b=>b.onclick=()=>{ const g=b.dataset.acgo; acClose();
+  d.querySelectorAll('[data-acgo]').forEach(b=>b.onclick=()=>{ const g=b.dataset.acgo; acClose(); setTimeout(()=>acFromStart(g),0);
     try{ if(g==='life'){ if(typeof goLife==='function') goLife(); } else if(g==='earth') eaOpenDialog(); else if(g==='machi') machiBuraOpen(); else if(g==='ride') ridesOpen(); else if(g==='hs') hsTripOpen(); else if(g==='pet') mpOpen(); else if(g==='invite'){ const o=document.querySelector('.fr-open'); if(o) o.click(); } }catch(e){ console.warn(e); } });
-  d.querySelectorAll('[data-acarc]').forEach(b=>b.onclick=()=>{ const a=(store.get(KEY_ARC,[])||[])[+b.dataset.acarc]; if(!a) return; acClose(); viewing={ seed:a.seed, country:a.country, force:a.force||null, choice:a.choice, bs:a.bs||null }; render(); window.scrollTo(0,0); }); }
-function acOpen(){ const d=acDlg(); d.innerHTML=`<div class="frd-in ac-in"><button class="frd-x" type="button" aria-label="閉じる">×</button>${acHTML()}</div>`; d.hidden=false; document.body.classList.add('frd-on');
-  d.querySelector('.frd-x').onclick=acClose; const on=(id,f)=>{ const b=document.getElementById(id); if(b) b.onclick=f; };
+  d.querySelectorAll('[data-acarc]').forEach(b=>b.onclick=()=>{ const a=(store.get(KEY_ARC,[])||[])[+b.dataset.acarc]; if(!a) return; acClose(); viewing={ seed:a.seed, country:a.country, force:a.force||null, choice:a.choice, bs:a.bs||null }; render(); window.scrollTo(0,0); acFromStart('arc'); }); }
+// ---- マイページから開いたページ：「とじる」ではなく「← マイページへ戻る」。押すと（閉じると）マイページのトップへ戻る（2026-11-18 MITSUさん） ----
+let _acFrom=null, _acFromT=0; const AC_BACK='← マイページへ戻る', AC_OV='#mpDlg:not([hidden]),#eaOv,.mbx,.rvx,.rvx-modal,.mbx-modal,#frDlg:not([hidden])';
+function acFromStop(){ _acFrom=null; clearInterval(_acFromT); document.querySelectorAll('#acFab,.ac-backin').forEach(x=>x.remove()); }
+function acBackHome(){ acFromStop(); _acTab='life'; acOpen(); }
+function acCloseOv(){ try{ document.querySelectorAll('.mbx-modal,.rvx-modal,#eaOv').forEach(x=>x.remove()); ['.mbx-close','.rvx-close'].forEach(q=>{ const b=document.querySelector(q); if(b) b.click(); });
+    const m=document.getElementById('mpDlg'); if(m&&!m.hidden) mpClose(); const f=document.getElementById('frDlg'); if(f&&!f.hidden) closeFriend(); }catch(e){ console.warn(e); } }
+function acFromStart(g){ acFromStop(); const pg=(g==='life'||g==='arc'); _acFrom={ g, pg, seen:false, t:Date.now(), page:page };
+  if(pg){ const f=document.createElement('button'); f.id='acFab'; f.type='button'; f.className='ac-fab'; f.textContent=AC_BACK; f.onclick=()=>{ if(g==='arc'){ viewing=null; try{ render(); }catch(e){} window.scrollTo(0,0); } acBackHome(); }; document.body.appendChild(f); }
+  _acFromT=setInterval(acFromTick,250); acFromTick(); }
+function acFromTick(){ const s=_acFrom; if(!s) return;
+  if(s.pg){ if(s.g==='arc'?!viewing:(page!=='life'||!!viewing)) acFromStop(); return; }
+  if(document.querySelector(AC_OV)){ s.seen=true;
+    document.querySelectorAll('.mbx-close,.rvx-close,#eaX,#mpDlg [data-mp="close"]').forEach(b=>{ if(b.textContent!==AC_BACK) b.textContent=AC_BACK; });
+    const box=s.g==='hs'&&!document.querySelector('.mbx,.rvx')?document.querySelector('.rvx-modal .rvx-mbox'):s.g==='invite'?document.querySelector('#frDlg:not([hidden]) .frd-in'):s.g==='pet'&&!document.querySelector('#mpDlg [data-mp="close"]')?document.querySelector('#mpDlg:not([hidden]) .mp-box'):null;
+    if(box&&!box.querySelector('.ac-backin')){ const b=document.createElement('button'); b.type='button'; b.className='ac-backin'; b.textContent=AC_BACK; b.onclick=e=>{ e.stopPropagation(); acCloseOv(); }; box.appendChild(b); }
+    return; }
+  if(s.seen){ const same=page===s.page; acFromStop(); if(same){ _acTab='life'; acOpen(); } return; }
+  if(Date.now()-s.t>2500) acFromStop(); }
+function acOpen(){ const d=acDlg(); if(_acFrom) acFromStop(); const sub=acIn()&&_acTab!=='life';
+  d.innerHTML=`<div class="frd-in ac-in">${sub?'<button class="frd-x ac-backx" type="button" data-achome="1">← 戻る</button>':'<button class="frd-x" type="button" aria-label="閉じる">×</button>'}${acHTML()}</div>`; d.hidden=false; document.body.classList.add('frd-on');
+  d.querySelector('.frd-x').onclick=sub?acBackHome:acClose; d.querySelectorAll('[data-achome]').forEach(b=>b.onclick=acBackHome); const on=(id,f)=>{ const b=document.getElementById(id); if(b) b.onclick=f; };
   on('acG',acGoogle); on('acLogin',()=>acEmail('in')); on('acNew',()=>acEmail('new')); on('acForgot',acReset); on('acOut',acLogout);
   on('acNow',async()=>{ acMsg('保存しています…'); await acSync('now'); acMsg(_acLastErr?'うまく保存できませんでした。もう一度押してください。':'保存完了しました！'); if(!_acLastErr) setTimeout(()=>{ const m=document.getElementById('acMsg'); if(m&&/保存完了/.test(m.textContent)) m.textContent=''; },2500); });
   const r=document.getElementById('fbRetry'); if(r) r.onclick=()=>{ if(typeof fbStart==='function') fbStart(); setTimeout(acOpen,1500); };
@@ -21470,6 +21490,12 @@ function acStart(){ if(_acStarted) return; _acStarted=true; acBtnSync(); documen
 .ac-big{ display:block; text-align:left; font-size:14px; padding:14px; margin:8px 0; line-height:1.5; } .ac-big b{ font-size:16px; } .ac-big small{ display:block; font-weight:400; font-size:12px; opacity:.85; } .ac-sub{ background:#fff; border:2px solid #FFB3C8; }
 .ac-note{ margin:12px auto; max-width:560px; background:#FFF6FA; border:2px solid #FFC2D0; border-radius:18px; padding:12px 14px; text-align:center; } .ac-note p{ margin:0 0 10px; font-size:14px; line-height:1.6; } .ac-note .frd-b{ display:inline-flex; padding:10px 18px; }
 .ac-toast{ position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:70; background:#D9467A; color:#fff; font-size:14px; padding:10px 16px; border-radius:999px; box-shadow:0 6px 20px rgba(0,0,0,.2); max-width:calc(100vw - 32px); }
+.ac-cnt{ margin:4px 0 8px; text-align:center; font-size:15px; font-weight:700; color:#3A2A33; background:#FFF6FA; border:2px solid #FFC2D0; border-radius:14px; padding:9px 10px; } .ac-cnt b{ font-size:24px; color:#D9467A; margin:0 3px; }
+.ac-tn{ font-style:normal; font-size:11px; line-height:1.2; background:#FFE3EC; color:#D9467A; border-radius:999px; padding:0 7px; margin-top:1px; } .ac-tab.on .ac-tn{ background:#fff; }
+.frd-x.ac-backx{ width:auto; height:34px; padding:0 13px; border-radius:999px; font:inherit; font-size:13px; font-weight:700; background:#FF8FAB; border-color:#FF8FAB; color:#fff; white-space:nowrap; } .ac-in:has(.ac-backx) h2{ padding-right:84px; }
+.ac-in .ac-backb{ margin:12px 0 2px; border:2px solid #FFB3C8; color:#D9467A; font-weight:700; }
+.ac-backin{ display:block; width:100%; box-sizing:border-box; margin:14px 0 2px; padding:12px 10px; border-radius:14px; border:2px solid #FFB3C8; background:#fff; color:#D9467A; font:inherit; font-size:15px; font-weight:700; cursor:pointer; }
+.ac-fab{ position:fixed; left:12px; bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:55; padding:11px 16px; border-radius:999px; border:2px solid #fff; background:#FF8FAB; color:#fff; font:inherit; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(217,70,122,.35); }
 @media (max-width:520px){ .ac-in{ padding:14px 14px 16px; } }`;
   const s=document.createElement('style'); s.textContent=css; document.head.appendChild(s);
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',acStart); else acStart(); })();
@@ -23482,7 +23508,7 @@ function mbxClose(){ if(!mbxEl) return; mbxEl.remove(); mbxEl=null; document.doc
 function machiBuraOpen(cityId){ try{ mbxCss(); const goId=typeof cityId==='string'?cityId:null; if(mbxEl){ if(goId) mbxGo(goId); return; } mbxLv={ reg:null, cty:null }; mbxCur=-1;
   const el=document.createElement('div'); el.className='mbx'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','街ブラ');
   el.innerHTML=`<div class="mbx-wrap">
-  <div class="mbx-top"><b>🟡 街ブラ</b><button class="mbx-pbtn mbx-sub2 mbx-close" type="button">✕ とじる</button></div>
+  <div class="mbx-top"><b>🟡 街ブラ</b><button class="mbx-pbtn mbx-sub2 mbx-close" type="button">← 戻る</button></div>
   <section class="mbx-panel"><div><h1>どこへ行く？</h1><p class="mbx-sub">地図をタップして、行きたい街をえらんでね</p></div><nav class="mbx-crumbs" aria-label="いまの場所"></nav><div class="mbx-map"></div><p class="mbx-legend">ピンのほかに、下のボタンからもえらべます</p></section>
   <section class="mbx-panel mbx-city" hidden><div class="mbx-row"><div><h1 class="mbx-cname"></h1><p class="mbx-sub"><span class="mbx-carea"></span><span class="mbx-ltime mbx-ctime"></span></p></div><button class="mbx-pbtn mbx-sub2 mbx-back" type="button">◀ 地図にもどる</button></div><p class="mbx-sub">この街の写真は3枚。押すと大きくなります。</p><div class="mbx-photos"></div><p class="mbx-credit mbx-ccred"></p></section>
   <section class="mbx-panel"><div><h1>📔 観光アルバム</h1><p class="mbx-sub">📸でとった写真が、ここにたまっていきます。</p></div><div class="mbx-album"></div></section>
@@ -25159,7 +25185,7 @@ const RV_TZI={"tokyo":"Asia/Tokyo","miyako":"Asia/Tokyo","ny":"America/New_York"
 function rvClose(){ if(!rvEl) return; rvEl.remove(); rvEl=null; document.documentElement.style.overflow=''; document.querySelectorAll('.rvx-modal').forEach(m=>m.remove()); }
 function ridesOpen(tab){ try{ rvCss(); const gone=rvSweep(); if(rvEl) return; if(tab&&rvCat(tab)) rvTab=tab;
   const el=document.createElement('div'); el.className='rvx'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','乗り物レンタル');
-  el.innerHTML=`<div class="rvx-wrap"><div class="rvx-top"><b>🔑 乗り物レンタル</b><button class="rv-btn rv-sub rv-sm rvx-close" type="button">✕ とじる</button></div>
+  el.innerHTML=`<div class="rvx-wrap"><div class="rvx-top"><b>🔑 乗り物レンタル</b><button class="rv-btn rv-sub rv-sm rvx-close" type="button">← 戻る</button></div>
   <section class="rvx-panel"><div><h1>🅿️ あずかっている乗り物<span class="rvx-cnt"></span></h1><p class="rvx-p">Higher Self が Channel のかわりに借りて、あずかっています。試作版は2台まで・1週間のレンタルです。</p></div><div class="rvx-own"></div></section>
   <section class="rvx-panel"><div><h1>🔑 乗り物をえらぶ</h1><p class="rvx-p">本物にある種類から、好きな形と色をえらんでね。</p></div><div class="rvx-tabs" role="tablist"></div><div class="rvx-grid"></div></section>
   <section class="rvx-panel"><div><h1>📷 乗り物アルバム</h1><p class="rvx-p">📸でとった写真が、ここにたまっていきます。</p></div><div class="rvx-alb"></div></section>
