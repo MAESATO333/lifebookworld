@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.44">
+<meta name="lifebook-version" content="v178.45">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.44 (2026-11-18) */ var LB_VER='v178.44';
+/* LIFE BOOK game version: v178.45 (2026-11-18) */ var LB_VER='v178.45';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21380,15 +21380,9 @@ function acHTML(){ const srv=typeof fbStatusHTML==='function'?fbStatusHTML():'';
   <p><small>思い出のLIFE BOOK</small><br><b>${arc}</b> 冊</p></div>
   <p class="ac-sync">${_acBusy?'☁️ 記録を合わせています…':_acLastErr?`⚠️ ${esc(_acLastErr)}`:`☁️ 記録はマイページに保存されています${at?`（${acAgo(at)}）`:''}`}</p>
   <p class="tiny muted">ほかの端末でも、同じ方法でログインすると、この人生の続きを見守れます。</p>
-  ${acQRHTML(how,u.email||'')}
   <div id="acKeeps"></div>
   <div class="frd-btns"><button class="frd-b frd-sky" id="acNow" type="button">保存する</button><button class="frd-b" id="acOut" type="button">ログアウト</button></div>
   <p class="frd-msg" id="acMsg" role="status"></p>`:pane+'<p class="frd-msg" id="acMsg" role="status"></p><button class="frd-b ac-backb" type="button" data-achome="1">← マイページへ戻る</button>'}`; }
-// スマホですぐ開けるQRコード（ゲームの住所だけ。ログインの情報は入れない）（2026-11-18 MITSUさん）
-function acQRHTML(how,em){ let url='https://lifebookworld.com/play.html'; try{ if(location.protocol==='https:') url=location.origin+location.pathname; }catch(e){}
-  const q=typeof moveQR==='function'?moveQR(url):''; if(!q) return '';
-  return `<div class="ac-qr"><p class="ac-qr-t">📱 スマホで この人生を開く</p><div class="ac-qr-c">${q}</div>
-  <ol><li>スマホのカメラで、このQRコードを読みます。</li><li>👤 マイページを開いて、<b>${how==='Google'?'Googleでログイン':'メールアドレスでログイン'}</b>${em?`（${esc(em)}）`:''}します。</li><li>同じ人生の続きが出てきます。</li></ol></div>`; }
 async function acKeepsFill(){ const box=document.getElementById('acKeeps'); if(!box||!acIn()) return;
   try{ if(!_acKeeps) _acKeeps=await acKeepList(); }catch(e){ return; } if(!_acKeeps.length){ box.innerHTML=''; return; }
   box.innerHTML=`<h3 class="ac-h3">保管してある人生</h3>`+_acKeeps.map(k=>`<div class="ac-keep"><span>${esc(k.nm||'人生')}<small>${esc(k.dev||'')}・${acAgo(k.at)}に保管しました</small></span><button class="frd-b" type="button" data-ackeep="${esc(k.id)}">この人生にもどす</button></div>`).join('')+`<p class="tiny muted">もどすと、すべての端末でその人生に入れかわり、いまの人生がここに保管されます。</p>`;
@@ -21452,7 +21446,7 @@ function acOpen(){ const d=acDlg(); if(_acFrom) acFromStop(); const sub=acIn()&&
 function acDlgRefresh(){ const d=document.getElementById('acDlg'); if(d&&!d.hidden&&!d.querySelector('#acOk')&&!d.querySelector('#acEm:focus,#acPw:focus')){ const m=(document.getElementById('acMsg')||{}).textContent||''; acOpen(); if(m&&!/…$/.test(m)) acMsg(m); } acBtnSync(); }
 function acToast(t){ let e=document.getElementById('acToast'); if(!e){ e=document.createElement('div'); e.id='acToast'; e.className='ac-toast'; e.setAttribute('role','status'); document.body.appendChild(e); } e.textContent=t; e.hidden=false; clearTimeout(acToast._t); acToast._t=setTimeout(()=>{ e.hidden=true; },4000); }
 // 上の帯のボタン
-function acBtnSync(){ const r=document.querySelector('.mast-r'); if(!r) return; let b=document.getElementById('acTop');
+function acBtnSync(){ try{ const ia=document.querySelector('.inapp'); if(ia) ia.style.display=acIn()?'none':''; }catch(e){} const r=document.querySelector('.mast-r'); if(!r) return; let b=document.getElementById('acTop');
   if(!b){ b=document.createElement('button'); b.id='acTop'; b.type='button'; b.className='fr-top ac-top'; b.onclick=acOpen; r.appendChild(b); }
   const t=acIn()?'<span aria-hidden="true">👤</span>マイページ<i class="ac-dot" aria-hidden="true"></i>':'<span aria-hidden="true">👤</span>マイページ'; if(b.innerHTML!==t) b.innerHTML=t; }
 // まだ生まれていない画面で：ほかの端末で見守っている人へのひとこと
@@ -21496,8 +21490,6 @@ function acStart(){ if(_acStarted) return; _acStarted=true; acBtnSync(); documen
 .ac-big{ display:block; text-align:left; font-size:14px; padding:14px; margin:8px 0; line-height:1.5; } .ac-big b{ font-size:16px; } .ac-big small{ display:block; font-weight:400; font-size:12px; opacity:.85; } .ac-sub{ background:#fff; border:2px solid #FFB3C8; }
 .ac-note{ margin:12px auto; max-width:560px; background:#FFF6FA; border:2px solid #FFC2D0; border-radius:18px; padding:12px 14px; text-align:center; } .ac-note p{ margin:0 0 10px; font-size:14px; line-height:1.6; } .ac-note .frd-b{ display:inline-flex; padding:10px 18px; }
 .ac-toast{ position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:70; background:#D9467A; color:#fff; font-size:14px; padding:10px 16px; border-radius:999px; box-shadow:0 6px 20px rgba(0,0,0,.2); max-width:calc(100vw - 32px); }
-.ac-qr{ background:#fff; border:2px solid #FFD6E1; border-radius:16px; padding:12px 14px; margin:10px 0; text-align:center; } .ac-qr-t{ margin:0 0 8px; font-weight:700; font-size:15px; color:#3A2A33; } .ac-qr-c{ width:160px; max-width:60%; margin:0 auto 8px; padding:6px; background:#fff; border-radius:10px; } .ac-qr-c svg{ display:block; width:100%; height:auto; }
-.ac-qr ol{ margin:0; padding-left:1.3em; text-align:left; font-size:13px; line-height:1.7; color:#3A2A33; } .ac-qr ol b{ color:#D9467A; }
 .ac-cnt{ margin:4px 0 8px; text-align:center; font-size:15px; font-weight:700; color:#3A2A33; background:#FFF6FA; border:2px solid #FFC2D0; border-radius:14px; padding:9px 10px; } .ac-cnt b{ font-size:24px; color:#D9467A; margin:0 3px; }
 .ac-tn{ font-style:normal; font-size:11px; line-height:1.2; background:#FFE3EC; color:#D9467A; border-radius:999px; padding:0 7px; margin-top:1px; } .ac-tab.on .ac-tn{ background:#fff; }
 .frd-x.ac-backx{ width:auto; height:34px; padding:0 13px; border-radius:999px; font:inherit; font-size:13px; font-weight:700; background:#FF8FAB; border-color:#FF8FAB; color:#fff; white-space:nowrap; } .ac-in:has(.ac-backx) h2{ padding-right:84px; }
