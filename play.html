@@ -48,8 +48,8 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.27">
-<script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5af5f16575224c8c9596106067decbde"}'></script>
+<meta name="lifebook-version" content="v178.28">
+<script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head><body>
 <title>LIFE BOOK — 人生のヒントが、ここにある</title>
@@ -724,7 +724,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.27 (2026-11-17) */ var LB_VER='v178.27';
+/* LIFE BOOK game version: v178.28 (2026-11-17) */ var LB_VER='v178.28';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -18216,7 +18216,7 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 </style>`);
 
 // v178.27（MITSUさん）：友だちの一覧は、全部ならべずに、コンパクトな箱の中でスクロールして見る（スマホ優先）
-(function(){ const s=document.createElement('style'); s.textContent='.gsz-l{ max-height:min(46vh,380px); overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; padding:6px; border-radius:14px; background:#FFF8FA; box-shadow:inset 0 0 0 1.5px #F6D3DE; } .gsz-sc{ margin:10px 0 0; font-size:12.5px; color:#C2476B; font-weight:700; text-align:center; }'; document.head.appendChild(s); })();// v148: ペットの名前を、1回だけ直せる
+(function(){ const s=document.createElement('style'); s.textContent='.gsz-l{ max-height:min(23vh,190px); overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; padding:6px; border-radius:14px; background:#FFF8FA; box-shadow:inset 0 0 0 1.5px #F6D3DE; } .gsz-sc{ margin:10px 0 0; font-size:12.5px; color:#C2476B; font-weight:700; text-align:center; }'; document.head.appendChild(s); })();// v148: ペットの名前を、1回だけ直せる
 (function(){
   const P0=mpPageHTML; let open=false;
   mpPageHTML=function(){ let h=P0.apply(this,arguments); const p=mpGet(); if(!p) return h; const gone=mpGone(p);
