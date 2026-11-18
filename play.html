@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.39">
+<meta name="lifebook-version" content="v178.40">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -741,7 +741,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.39 (2026-11-18) */ var LB_VER='v178.39';
+/* LIFE BOOK game version: v178.40 (2026-11-18) */ var LB_VER='v178.40';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21215,7 +21215,7 @@ setInterval(flPhListen,4000); setTimeout(flPhListen,1800);
 //  ・初めてのログインで、この端末とマイページに別の人生があるときは、聞かずに「長く見守ってきたほう」に必ず揃える。もう一方は「保管してある人生」に残す（消さない）。
 //  ・ログインしていない端末で、初めて「生まれる」を押したときは、ほかの端末で見守っていないか先にたずねる（別の人生が生まれないように）。
 const AC_UID='ac.uid', AC_REV='ac.rev', AC_BASE='ac.base', AC_AT='ac.at', AC_CHUNK=900000;
-let _acTab='life', _acReloading=false, _acBusy=false, _acStarted=false, _acPullAt=0, _acLastErr='', _acKeeps=null, _acState='';
+let _acGmailAsk='', _acTab='life', _acReloading=false, _acBusy=false, _acStarted=false, _acPullAt=0, _acLastErr='', _acKeeps=null, _acState='';
 function acSkip(k){ return /^(firebase:|ac\.|lb\.|gw\.seen|mbx\.lastStrip$|hmiDeck$|hitotsu\.(fbreg|fbpush|pwaSet|dev|mvNo|news$|sky\.|nw\.|nwjp\.|stat|space\.))/.test(k); }
 function acLocal(){ const m={}; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&!acSkip(k)){ const v=localStorage.getItem(k); if(v!=null) m[k]=v; } } }catch(e){} return m; }
 function acHash(s){ let h=0x811c9dc5; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,0x01000193); } return (h>>>0).toString(36)+'.'+s.length; }
@@ -21331,6 +21331,8 @@ function acGoogle(){ const U=FB.U, u=acUser(), pv=new U.GoogleAuthProvider(); pv
   const p=(u&&u.isAnonymous)?U.linkWithPopup(u,pv).catch(e=>{ if(/credential-already-in-use/.test(e&&e.code||'')){ const c=U.GoogleAuthProvider.credentialFromError(e); if(c) return U.signInWithCredential(FB.auth,c); } throw e; }):U.signInWithPopup(FB.auth,pv);
   p.then(acAfterLogin).catch(e=>acMsg(acErr(e))); }
 async function acEmail(mode){ const U=FB.U, em=($('#acEm').value||'').trim(), pw=$('#acPw').value||''; if(!em||!pw){ acMsg('メールアドレスとパスワードを入れてください。'); return; }
+  // Gmail の人は、Googleでログインのほうが まちがいが少ない（打ちまちがいで別のアカウントができないように）
+  if(mode==='new'&&/@(gmail|googlemail)\.com$/i.test(em)&&_acGmailAsk!==em){ _acGmailAsk=em; acMsg('Gmail のアドレスですね。ほかの端末で「Googleでログイン」を使っているなら、ここでも上の「Googleでログイン」を押してください。このまま登録するときは、もう一度「初めて登録する」を押してください（アドレスに打ちまちがいがないか確認してね）。'); return; }
   acMsg(mode==='new'?'登録しています…':'ログインしています…');
   try{ const u=acUser();
     if(mode==='new'){ const c=U.EmailAuthProvider.credential(em,pw); if(u&&u.isAnonymous) await U.linkWithCredential(u,c); else await U.createUserWithEmailAndPassword(FB.auth,em,pw); }
@@ -21415,10 +21417,10 @@ function acBindPanes(d){ d.querySelectorAll('[data-actab]').forEach(b=>b.onclick
 function acOpen(){ const d=acDlg(); d.innerHTML=`<div class="frd-in ac-in"><button class="frd-x" type="button" aria-label="閉じる">×</button>${acHTML()}</div>`; d.hidden=false; document.body.classList.add('frd-on');
   d.querySelector('.frd-x').onclick=acClose; const on=(id,f)=>{ const b=document.getElementById(id); if(b) b.onclick=f; };
   on('acG',acGoogle); on('acLogin',()=>acEmail('in')); on('acNew',()=>acEmail('new')); on('acForgot',acReset); on('acOut',acLogout);
-  on('acNow',async()=>{ acMsg('保存しています…'); await acSync('now'); acMsg(_acLastErr?'うまく保存できませんでした':'保存しました'); });
+  on('acNow',async()=>{ acMsg('保存しています…'); await acSync('now'); acMsg(_acLastErr?'うまく保存できませんでした。もう一度押してください。':'保存完了しました！'); if(!_acLastErr) setTimeout(()=>{ const m=document.getElementById('acMsg'); if(m&&/保存完了/.test(m.textContent)) m.textContent=''; },2500); });
   const r=document.getElementById('fbRetry'); if(r) r.onclick=()=>{ if(typeof fbStart==='function') fbStart(); setTimeout(acOpen,1500); };
   acBindPanes(d); acKeepsFill(); }
-function acDlgRefresh(){ const d=document.getElementById('acDlg'); if(d&&!d.hidden&&!d.querySelector('#acOk')&&!d.querySelector('#acEm:focus,#acPw:focus')){ const m=(document.getElementById('acMsg')||{}).textContent||''; acOpen(); if(m) acMsg(m); } acBtnSync(); }
+function acDlgRefresh(){ const d=document.getElementById('acDlg'); if(d&&!d.hidden&&!d.querySelector('#acOk')&&!d.querySelector('#acEm:focus,#acPw:focus')){ const m=(document.getElementById('acMsg')||{}).textContent||''; acOpen(); if(m&&!/…$/.test(m)) acMsg(m); } acBtnSync(); }
 function acToast(t){ let e=document.getElementById('acToast'); if(!e){ e=document.createElement('div'); e.id='acToast'; e.className='ac-toast'; e.setAttribute('role','status'); document.body.appendChild(e); } e.textContent=t; e.hidden=false; clearTimeout(acToast._t); acToast._t=setTimeout(()=>{ e.hidden=true; },4000); }
 // 上の帯のボタン
 function acBtnSync(){ const r=document.querySelector('.mast-r'); if(!r) return; let b=document.getElementById('acTop');
