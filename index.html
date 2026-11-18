@@ -397,7 +397,7 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
  html.lb-land body.lb-land-show .top .gnav a{box-sizing:border-box; justify-content:center; height:40px; padding:0 8px!important; font-size:13px!important; white-space:nowrap}
 
 </style>
-<meta name="lifebook-version" content="v178.69">
+<meta name="lifebook-version" content="v178.70">
 <style>
 /* 2026-11-19（MITSUさん）：暗い画面設定のとき、文章が白くて薄く、読みにくかったのを直す。文章の色を明るく・少し太くして、ハッキリ読めるように */
 @media (prefers-color-scheme: dark){
@@ -1157,7 +1157,7 @@ document.querySelectorAll('[data-go]').forEach(a => { a.href = GAME_URL + a.data
 </script>
 <script>
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.69'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.70'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }

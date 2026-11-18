@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.69">
+<meta name="lifebook-version" content="v178.70">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.69 (2026-11-19) */ var LB_VER='v178.69';
+/* LIFE BOOK game version: v178.70 (2026-11-19) */ var LB_VER='v178.70';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -19633,6 +19633,7 @@ function flPhotoSVG(ph){ if(ph.bg&&ph.bg.length) return flPhotoBig(ph); const n=
    ${ph.sh&&ph.sh.length?flShelfSVG(ph.sh,ph.items&&ph.items.length?92:20,192,ph.sh.length>5?82:70,36,30)+(ph.items&&ph.items.length?(ph.tb&&ph.tb.length>5?flTableSVG(flPhW(ph.tb.length),100,136,ph.tb):ph.tb&&ph.tb.length>1?flTableSVG(66,50,136,ph.tb):flRoomSVG(84,48,136,ph)):''):(ph.items&&ph.items.length?(ph.tb&&ph.tb.length>1?flTableSVG(ph.tb.length>5?flPhW(ph.tb.length):84,100,136,ph.tb):flRoomSVG(112,104,136,ph)):'')}</svg>`; }
 function flTakePhoto(){ const rm=store.get(KEY_FLROOM,null), sh=flShelf(); const has=rm&&rm.items&&rm.items.length; if(!has&&!sh.length&&!flBig().length) return false; const L=store.get(KEY_FLALB,[]); L.push({ items:has?rm.items.map(x=>({ f:x.f, c:x.c })):[], ves:has?rm.ves:'vase', t:Date.now(), by:has?(rm.by||''):'', from:has?(rm.from||''):'', sh:sh.map(v=>({ items:v.items, ves:v.ves })), tb:flTable().map(v=>({ items:v.items.map(x=>({ f:x.f, c:x.c })), ves:v.ves })), bg:flBig().map(v=>({ items:v.items.map(x=>({ f:x.f, c:x.c })) })), bgBy:[...new Set(flBig().map(v=>v.by).filter(Boolean))].slice(0,12), bgFrom:[...new Set(flBig().map(v=>v.from).filter(Boolean))].slice(0,12) }); while(L.length>120) L.shift(); store.set(KEY_FLALB,L); return true; }
 function flPhReadH(){ const g=id=>document.getElementById(id); if(g('flPhH0')) _flPhH=[0,1,2].map(i=>g('flPhH'+i)?g('flPhH'+i).value.trim().slice(0,i===1?10:9):''); }
+var FL_PH_DAYMAX=10; /* v178.70（MITSUさん 2026-11-19）：1人の友だちに1日に送れる写真（お花の写真＋Gateway の写真）は 10枚まで（前は3枚） */
 var _flPhSend=-1, _flPhTo='', _flPhMsg='', _flPhH=null, _flPhTos=null;
 // v173: 写真のお礼は俳句で（作者は自分の Higher Self 名）
 const FL_TH5=['ありがとう','はなたばを','うれしくて','へやにさく','いいかおり','あたたかい','いつまでも','たからもの'];
@@ -20378,13 +20379,13 @@ function gwSendOpen(t,msg){ const rec=gwGetRec(t); if(typeof gsZoomOpen!=='funct
   const fr=typeof flFriends==='function'?flFriends():[]; if(_gwTo==null||!fr.some(f=>f.id===_gwTo)) _gwTo=fr[0]?fr[0].id:null;
   gsZoomOpen(`<div class="gw-send"><h3 class="gsz-h">💌 Gateway の写真を、Higher Self に送る</h3>${gwPhHTML('a:'+rec.t)}
     ${fr.length?`<p class="tiny muted">だれに送りますか？</p><div class="gw-tos">${fr.map(f=>`<button type="button" class="mp-w${f.id===_gwTo?' on':''}" data-gwto="${esc(f.id)}">${esc(f.by||'友だち')}さん</button>`).join('')}</div><div class="np-row"><button type="button" class="mp-btn" data-gwgo="${esc(String(rec.t))}">💌 送る</button></div>`:'<p>まだ友だちがいません。「友だちに紹介」から、友だちとつながると送れます。</p>'}
-    ${msg?`<p class="gw-msg">${esc(msg)}</p>`:''}<p class="tiny muted">1人の友だちに送れる写真は、1日3枚までです（お花の写真とあわせて）。</p></div>`);
+    ${msg?`<p class="gw-msg">${esc(msg)}</p>`:''}<p class="tiny muted">1人の友だちに送れる写真は、1日10枚までです（お花の写真とあわせて）。</p></div>`);
   setTimeout(()=>gwFill(document.getElementById('gsZoom')),0); }
 async function gwSend(t){ const rec=gwGetRec(t); if(!rec) return gwSendOpen(t); const fr=(typeof flFriends==='function'?flFriends():[]).find(f=>f.id===_gwTo); if(!fr) return gwSendOpen(t,'だれに送るか、選んでください。');
   const p='GW1:'+JSON.stringify(rec); if(p.length>1000) return gwSendOpen(t,'この写真は大きすぎて、送れませんでした。');
   const b=document.querySelector('[data-gwgo]'); if(b){ b.disabled=true; b.textContent='おくっています…'; }
   if(!(typeof flOn==='function'&&flOn())&&!(typeof fbWaitOn==='function'&&await fbWaitOn(15000))) return gwSendOpen(t,'いまサーバーにつながるのを待っています。少しあとで、もう一度押してください。');
-  const sent=store.get('fl.phSent',{}), key=fr.id+'|'+flDay(), n=(sent[key]||0)+1; if(n>3) return gwSendOpen(t,`${fr.by||'友だち'}さんには、きょうはもう3枚送りました。また明日ね。`);
+  const sent=store.get('fl.phSent',{}), key=fr.id+'|'+flDay(), n=(sent[key]||0)+1; if(n>FL_PH_DAYMAX) return gwSendOpen(t,`${fr.by||'友だち'}さんには、きょうはもう${FL_PH_DAYMAX}枚送りました。また明日ね。`);
   const me=myId(), by=String(store.get(KEY_ME,'')||'').slice(0,20), id=me+'_'+flDay()+'_'+n;
   try{ await Promise.race([FB.D.setDoc(FB.D.doc(FB.db,'ids',String(fr.id),'photo',id),{ from:me, by, p, m:'', t:Date.now() }),new Promise((_,ng)=>setTimeout(()=>ng(new Error('timeout')),15000))]);
     const keep={}; Object.keys(sent).filter(x=>x.endsWith(flDay())).forEach(x=>keep[x]=sent[x]); keep[key]=n; store.set('fl.phSent',keep);
@@ -20868,7 +20869,7 @@ try{ if(PWA_STANDALONE) store.set(KEY_PWASET,Date.now()); }catch(e){}
 window.addEventListener('appinstalled',()=>{ _pwaPrompt=null; _pwaDone=true; try{ store.set(KEY_PWASET,Date.now()); }catch(e){} pwaRefresh(); });
 if('serviceWorker' in navigator && /(github\.io|lifebookworld\.com)$/.test(location.host)) window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.69'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+(function(){ try{ var CUR='v178.70'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
   function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
     if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
     try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
@@ -21219,7 +21220,7 @@ async function flPhSendMany(ids,ph,msg){ ids=[...new Set(ids)].slice(0,5); if(!i
   _flMsg=(ok.length?`${ok.join('・')}に、お礼の俳句と写真を送りました💌`:'')+(ng.length?(ok.length?'　':'')+`送れなかった人：${ng.join('・')}`:''); if(ok.length){ _flPhSend=-1; _flPhMsg=''; _flPhH=null; _flPhTos=null; } flOpen(); }
 async function flPhSend(to,ph,msg,many){ const fr=flFriends().find(f=>f.id===to); if(!fr){ if(many) return '（見つかりません）'; _flMsg='だれに送るか、Higher Self名を選んでね。'; flOpen(); return; }
   if(!flOn()&&!(await fbWaitOn(15000))){ if(many) return '（サーバーにつながっていません）'; _flMsg='いまサーバーにつながるのを待っています。少しあとで、もう一度押してください。'; flOpen(); return; }
-  const sent=store.get('fl.phSent',{}), key=fr.id+'|'+flDay(), n=(sent[key]||0)+1; if(n>3){ if(many) return '（きょうはもう3枚送りました）'; _flMsg=`${fr.by||'友だち'}さんには、きょうはもう3枚送りました。また明日ね。`; flOpen(); return; }
+  const sent=store.get('fl.phSent',{}), key=fr.id+'|'+flDay(), n=(sent[key]||0)+1; if(n>FL_PH_DAYMAX){ if(many) return `（きょうはもう${FL_PH_DAYMAX}枚送りました）`; _flMsg=`${fr.by||'友だち'}さんには、きょうはもう${FL_PH_DAYMAX}枚送りました。また明日ね。`; flOpen(); return; }
   const me=myId(), by=String(store.get(KEY_ME,'')||'').slice(0,20), id=me+'_'+flDay()+'_'+n;
   if(!many){ const btn=document.querySelector('[data-fl-phgo]'); if(btn){ btn.disabled=true; btn.textContent='おくっています…'; } }
   try{ await FB.D.setDoc(FB.D.doc(FB.db,'ids',String(fr.id),'photo',id),{ from:me, by, p:flPhCode(ph), m:String(msg||'').slice(0,30), t:Date.now() });
