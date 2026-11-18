@@ -384,6 +384,19 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
 #cities .isle figcaption b{font-size:12px}
 </style>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script><!-- End Cloudflare Web Analytics -->
+<style>
+/* 2026-11-19（MITSUさん）：携帯を横にしている間は、上のボタン（Gateway・Life Home・Life Record・人生をはじめる）をかくして、街の風景を広く見せる。ロゴの右の「☰ ボタンを出す」で出し入れ。縦にもどすと、いつもの並び。パソコン・タブレットはそのまま */
+.lb-landbtn{display:none}
+@media (orientation:landscape) and (max-height:500px) and (pointer:coarse){
+  header.top{position:static!important}
+  .top .wrap{flex-wrap:wrap!important; row-gap:8px!important; padding-block:6px!important}
+  .top .gnav,.top .btn.small{display:none!important}
+  .lb-landbtn{display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; margin-left:auto; height:40px; padding:0 16px; border-radius:999px; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; font:inherit; font-family:var(--round); font-size:13px; font-weight:700; line-height:1; white-space:nowrap; cursor:pointer}
+  body.lb-land-show .top .btn.small{display:inline-flex!important; align-items:center; box-sizing:border-box; height:40px; margin:0}
+  body.lb-land-show .top .gnav{display:grid!important; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px!important; order:3!important; width:100%!important; overflow:visible; padding:0 0 4px}
+  body.lb-land-show .top .gnav a{box-sizing:border-box; justify-content:center; height:40px; padding:0 8px!important; font-size:13px!important; white-space:nowrap}
+}
+</style>
 </head>
 <body>
 
@@ -1124,5 +1137,12 @@ document.querySelectorAll('[data-go]').forEach(a => { a.href = GAME_URL + a.data
 })();
 </script>
 
+<script>
+/* 2026-11-19（MITSUさん）：携帯を横にしている間の「☰ ボタンを出す」（横にするたび、かくれた状態から） */
+(function(){ try{ var w=document.querySelector('header.top .wrap'), m=w&&w.querySelector('.mark'); if(!m) return; var b=document.createElement('button'); b.type='button'; b.className='lb-landbtn';
+  var set=function(on){ document.body.classList.toggle('lb-land-show',!!on); b.textContent=on?'✕ ボタンをかくす':'☰ ボタンを出す'; b.setAttribute('aria-expanded',on?'true':'false'); };
+  b.addEventListener('click',function(){ set(!document.body.classList.contains('lb-land-show')); }); m.parentNode.insertBefore(b,m.nextSibling); set(false);
+  var mq=window.matchMedia('(orientation:landscape) and (max-height:500px) and (pointer:coarse)'); var f=function(){ set(false); }; if(mq.addEventListener) mq.addEventListener('change',f); else if(mq.addListener) mq.addListener(f); }catch(e){} })();
+</script>
 </body>
 </html>

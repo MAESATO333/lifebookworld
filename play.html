@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.62">
+<meta name="lifebook-version" content="v178.63">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -742,7 +742,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.62 (2026-11-19) */ var LB_VER='v178.62';
+/* LIFE BOOK game version: v178.63 (2026-11-19) */ var LB_VER='v178.63';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20174,7 +20174,7 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .pr-ap ul{ margin:0; padding-left:1.1em; } .pr-ap li{ font-size:14px; line-height:1.6; color:#4A3A42; margin:4px 0; }
 .pr-nt{ margin:4px 0 0; font-size:11px; color:#A88A96; }
 .pr-al{ max-height:300px; }
-@media (prefers-reduced-motion:reduce){ .pr-p,.pr-bg,.pr-bt,.pr-hop{ animation:none!important; } .pr-p{ position:static; display:inline-flex; } .pr-run{ overflow-x:auto; white-space:nowrap; height:auto; padding:8px; } .pr-bg{ display:none; } .pr-bw{ overflow-x:auto; } }
+/* v178.63（MITSUさん 2026-11-19）：携帯の「視差効果を減らす（動きを減らす）」がオンでも、公園のペットは、ほかの携帯と同じように走らせる。（前は、ペットが画面の外で待ったまま止まり、公園の絵も消えて、何も見えなかった） */ @media (prefers-reduced-motion:reduce){ .pr-bt{ animation:none!important; } .pr-bw{ overflow-x:auto; } }
 </style>`);
 // v175: 海辺の動く街。Life Home にいつも出すカードと、Gateway 用の「?view=street」（同じ部品）
 function lbStTod(){ const h=new Date().getHours(); return h>=5&&h<9?'morning':h>=9&&h<16?'day':h>=16&&h<19?'evening':'night'; }
