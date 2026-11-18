@@ -397,6 +397,7 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
  html.lb-land body.lb-land-show .top .gnav a{box-sizing:border-box; justify-content:center; height:40px; padding:0 8px!important; font-size:13px!important; white-space:nowrap}
 
 </style>
+<meta name="lifebook-version" content="v178.65">
 </head>
 <body>
 
@@ -1142,6 +1143,15 @@ document.querySelectorAll('[data-go]').forEach(a => { a.href = GAME_URL + a.data
   var set=function(on){ document.body.classList.toggle('lb-land-show',!!on); b.textContent=on?'✕ ボタンをかくす':'☰ ボタンを出す'; b.setAttribute('aria-expanded',on?'true':'false'); };
   b.addEventListener('click',function(){ set(!document.body.classList.contains('lb-land-show')); }); m.parentNode.insertBefore(b,m.nextSibling); set(false);
   window.addEventListener('lb-land-change',function(){ set(false); }); (function(){ try{ var de=document.documentElement; var chk=function(){ var sw=Math.min(screen.width||9999,screen.height||9999); var touch=(navigator.maxTouchPoints||0)>0||('ontouchstart' in window); var land=false; try{ if(typeof window.orientation==='number') land=Math.abs(window.orientation)===90; else if(screen.orientation&&screen.orientation.type) land=/landscape/.test(screen.orientation.type); else land=window.innerWidth>window.innerHeight; }catch(e){ land=window.innerWidth>window.innerHeight; } if(!land&&window.innerWidth>window.innerHeight*1.25&&typeof window.orientation!=='number'&&!(screen.orientation&&screen.orientation.type)) land=true; var on=!!(touch&&sw<=540&&land); if(de.classList.contains('lb-land')!==on){ de.classList.toggle('lb-land',on); try{ window.dispatchEvent(new Event('lb-land-change')); }catch(e){} } }; chk(); window.addEventListener('resize',chk); window.addEventListener('orientationchange',function(){ chk(); setTimeout(chk,200); setTimeout(chk,600); }); try{ if(screen.orientation&&screen.orientation.addEventListener) screen.orientation.addEventListener('change',chk); }catch(e){} document.addEventListener('visibilitychange',chk); }catch(e){} })(); }catch(e){} })();
+</script>
+<script>
+/* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
+(function(){ try{ var CUR='v178.65'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
+  function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
+    if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
+    try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
+  function chk(){ try{ var a=document.activeElement; if(busy||document.hidden||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return; busy=true; fetch('version.json?_='+Date.now(),{cache:'no-store'}).then(function(r){ return r.ok?r.json():null; }).then(function(j){ busy=false; if(j&&j.v&&j.v!==CUR) go(j.v); }).catch(function(){ busy=false; }); }catch(e){ busy=false; } }
+  setTimeout(chk,1200); document.addEventListener('visibilitychange',function(){ if(!document.hidden) chk(); }); window.addEventListener('pageshow',chk); window.addEventListener('focus',chk); }catch(e){} })();
 </script>
 </body>
 </html>
