@@ -506,7 +506,7 @@ requestAnimationFrame(step);
 })();
 </script>
     <div class="parade" aria-label="街を走る乗り物">
-      <p class="worlds-title">友だちや、友だちの友だちが交差する街</p>
+      <p class="worlds-title">友だちと暮らす街</p>
       <p class="worlds-sub">バスや電車、船や飛行機に、Higher Self の名前が乗っています</p>
       <div class="pd-frame"><div id="parade" class="pd-view"></div><div id="pdFlash" class="pd-flash" aria-hidden="true"></div></div>
       <div class="pd-cam"><span id="pdMsg" class="pd-msg" role="status" aria-live="polite"></span><button type="button" id="pdShot" class="pd-btn" aria-label="写真を撮る">📷 写真</button><button type="button" id="pdMovie" class="pd-btn" aria-label="動く写真を撮る">🎬 動く写真</button><button type="button" id="pdPick" class="pd-btn" aria-label="選んでアップで撮る">🔍 アップ</button><button type="button" id="pdAlb" class="pd-btn" aria-label="アルバム">📒 アルバム<span></span></button></div>
@@ -726,7 +726,7 @@ var tag=function(e,fs,force,want){ if(!force&&!N.length) return; var rs=e.queryS
     var yy=(seats.length>1?base:h.y-h.r*1.35-fs*.3)-L*fs*1.7; s+=pill(h.x,yy,t,fs); top=Math.min(top,yy-fs*1.45); });
   if(seats.length>=2){ var all; if(force) all=LB!==2; else { var mm=G.slice(0,seats.length); all=true; for(var x=0;x<mm.length;x++) for(var y=x+1;y<mm.length;y++) if(!F[mm[x]][mm[y]]) all=false; } LB=all?1:2;
     var minx=Math.min.apply(null,seats.map(function(h){ return h.x; })), maxx=Math.max.apply(null,seats.map(function(h){ return h.x; }));
-    s+='<text x="'+((minx+maxx)/2).toFixed(1)+'" y="'+(top-fs*.35).toFixed(1)+'" font-size="'+(fs*.9).toFixed(1)+'" text-anchor="middle" fill="#E0457B" font-weight="700" stroke="#FFFFFF" stroke-width="'+(fs*.28).toFixed(2)+'" paint-order="stroke">'+(all?'♡ 友だち':'友だちの友だち')+'</text>'; }
+    s+='<text x="'+((minx+maxx)/2).toFixed(1)+'" y="'+(top-fs*.35).toFixed(1)+'" font-size="'+(fs*.9).toFixed(1)+'" text-anchor="middle" fill="#E0457B" font-weight="700" stroke="#FFFFFF" stroke-width="'+(fs*.28).toFixed(2)+'" paint-order="stroke">'+'♡ 友だち' /* 2026-11-19 MITSUさん：街では、みんな「友だち」 */+'</text>'; }
   var g=document.createElementNS(NS,'g'); g.innerHTML=s; e.appendChild(g); e._tag=[st,NM,seats.length>=2?LB:0]; if(!force){ var used=G.slice(0,seats.length); used.forEach(function(i){ ON[i]=1; }); e._hs=used; } };
 tag.on=ON; tag.nm=function(i){ return N[i]; };
 // ---- 友だちのペット（ゲームが 'hitotsu.gwPets' に、名前・種類・飼い主のHigher Self名だけを入れている）。乗り物に、だれかと一緒に乗る ----
@@ -925,7 +925,7 @@ box.addEventListener('click',function(ev){ if(!picking||!S) return; ev.stopPropa
   if(flash){ flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); } pickMode(false); say('📷 パシャ！ アップの写真をアルバムに入れました。'); albCount(); },true);
 var tdl=document.getElementById('pdTalk');
 function openTalk(k){ var t=null; TK.forEach(function(x){ if(x.k===k) t=x; }); if(!t||!tdl) return; if(tdl.parentNode!==document.body) document.body.appendChild(tdl);
-  if(!t.lines) return; var L=tdl.querySelector('.pd-lines'); L.innerHTML=''; tdl.querySelector('.pd-lab').textContent=t.lb===1?'♡ 友だち':t.lb===2?'友だちの友だち':'街の人たち';
+  if(!t.lines) return; var L=tdl.querySelector('.pd-lines'); L.innerHTML=''; tdl.querySelector('.pd-lab').textContent=t.lb?'♡ 友だち':'街の人たち';
   if(!t.lines) return; (t.lines).forEach(function(tx,i){ var d=document.createElement('div'); d.className='pd-ln'+(i%2?' r':''); var b=document.createElement('b'); b.textContent=t.n[i%2]||(i%2?'🙂':'😊'); var sp=document.createElement('span'); sp.textContent=tx; d.appendChild(b); d.appendChild(sp); L.appendChild(d); });
   tdl.hidden=false; document.body.style.overflow='hidden'; }
 function closeTalk(){ tdl.hidden=true; document.body.style.overflow=''; }

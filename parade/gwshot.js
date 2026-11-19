@@ -138,7 +138,7 @@ var tag=function(e,fs,force,want){ if(!force&&!N.length) return; var rs=e.queryS
     var yy=(seats.length>1?base:h.y-h.r*1.35-fs*.3)-L*fs*1.7; s+=pill(h.x,yy,t,fs); top=Math.min(top,yy-fs*1.45); });
   if(seats.length>=2){ var all; if(force) all=LB!==2; else { var mm=G.slice(0,seats.length); all=true; for(var x=0;x<mm.length;x++) for(var y=x+1;y<mm.length;y++) if(!F[mm[x]][mm[y]]) all=false; } LB=all?1:2;
     var minx=Math.min.apply(null,seats.map(function(h){ return h.x; })), maxx=Math.max.apply(null,seats.map(function(h){ return h.x; }));
-    s+='<text x="'+((minx+maxx)/2).toFixed(1)+'" y="'+(top-fs*.35).toFixed(1)+'" font-size="'+(fs*.9).toFixed(1)+'" text-anchor="middle" fill="#E0457B" font-weight="700" stroke="#FFFFFF" stroke-width="'+(fs*.28).toFixed(2)+'" paint-order="stroke">'+(all?'♡ 友だち':'友だちの友だち')+'</text>'; }
+    s+='<text x="'+((minx+maxx)/2).toFixed(1)+'" y="'+(top-fs*.35).toFixed(1)+'" font-size="'+(fs*.9).toFixed(1)+'" text-anchor="middle" fill="#E0457B" font-weight="700" stroke="#FFFFFF" stroke-width="'+(fs*.28).toFixed(2)+'" paint-order="stroke">'+'♡ 友だち'+'</text>'; }
   var g=document.createElementNS(NS,'g'); g.innerHTML=s; e.appendChild(g); e._tag=[st,NM,seats.length>=2?LB:0]; if(!force){ var used=G.slice(0,seats.length); used.forEach(function(i){ ON[i]=1; }); e._hs=used; } };
 tag.on=ON; tag.nm=function(i){ return N[i]; };
 // ---- 友だちのペット（ゲームが 'hitotsu.gwPets' に、名前・種類・飼い主のHigher Self名だけを入れている）。乗り物に、だれかと一緒に乗る ----
