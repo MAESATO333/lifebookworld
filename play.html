@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.100">
+<meta name="lifebook-version" content="v178.101">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -753,7 +753,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.100';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.101';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21675,7 +21675,7 @@ function pgHouseSVG(p,O){ const T=(x,y,z,e,t)=>`<text x="${x}" y="${y}" font-siz
 if(typeof mpPageHTML==='function'){ const MP3=mpPageHTML; mpPageHTML=function(){ let h=MP3.apply(this,arguments); try{ const p=mpGet(); if(!p||(typeof mpGone==='function'&&mpGone(p))) return h;
   const a=h.indexOf('<div class="mp-top">'); if(a<0) return h; const s0=h.indexOf('<svg',a); if(s0<0) return h; let dep=0, i=s0, e0=-1; const re=/<svg\b|<\/svg>/g; re.lastIndex=s0; let m; while((m=re.exec(h))){ dep+=m[0]==='</svg>'?-1:1; if(!dep){ e0=m.index+6; break; } } if(e0<0) return h;
   let rest=h.slice(e0); const ac=rest.indexOf('<div class="mp-acts">'); let ctl='';
-  if(ac>=0){ const ae=rest.indexOf('</div>',ac)+6; const w0=rest.indexOf('<p class="tiny muted">あなた（Higher Self）'); const st=w0>=0&&w0<ac?w0:ac; ctl=rest.slice(st,ae).replace('さんぽに行ってあげて','さんぽに行こう'); ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-hsv" data-hsasave="1">📒 アルバムに保存</button><button type="button" class="mp-a pg-gfb" data-pgfr="1">🎁 友だちにプレゼント</button></div>`); if(pgClOk(p.kind)) ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-clb" data-pgclo="1">👕 服を着せる</button></div>`); rest=rest.slice(0,st)+rest.slice(ae); }
+  if(ac>=0){ const ae=rest.indexOf('</div>',ac)+6; const w0=rest.indexOf('<p class="tiny muted">あなた（Higher Self）'); const st=w0>=0&&w0<ac?w0:ac; ctl=rest.slice(st,ae).replace('さんぽに行ってあげて','さんぽ').replace('なでてあげて','なでる').replace('ごはんをあげて','ごはん').replace('あそんであげて','あそぶ').replace('写真をとる','写真').replace(/>(お父さん|お母さん|お兄さん|お姉さん|弟|妹)の/g,(m,c)=>'>'+({'お父さん':'父','お母さん':'母','お兄さん':'兄','お姉さん':'姉','弟':'弟','妹':'妹'})[c]+' '); ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-hsv" data-hsasave="1">📒 保存</button><button type="button" class="mp-a pg-hsv" data-hsaopen="1">📖 アルバム</button><button type="button" class="mp-a pg-gfb" data-pgfr="1">🎁 プレゼント</button></div>`); if(pgClOk(p.kind)) ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-clb" data-pgclo="1">👕 着せかえ</button></div>`); rest=rest.slice(0,st)+rest.slice(ae); }
   return h.slice(0,a)+`<div class="pg-house">${pgHouseSVG(p)}<button type="button" class="pg-back" data-mp="close">← もどる</button></div>${ctl?`<div class="pg-hctl">${ctl}</div>`:''}<div class="mp-top pg-ht">`+rest; }catch(e){ return h; } }; }
 // 公園で、うちのペットを押した時も、まず家へ
 
@@ -22259,6 +22259,14 @@ body .frd-b{ padding:9px 10px; }
 @media (max-width:350px){ .masthead .lb-t{ width:24px; height:26px; font-size:15px; } .masthead .lb-isle{ width:44px; height:50px; flex:none; } .masthead .mastnav .nav-b,.masthead .fr-top{ font-size:8.5px!important; } .masthead .mast-r{ gap:3px!important; } }`;
   const s=document.createElement('style'); s.textContent=css; document.head.appendChild(s);
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',acStart); else acStart(); })();
+
+try{ document.head.insertAdjacentHTML('beforeend',`<style>
+/* v178.101（MITSUさん 2026-11-19）：家の下のボタンを半分の大きさに。スマホ4列・パソコン7列 */
+.pg-hctl .mp-who,.pg-hctl .mp-acts{ grid-template-columns:repeat(auto-fill,minmax(70px,1fr)) !important; gap:5px !important; }
+.pg-hctl .mp-w,.pg-hctl .mp-a{ height:26px !important; min-height:26px !important; padding:0 4px !important; border-radius:13px !important; font-size:11.5px !important; border-width:1.2px !important; }
+.pg-hctl .mp-w{ font-size:10.5px !important; letter-spacing:-.02em; } .pg-hctl .mp-a{ font-size:10.5px !important; letter-spacing:-.02em; }
+.pg-hctl .tiny{ font-size:10.5px; }
+</style>`); }catch(e){}
 </script>
 <script>
 // ===== 街ブラ（🟡街ブラ）：世界の街の島・Life Home の街の帯・観光アルバム。ぜんぶこのファイルの中で完結します（ほかのファイルの名前とぶつからないよう、外には machiBuraOpen だけ出します） =====
