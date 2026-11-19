@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.95">
+<meta name="lifebook-version" content="v178.96">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -68,6 +68,12 @@
   }catch(e){ try{ console.warn('[account] 記録を入れられませんでした',e); }catch(_){} }
 })();
 </script>
+<style id="v17894">/* v178.96（MITSUさん 2026-11-19）：✕ のボタンは、全部「← 戻る」に */
+.frd-x:not(.gsz-back),.gsz-x:not(.gsz-back),.pa-x:not(.pa-back),.mbx-x,.rvx-x{ width:auto!important; min-width:0; height:36px!important; padding:0 14px!important; border-radius:999px!important; border:0!important; background:#FF8FAB!important; color:#fff!important; font:inherit; font-size:14px!important; font-weight:700!important; line-height:36px!important; white-space:nowrap; box-shadow:0 2px 6px rgba(194,71,107,.25); }
+.gsz-h{ margin-right:96px; } .frd-in > h2:first-of-type,.rvx-mbox > h2:first-of-type{ padding-right:92px; }
+.frd-x:focus:not(:focus-visible),.gsz-x:focus:not(:focus-visible),.pa-x:focus:not(:focus-visible),.mbx-x:focus:not(:focus-visible),.rvx-x:focus:not(:focus-visible){ outline:none; }
+.gsz-art svg.gs-big{ max-width:720px; margin:0 auto; }
+</style>
 </head><body>
 <title>LIFE BOOK — 人生のヒントが、ここにある</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -747,7 +753,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.95';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.96';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -11170,7 +11176,7 @@ function frArtSVG(big){ let S; try{ S=bkScene(); }catch(e){ return ''; }
   return `<svg class="fr-art" viewBox="0 0 360 200" width="${W}" height="${H}" role="img" aria-label="ふたつの小さな浮島に立つブロックの子どもたちと、そのあいだに浮かぶハート">${bg}<g transform="translate(0 52)">${S.render()}</g>${frHeart(160,26,6,'#FF7E9A')}${frHeart(214,58,3,'#FFB3C4')}${frHeart(112,40,3,'#FFB3C4')}${env}</svg>`; }
 // 紹介の窓
 function friendDialogHTML(){ const me=store.get(KEY_ME,''); const can=!!myHero(); const fr=store.get(KEY_FRIEND,[]);
-  return `<div class="frd-in"><button class="frd-x" type="button" aria-label="閉じる">×</button>
+  return `<div class="frd-in"><button class="frd-x" type="button" aria-label="戻る">← 戻る</button>
     <div class="frd-art">${frArtSVG(true)}</div><h2><svg class="lb-heart" viewBox="0 0 7 6" shape-rendering="crispEdges" aria-hidden="true"><path fill="#E0566B" d="M1 0h2v1h1V0h2v1h1v2H6v1H5v1H4v1H3V5H2V4H1V3H0V1h1z"/><path fill="#fff" opacity=".7" d="M1 1h1v1H1z"/></svg>友だちに紹介する<svg class="lb-heart" viewBox="0 0 7 6" shape-rendering="crispEdges" aria-hidden="true"><path fill="#E0566B" d="M1 0h2v1h1V0h2v1h1v2H6v1H5v1H4v1H3V5H2V4H1V3H0V1h1z"/><path fill="#fff" opacity=".7" d="M1 1h1v1H1z"/></svg></h2><p class="frd-lead">${FR_LEAD}</p>${frReplyHTML()}
     ${can?'':'<p class="tiny frd-note">まだ Channel が生まれていないので、今送れるのは LIFE BOOK の入口のリンクです。「生まれる」を押したあとに送ると、ふたりの Channel が出会います。</p>'}
     <div class="frd-name"><label for="frBy">あなたの呼び名（友だちに表示されます）</label><div class="frd-nrow"><input id="frBy" value="${esc(me)}" maxlength="20" placeholder="例：みつ"><button class="frd-ok" id="frByOk" type="button">OK！</button></div><p class="frd-saved" id="frBySaved" role="status" aria-live="polite"></p></div>
@@ -15792,7 +15798,7 @@ async function moveUnzip(t){ const k=t[0], body=t.slice(1); const bin=atob(body.
 function moveData(){ return { v:1, id:myId(), me:store.get(KEY_ME,''), cur:st||null, arc:store.get(KEY_ARC,[]), fr:store.get(KEY_FRIEND,[]), idk:store.get('hitotsu.myidk','')||null, at:Date.now() }; }
 async function moveLink(){ const z=await moveZip(JSON.stringify(moveData())); const base=/(github\.io|lifebookworld\.com)$/.test(location.host)?location.origin+location.pathname:FRIEND_URL; return extURL(base+'#move='+z); }
 function moveQR(text){ try{ const q=qrcode(0,'L'); q.addData(text,'Byte'); q.make(); return q.createSvgTag({ cellSize:4, margin:2, scalable:true }); }catch(e){ return ''; } }
-function moveDialogHTML(){ return `<div class="frd-in mv-in"><button class="frd-x" type="button" aria-label="閉じる">×</button>
+function moveDialogHTML(){ return `<div class="frd-in mv-in"><button class="frd-x" type="button" aria-label="戻る">← 戻る</button>
   <h2>ほかの端末で続ける</h2>
   <p class="frd-lead">携帯とパソコンで、同じ人生を見守れます。もう一方の端末で、下のQRコードを読みとるか、リンクを開いてください。</p>
   <div class="mv-qr" id="mvQR"><p class="tiny muted">つくっています…</p></div>
@@ -18272,7 +18278,41 @@ setTimeout(function(){ try{
 // ===== 友だちの木が、増えると森になる。木を押すと、アップで全員の名前が見える。友だちのペットのつながりの木も =====
 const GS_PER=30; // 1本の木に、30人まで
 const _gsTree1=gsTreeHTML;
-function gsSVG(fr,full){ const s0=gsShort; if(full) gsShort=(s)=>String(s||''); let h=''; try{ h=_gsTree1(fr); }finally{ gsShort=s0; } const m=h.match(/<svg[\s\S]*<\/svg>/); return m?m[0]:''; }
+// v178.96（MITSUさん 2026-11-19）：大きな友だちの木は、全員が重ならずに見えるように。左右に枝を出して上へのびる木。名前は1人ずつ、下に「つながっている人」を全員ならべる
+function gsTW(t,fs){ let w=0; for(const ch of String(t)) w+=(ch.charCodeAt(0)<0x2E80?.6:1); return w*fs; }
+function gsFit(t,fs,max){ t=String(t||''); if(gsTW(t,fs)<=max) return t; while(t.length>1&&gsTW(t+'…',fs)>max) t=t.slice(0,-1); return t+'…'; }
+function gsBigSVG(fr){ const fof=(typeof store!=='undefined'&&store.get('hitotsu.fof',{}))||{}; const n=fr.length;
+  const cols=(typeof innerWidth==='number'&&innerWidth>=700)?4:2, W=cols===4?720:360, cx=W/2, colW=(W-24)/cols;
+  const xs=cols===4?[cx-colW*1.5-6,cx-colW*.5-6,cx+colW*.5+6,cx+colW*1.5+6]:[cx-colW*.5-6,cx+colW*.5+6];
+  const myName=(typeof cur!=='undefined'&&cur&&cur.P)?cur.P.given:'';
+  // 段（下の段から）。左右に半分ずつ：内側→外側の順に置く
+  const ord=cols===4?[1,2,0,3]:[0,1]; const rows=[]; for(let i=0;i<n;i+=cols) rows.push(fr.slice(i,i+cols));
+  const subs=f=>{ const e=fof[f.id]; return e&&Array.isArray(e.fr)?e.fr.filter(x=>x&&x.b):[]; };
+  const FS=12.5, SF=10.5, LH=15;
+  const rh=rows.map(r=>58+30+Math.max(0,...r.map(f=>subs(f).length))*LH+(r.some(f=>subs(f).length)?6:0)+10);
+  const top=26; let y=top; const rowY=[]; for(let r=rows.length-1;r>=0;r--){ rowY[r]=y; y+=rh[r]; }
+  const base=y+40, H=base+40; let br='', lv='', ppl='', lab='';
+  const tTop=n?rowY[rows.length-1]+46:base-60;
+  br+=`<path d="M${cx-14} ${base} L${cx-5} ${tTop} L${cx+5} ${tTop} L${cx+14} ${base} Z" fill="#9A6B47"/><rect x="${cx-6}" y="${tTop}" width="4" height="${base-tTop}" fill="#B08463" opacity=".55"/>`;
+  rows.forEach((r,ri)=>{ const by=rowY[ri]+46; const side=[[],[]];
+    r.forEach((f,j)=>{ const ci=ord[j], x=xs[ci]; (x<cx?side[0]:side[1]).push(x); });
+    side.forEach(s=>{ if(!s.length) return; const far=s.reduce((a,b)=>Math.abs(b-cx)>Math.abs(a-cx)?b:a); br+=`<path d="M${cx} ${(by+14).toFixed(1)} Q${((cx+far)/2).toFixed(1)} ${(by+8).toFixed(1)} ${far.toFixed(1)} ${by.toFixed(1)}" stroke="#9A6B47" stroke-width="6" fill="none" stroke-linecap="round"/>`; });
+    r.forEach((f,j)=>{ const x=xs[ord[j]], i=ri*cols+j;
+      lv+=gsLeaves(x+3,by+2,15,i%2?'#A6DC8E':'#86C878',i%2?'#86C878':'#B7E3A0');
+      ppl+=gsPerson(x,by-16,1.45,f.id||f.by||i);
+      const nm=gsFit((f.by||'友だち')+'さん',FS,colW-14), lw=Math.max(40,gsTW(nm,FS)+18);
+      lab+=`<g><rect x="${(x-lw/2).toFixed(1)}" y="${by+12}" width="${lw.toFixed(1)}" height="22" rx="11" fill="#fff" stroke="#F4C6D4" stroke-width="1.5"/><text x="${x.toFixed(1)}" y="${by+27.5}" text-anchor="middle" font-size="${FS}" font-weight="700" fill="#6A4A58">${esc(nm)}</text></g>`;
+      const ss=subs(f); if(ss.length){ const names=ss.map(s=>gsFit(s.b+'さん',SF,colW-34)); const bw=Math.max(...names.map(t=>gsTW(t,SF)))+16; const x0=x-bw/2, y0=by+40;
+        br+=`<path d="M${x.toFixed(1)} ${by+34} L${x.toFixed(1)} ${y0-2} L${x0.toFixed(1)} ${y0-2} L${x0.toFixed(1)} ${(y0+(names.length-1)*LH+6).toFixed(1)}" stroke="#B9967A" stroke-width="1.6" stroke-dasharray="3 2" fill="none"/>`;
+        names.forEach((t,k)=>{ const yy=y0+k*LH+6; br+=`<path d="M${x0.toFixed(1)} ${yy} h5" stroke="#B9967A" stroke-width="1.6" stroke-dasharray="2 1.5"/>`; lv+=`<rect x="${(x0+5).toFixed(1)}" y="${yy-3.5}" width="7" height="7" rx="2" fill="#A6DC8E"/>`; lab+=`<text x="${(x0+15).toFixed(1)}" y="${yy+3.8}" font-size="${SF}" fill="#7A6A74">${esc(t)}</text>`; }); } }); });
+  if(!n) lab+=`<text x="${cx}" y="${base-80}" text-anchor="middle" font-size="11" fill="#8A7A84">友だちを紹介すると、ここに枝がのびていきます</text>`;
+  const back=`<rect x="${cx-80}" y="${base}" width="160" height="10" rx="2" fill="#A6DC8E"/><rect x="${cx-70}" y="${base+8}" width="140" height="7" rx="2" fill="#B08463"/>`;
+  ppl+=gsPerson(cx,base-11,1.6,'me'+(myName||''));
+  const mn=myName?gsFit(myName,FS,150)+'（Channel）':'あなたの Channel', mw=gsTW(mn,FS)+24;
+  lab+=`<g><rect x="${(cx-mw/2).toFixed(1)}" y="${base+18}" width="${mw.toFixed(1)}" height="22" rx="11" fill="#fff" stroke="#F4C6D4" stroke-width="1.5"/><text x="${cx}" y="${base+33.5}" text-anchor="middle" font-size="${FS}" font-weight="700" fill="#6A4A58">${esc(mn)}</text></g>`;
+  const hearts=[[cx-18,6]].map(([x,y])=>`<g fill="#FF9FB2"><rect x="${x}" y="${y}" width="5" height="5"/><rect x="${x+7}" y="${y}" width="5" height="5"/><rect x="${x-1}" y="${y+4}" width="14" height="5"/><rect x="${x+1}" y="${y+8}" width="10" height="4"/><rect x="${x+4}" y="${y+11}" width="4" height="3"/></g>`).join('');
+  return `<svg class="gs-big" viewBox="0 0 ${W} ${H+4}" role="img" aria-label="友だちの木。あなたの Channel から、紹介でつながった${n}人へ枝がのびている">${hearts}${br}${lv}${ppl}${lab}</svg>`; }
+function gsSVG(fr,full){ if(full) return gsBigSVG(fr||[]); const s0=gsShort; if(full) gsShort=(s)=>String(s||''); let h=''; try{ h=_gsTree1(fr); }finally{ gsShort=s0; } const m=h.match(/<svg[\s\S]*<\/svg>/); return m?m[0]:''; }
 function gsChunks(a,n){ const out=[]; for(let i=0;i<a.length;i+=n) out.push(a.slice(i,i+n)); return out; }
 let _gsFr=[];
 gsTreeHTML=function(fr){ fr=fr||[]; _gsFr=fr; const ch=gsChunks(fr,GS_PER);
@@ -18302,7 +18342,7 @@ function gsPetTreeHTML(fr){ const list=gsFrPets(fr); const me=typeof mpGet==='fu
   return `<div class="gs-pet-w"><p class="gs-forest-h">🐾 ペットのつながりの木${list.length?`　${list.length}匹`:''}${list.length&&me?'<button type="button" class="pt-snapb" data-ptsnap="0">📷 集合写真</button>':''}${ch.length>1?`・木${ch.length}本<span class="gs-zoom gs-zoom-h" aria-hidden="true">🔍 押すと大きく見られます</span>`:''}</p><div class="${ch.length>1?'gs-forest':''}">${ch.map((c,i)=>`<figure class="gs-tree gs-pet ${ch.length>1?'gs-mini':'gs-one'}"><button type="button" class="gs-zb" data-gspz="${i}" aria-label="ペットの木を、大きく見る">${gsPetSVG(c)}${ch.length>1?'':'<span class="gs-zoom" aria-hidden="true">🔍 押すと大きく見られます</span>'}</button>${ch.length>1?`<figcaption>${i+1}本目の木・${c.length}匹</figcaption>`:'<figcaption>うちのペットを幹に、友だちのペットが枝の先に。</figcaption>'}</figure>`).join('')}</div></div>`; }
 // ---- アップで見る ----
 function gsZoomOpen(html){ let d=document.getElementById('gsZoom'); if(!d){ d=document.createElement('div'); d.id='gsZoom'; d.className='gsz'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); document.body.appendChild(d); }
-  d.innerHTML=`<div class="gsz-in"><button type="button" class="gsz-x" aria-label="閉じる">×</button>${html}<button type="button" class="gsz-x gsz-back">← もどる</button></div>`; d.hidden=false; document.body.classList.add('gsz-open'); try{ d.querySelector('.gsz-x').focus(); }catch(e){} }
+  d.innerHTML=`<div class="gsz-in"><button type="button" class="gsz-x" aria-label="戻る">← 戻る</button>${html}<button type="button" class="gsz-x gsz-back">← 戻る</button></div>`; d.hidden=false; document.body.classList.add('gsz-open'); try{ d.querySelector('.gsz-x').focus(); }catch(e){} }
 function gsZoomClose(){ const d=document.getElementById('gsZoom'); if(d){ d.hidden=true; d.innerHTML=''; } document.body.classList.remove('gsz-open'); }
 document.addEventListener('click',e=>{ const t=e.target; if(t.closest&&t.closest('.gsz-x')||(t.id==='gsZoom')){ gsZoomClose(); return; }
   const z=t.closest&&t.closest('[data-gsz]'); if(z){ const i=+z.dataset.gsz; const c=gsChunks(_gsFr,GS_PER)[i]||_gsFr; const fof=store.get('hitotsu.fof',{}); const many=_gsFr.length>GS_PER;
@@ -18907,7 +18947,7 @@ function gpOpen(z){ let p, own=false; if(z==='me'){ p=_gpMe; own=true; } else p=
   let d=document.getElementById('gpZoom'); if(!d){ d=document.createElement('div'); d.id='gpZoom'; d.className='pa-ov gp-ov'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','ペットの写真を大きく見る'); document.body.appendChild(d);
     d.addEventListener('click',e=>{ if(e.target===d||e.target.closest('.pa-x')){ d.hidden=true; d.innerHTML=''; } }); }
   const fi=PM_FOODI[kind]||'🍎';
-  d.innerHTML=`<div class="pa-in"><button type="button" class="pa-x" aria-label="閉じる">×</button><div class="pa-art">${art}</div><p class="pa-cap"><b>${p.g?'🌈 ':''}${esc(nm)}</b>　${own?'うちのペット':''}${own?'・':''}${esc(br)}${own?'':`・${p.a}歳`}${own?'':`<br><span class="gp-hs">🌟 Higher Self：${esc(p.owner||'友だち')}さん</span>`}<br>💗 可愛い！ ${c.l}回　${fi} ごはん ${c.f}回${c.o?`　🧸 そのほか ${c.o}回`:''}</p>${!own&&typeof pgBtns==='function'?`<div class="gp-btns">${pgBtns(p)}</div>`:''}<button type="button" class="pa-x pa-back">← もどる</button></div>`;
+  d.innerHTML=`<div class="pa-in"><button type="button" class="pa-x" aria-label="戻る">← 戻る</button><div class="pa-art">${art}</div><p class="pa-cap"><b>${p.g?'🌈 ':''}${esc(nm)}</b>　${own?'うちのペット':''}${own?'・':''}${esc(br)}${own?'':`・${p.a}歳`}${own?'':`<br><span class="gp-hs">🌟 Higher Self：${esc(p.owner||'友だち')}さん</span>`}<br>💗 可愛い！ ${c.l}回　${fi} ごはん ${c.f}回${c.o?`　🧸 そのほか ${c.o}回`:''}</p>${!own&&typeof pgBtns==='function'?`<div class="gp-btns">${pgBtns(p)}</div>`:''}<button type="button" class="pa-x pa-back">← もどる</button></div>`;
   d.hidden=false; try{ d.querySelector('.pa-x').focus(); }catch(e){} }
 document.head.insertAdjacentHTML('beforeend','<style>.gp-hs{ display:inline-block; margin:4px 0 2px; padding:2px 10px; border-radius:999px; background:#FFE3EC; color:#C2476B; font-weight:700; }</style>');
 document.addEventListener('click',e=>{ const g=e.target.closest&&e.target.closest('[data-gpz]'); if(g){ e.preventDefault(); e.stopPropagation(); gpOpen(g.dataset.gpz); } },true);
@@ -19671,10 +19711,10 @@ function flAlbumHTML(){ const L=store.get(KEY_FLALB,[]); const rm=store.get(KEY_
 var _flDone=null, _flLastTab=''; function flGk(g){ return String(g&&(g.id||g.t)||''); }
 function flOpen(tab){ if(tab) _flTab=tab; let d=document.getElementById('flDlg'); const keepY=d&&!d.hidden&&_flLastTab===_flTab&&d.querySelector('.fl-in')?d.querySelector('.fl-in').scrollTop:0; if(_flLastTab!==_flTab) _flDone=null; _flLastTab=_flTab; if(!d){ d=document.createElement('div'); d.id='flDlg'; d.className='pa-ov fl-ov'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','お花'); document.body.appendChild(d);
     d.addEventListener('click',flClick); d.addEventListener('input',flInput); d.addEventListener('change',flInput); }
-  d.innerHTML=`<div class="pa-in fl-in"><button type="button" class="pa-x" data-fl-x="1" aria-label="閉じる">×</button><h3 class="fl-h">💐 お花</h3>
+  d.innerHTML=`<div class="pa-in fl-in"><button type="button" class="pa-x" data-fl-x="1" aria-label="戻る">← 戻る</button><h3 class="fl-h">💐 お花</h3>
    <div class="fl-tabs" role="tablist">${[['pick','えらぶ・飾る'],['send','贈る'],['got','届いたお花'],['shelf','🪴 棚'],['album','花束アルバム']].map(([k,t])=>`<button type="button" role="tab" aria-selected="${_flTab===k}" class="fl-tab${_flTab===k?' on':''}" data-fl-tab="${k}">${t}</button>`).join('')}</div>
    <div class="fl-body">${_flTab==='send'?flSendHTML():_flTab==='got'?flGotHTML():_flTab==='album'?flAlbumHTML():_flTab==='shelf'?flShelfHTML():flPickHTML()}</div>
-   ${_flMsg?`<p class="fl-msg" role="status">${esc(_flMsg)}</p>`:''}<button type="button" class="pa-x pa-back" data-fl-x="1">← もどる</button></div>`;
+   ${_flMsg?`<p class="fl-msg" role="status">${esc(_flMsg)}</p>`:''}<button type="button" class="pa-x pa-back" data-fl-x="1">← 戻る</button></div>`;
   if(keepY) try{ d.querySelector('.fl-in').scrollTop=keepY; }catch(e){}
   d.hidden=false; document.body.classList.add('gsz-open'); }
 function flClose(){ const d=document.getElementById('flDlg'); if(d){ d.hidden=true; d.innerHTML=''; } document.body.classList.remove('gsz-open'); _flMsg=''; flRefreshTile(); try{ if(typeof lbnRefresh==='function') lbnRefresh(); }catch(e){} }
@@ -19881,7 +19921,7 @@ function paZoomOpen(fig){ let d=document.getElementById('paZoom'); if(!d){ d=doc
     d.addEventListener('click',e=>{ if(e.target===d||e.target.closest('.pa-x')) paZoomClose(); }); }
   const art=fig.querySelector('svg'), cap=fig.querySelector('figcaption'); if(!art) return;
   const all=[...document.querySelectorAll('.mp-album .mp-ph')], i=all.indexOf(fig);
-  d.innerHTML=`<div class="pa-in"><button type="button" class="pa-x" aria-label="閉じる">×</button><div class="pa-art">${art.outerHTML}</div>${cap?`<p class="pa-cap">${cap.innerHTML}</p>`:''}${all.length>1?`<div class="pa-nav"><button type="button" class="pa-b" data-pa="${i-1}" ${i<=0?'disabled':''}>← まえ</button><span>${i+1} / ${all.length}</span><button type="button" class="pa-b" data-pa="${i+1}" ${i>=all.length-1?'disabled':''}>つぎ →</button></div>`:''}<button type="button" class="pa-x pa-back">← もどる</button></div>`;
+  d.innerHTML=`<div class="pa-in"><button type="button" class="pa-x" aria-label="戻る">← 戻る</button><div class="pa-art">${art.outerHTML}</div>${cap?`<p class="pa-cap">${cap.innerHTML}</p>`:''}${all.length>1?`<div class="pa-nav"><button type="button" class="pa-b" data-pa="${i-1}" ${i<=0?'disabled':''}>← まえ</button><span>${i+1} / ${all.length}</span><button type="button" class="pa-b" data-pa="${i+1}" ${i>=all.length-1?'disabled':''}>つぎ →</button></div>`:''}<button type="button" class="pa-x pa-back">← もどる</button></div>`;
   d.querySelectorAll('[data-pa]').forEach(b=>b.onclick=()=>{ const f=all[+b.dataset.pa]; if(f) paZoomOpen(f); });
   d.hidden=false; try{ d.querySelector('.pa-x').focus(); }catch(e){} }
 function paZoomClose(){ const d=document.getElementById('paZoom'); if(d){ d.hidden=true; d.innerHTML=''; } }
@@ -21491,7 +21531,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 .pg-frc .pg-frp{ width:100%; height:auto; } .pg-frc b{ font-size:13px; color:#B23A64; } .pg-frc small{ font-size:11px; color:#8A7A84; }
 </style>`); }catch(e){}
 
-// v178.94（MITSUさん 2026-11-19）：ペットのつながりの木の「集合写真」。とると 📒 Higher Self のアルバムに入り、友だちの Higher Self にも送れる
+// v178.96（MITSUさん 2026-11-19）：ペットのつながりの木の「集合写真」。とると 📒 Higher Self のアルバムに入り、友だちの Higher Self にも送れる
 // 写真は小さなメモ（うちのペットと、友だちのペットの種類・名前）。送る時は お花・Gateway の写真と同じ場所（photo）に 'PT1:' をつけて送る（1000文字まで・ルールの変更なし）
 const PT_ALB='pt.album', PT_GOT='pt.got', PT_SEEN='pt.seen';
 function ptClean(v,n){ return String(v||'').replace(/[~^]/g,'').slice(0,n); }
@@ -22118,7 +22158,7 @@ function acIntroNote(){ try{ if(acIn()||(typeof st!=='undefined'&&st)||(typeof v
 function acBornGuard(e){ const b=e.target&&e.target.closest&&e.target.closest('#bornBtn,#bornBtn2'); if(!b||b.disabled) return;
   if(acIn()||acHasLife(acLocal())||acGet('ac.bornOK',0)||!/^https?:$/.test(location.protocol)) return;
   e.preventDefault(); e.stopImmediatePropagation(); const d=acDlg();
-  d.innerHTML=`<div class="frd-in ac-in"><button class="frd-x" type="button" aria-label="閉じる">×</button><h2>ほかの端末で、もう見守っていますか？</h2>
+  d.innerHTML=`<div class="frd-in ac-in"><button class="frd-x" type="button" aria-label="戻る">← 戻る</button><h2>ほかの端末で、もう見守っていますか？</h2>
   <p class="frd-lead">スマホやパソコンで、もう人生を見守っている人は、ここで生まれずに <b>👤 マイページ</b>からログインしてください。同じ人生の続きが見られます。</p>
   <button class="frd-b frd-pink ac-big" id="acBgIn" type="button" style="text-align:center">はい、ログインする</button>
   <button class="frd-b ac-big ac-sub" id="acBgNew" type="button" style="text-align:center">いいえ、初めてです（生まれる）</button></div>`;
@@ -24201,7 +24241,7 @@ let mbxEl=null, mbxLv={ reg:null, cty:null }, mbxCur=-1, mbxTimer=0;
 // 大きな写真（街の写真・Life Home の帯・アルバムから開く）
 function mbxModal(c,v,saved){ const vv=mbxV(c,v); if(!vv) return; mbxCss(); const tod=saved?(saved.tod||'day'):mbxLt(c).tod; let flip=saved?!!saved.f:false, big=false, rs=0;
   const m=document.createElement('div'); m.className='mbx-modal';
-  m.innerHTML=`<div class="mbx-mbox" role="dialog" aria-modal="true" aria-label="${vv.pl}"><button class="mbx-x" type="button" aria-label="とじる">✕</button><div class="mbx-stage${flip?' mbx-flip':''}">${mbxDraw(c,v,tod,saved?saved.s:(rs=(Math.random()*1e9)|0))}</div><div class="mbx-row"><div><h2>${vv.t}${saved||mbxPhoto(c,v)?'':`<span class="mbx-ltime" data-mbxlt="${c}">${mbxLtxt(c)}</span>`}</h2><p class="mbx-sub">📍 ${vv.addr}</p>${mbxPhoto(c,v)?`<p class="mbx-credit">${mbxCred(c)}</p>`:''}</div><div class="mbx-btns">${saved?'<button class="mbx-pbtn" type="button" data-lbshare=".mbx-mbox">📤 SNS にシェア</button>':(mbxPhoto(c,v)?'':'<button class="mbx-pbtn mbx-sub2" type="button" data-a="flip">🔄 角度をかえる</button>')+'<button class="mbx-pbtn mbx-sub2" type="button" data-a="zoom">🔍 大きく</button><button class="mbx-pbtn" type="button" data-a="shot">📸 写真をとる</button>'}</div></div><p class="mbx-desc">${saved?`${saved.d} にとった写真`:vv.d}</p></div>`;
+  m.innerHTML=`<div class="mbx-mbox" role="dialog" aria-modal="true" aria-label="${vv.pl}"><button class="mbx-x" type="button" aria-label="戻る">← 戻る</button><div class="mbx-stage${flip?' mbx-flip':''}">${mbxDraw(c,v,tod,saved?saved.s:(rs=(Math.random()*1e9)|0))}</div><div class="mbx-row"><div><h2>${vv.t}${saved||mbxPhoto(c,v)?'':`<span class="mbx-ltime" data-mbxlt="${c}">${mbxLtxt(c)}</span>`}</h2><p class="mbx-sub">📍 ${vv.addr}</p>${mbxPhoto(c,v)?`<p class="mbx-credit">${mbxCred(c)}</p>`:''}</div><div class="mbx-btns">${saved?'<button class="mbx-pbtn" type="button" data-lbshare=".mbx-mbox">📤 SNS にシェア</button>':(mbxPhoto(c,v)?'':'<button class="mbx-pbtn mbx-sub2" type="button" data-a="flip">🔄 角度をかえる</button>')+'<button class="mbx-pbtn mbx-sub2" type="button" data-a="zoom">🔍 大きく</button><button class="mbx-pbtn" type="button" data-a="shot">📸 写真をとる</button>'}</div></div><p class="mbx-desc">${saved?`${saved.d} にとった写真`:vv.d}</p></div>`;
   document.body.appendChild(m); const st=m.querySelector('.mbx-stage'); if(saved) mbxFreeze(st,saved.t);
   m.querySelector('.mbx-x').focus();
   m.addEventListener('click',e=>{ if(e.target===m||e.target.closest('.mbx-x')){ m.remove(); return; } const b=e.target.closest('[data-a]'); if(!b) return; const a=b.dataset.a;
@@ -24260,12 +24300,12 @@ function mbxStripKeys(){ const keys=MB_STRIP.filter(k=>MB_THUMB2[k]); let last=[
 // 流れている街を押した時：帯と同じ「本物の地図から描いた絵」を大きく見せる（MITSUさん 11-17）。大きい絵は mb-big/〇〇.webp（押した時だけ読む）、無い時は帯の絵
 function mbxStripModal(c,v){ const C=MB_CITIES[c], vv=mbxV(c,v); if(!C||!vv) return; mbxCss(); const key=C.id+'-'+(v+1), th=MB_THUMB2[key]||'';
   const m=document.createElement('div'); m.className='mbx-modal';
-  m.innerHTML=`<div class="mbx-mbox" role="dialog" aria-modal="true" aria-label="${C.name}"><button class="mbx-x" type="button" aria-label="とじる">✕</button><div class="mbx-stage" style="background:#BFE6F7"><img src="mb-big/${C.id}.webp" alt="${C.name}の街の絵" style="display:block;width:100%;height:auto;aspect-ratio:900/630;object-fit:contain"></div><div class="mbx-row"><div><h2>${C.name}</h2><p class="mbx-sub">📍 ${vv.addr}</p><p class="mbx-credit">${mbxCred(c)}</p></div><div class="mbx-btns"><button class="mbx-pbtn" type="button" data-a="go">🟡 街ブラへ行く</button></div></div></div>`;
+  m.innerHTML=`<div class="mbx-mbox" role="dialog" aria-modal="true" aria-label="${C.name}"><button class="mbx-x" type="button" aria-label="戻る">← 戻る</button><div class="mbx-stage" style="background:#BFE6F7"><img src="mb-big/${C.id}.webp" alt="${C.name}の街の絵" style="display:block;width:100%;height:auto;aspect-ratio:900/630;object-fit:contain"></div><div class="mbx-row"><div><h2>${C.name}</h2><p class="mbx-sub">📍 ${vv.addr}</p><p class="mbx-credit">${mbxCred(c)}</p></div><div class="mbx-btns"><button class="mbx-pbtn" type="button" data-a="go">🟡 街ブラへ行く</button></div></div></div>`;
   const im=m.querySelector('.mbx-stage img'); im.addEventListener('error',()=>{ if(th&&im.src!==th) im.src=th; },{ once:true });
   document.body.appendChild(m); m.querySelector('.mbx-x').focus();
   m.addEventListener('click',e=>{ if(e.target===m||e.target.closest('.mbx-x')){ m.remove(); return; } const b=e.target.closest('[data-a="go"]'); if(b){ m.remove(); machiBuraOpen(C.id); } }); }
 function mbxUnivModal(){ if(typeof MB_UNIV==='undefined') return; mbxCss(); const m=document.createElement('div'); m.className='mbx-modal';
-  m.innerHTML=`<div class="mbx-mbox" role="dialog" aria-modal="true" aria-label="LIFE BOOK大学"><button class="mbx-x" type="button" aria-label="とじる">✕</button><style>.mbx-univ{position:relative;container-type:inline-size}.mbx-univ img{display:block;width:100%;height:auto}.mbx-unote{position:absolute;right:15.5%;top:11.8%;text-align:center;padding:.4em .9em .45em;border-radius:.8em;background:rgba(31,46,92,.62);border:1.5px solid #E9C46A;color:#fff;font-family:'Hiragino Maru Gothic ProN','M PLUS Rounded 1c','Noto Sans JP',sans-serif;font-size:max(8.5px,.6cqw);line-height:1.55;font-weight:700;white-space:nowrap;pointer-events:none}.mbx-unote b{display:block;color:#F7E3A3;font-weight:900;letter-spacing:.06em}.mbx-unote span{display:block}.mbx-unote .s{color:#E6E9F5;font-size:.95em}@container (max-width:700px){.mbx-unote{position:static;margin:.6em auto;width:fit-content;white-space:normal;font-size:10.5px}}</style><div class="mbx-stage mbx-univ" style="background:#1B2140"><img src="${MB_UNIV.full}" alt="月の裏側にあるLIFE BOOK大学の絵"><div class="mbx-unote"><b>開学準備中！</b><span>教授は、Over Soulたち</span><span class="s">非常勤講師に前里光秀の名簿もありました。</span></div></div><div class="mbx-row"><div><h2>LIFE BOOK大学</h2><p class="mbx-sub">🌙 月の裏側</p></div></div></div>`;
+  m.innerHTML=`<div class="mbx-mbox" role="dialog" aria-modal="true" aria-label="LIFE BOOK大学"><button class="mbx-x" type="button" aria-label="戻る">← 戻る</button><style>.mbx-univ{position:relative;container-type:inline-size}.mbx-univ img{display:block;width:100%;height:auto}.mbx-unote{position:absolute;right:15.5%;top:11.8%;text-align:center;padding:.4em .9em .45em;border-radius:.8em;background:rgba(31,46,92,.62);border:1.5px solid #E9C46A;color:#fff;font-family:'Hiragino Maru Gothic ProN','M PLUS Rounded 1c','Noto Sans JP',sans-serif;font-size:max(8.5px,.6cqw);line-height:1.55;font-weight:700;white-space:nowrap;pointer-events:none}.mbx-unote b{display:block;color:#F7E3A3;font-weight:900;letter-spacing:.06em}.mbx-unote span{display:block}.mbx-unote .s{color:#E6E9F5;font-size:.95em}@container (max-width:700px){.mbx-unote{position:static;margin:.6em auto;width:fit-content;white-space:normal;font-size:10.5px}}</style><div class="mbx-stage mbx-univ" style="background:#1B2140"><img src="${MB_UNIV.full}" alt="月の裏側にあるLIFE BOOK大学の絵"><div class="mbx-unote"><b>開学準備中！</b><span>教授は、Over Soulたち</span><span class="s">非常勤講師に前里光秀の名簿もありました。</span></div></div><div class="mbx-row"><div><h2>LIFE BOOK大学</h2><p class="mbx-sub">🌙 月の裏側</p></div></div></div>`;
   document.body.appendChild(m); m.querySelector('.mbx-x').focus(); m.addEventListener('click',e=>{ if(e.target===m||e.target.closest('.mbx-x')) m.remove(); }); }
 function mbxStripBuild(){ const isl=mbxStripKeys().map(key=>{ if(key==='univ') return `<button type="button" class="mbx-isle" data-u="1" aria-label="LIFE BOOK大学の絵をひらく"><img src="${MB_UNIV.thumb}" alt="" width="320" height="220" loading="lazy" decoding="async"><span class="mbx-fc"><b>LIFE BOOK大学</b><span>月の裏側</span></span></button>`; const k=key.lastIndexOf('-'), id=key.slice(0,k), vi=+key.slice(k+1)-1, ci=mbxCI(id); if(ci<0||!MB_THUMB2[key]) return ''; const C=MB_CITIES[ci], v=mbxV(ci,vi);
     return `<button type="button" class="mbx-isle" data-c="${ci}" data-v="${vi}" aria-label="${v.pl}の写真をひらく"><img src="${MB_THUMB2[key]}" alt="" width="320" height="220" loading="lazy" decoding="async"><span class="mbx-fc"><b>${C.name.replace(/^.*・/,'')}</b><span>${C.area.split('・')[0]}</span></span></button>`; }).join('');
@@ -25687,7 +25727,7 @@ function rvInFlight(box,ctx){ const { r, T, C, from, to, km, me, onArrive }=ctx;
   const todOf=s=>s===0?tod0:s===3?tod1:s===2?'night':(tod0==='night'&&tod1==='night'?'night':'day');
   const fmtAlt=a=>a>=100000?`宇宙 ${Math.round(a/1000).toLocaleString()}km`:`${Math.round(a/100)*100}m`.replace(/\B(?=(\d{3})+(?!\d))/g,',');
   const tempOf=a=>a>=100000?'−270度（宇宙）':`${Math.round(Math.max(-56,15-6.5*a/1000))}度`;
-  box.innerHTML=`<button class="rvx-x" type="button" aria-label="とじる">✕</button><h2>${C.e} ${esc2(from.name)} → ${esc2(to.name)}</h2>
+  box.innerHTML=`<button class="rvx-x" type="button" aria-label="戻る">← 戻る</button><h2>${C.e} ${esc2(from.name)} → ${esc2(to.name)}</h2>
    <div class="rvx-vt" role="tablist">${[['map','🗺️ 地図'],['win','🪟 窓から'],['side','🛫 横から']].map(([k,n])=>`<button class="rvx-tab" type="button" data-view="${k}" aria-selected="${k==='map'}">${n}</button>`).join('')}</div>
    <div class="rvx-fv"></div>
    <div class="rvx-now"></div>
@@ -25841,7 +25881,7 @@ const RV_CSS=`
 `;
 function rvCss(){ if(document.getElementById('rvCss')) return; const s=document.createElement('style'); s.id='rvCss'; s.textContent=RV_CSS; document.head.appendChild(s); }
 function rvFlash(){ let f=document.querySelector('.rv-flash'); if(!f){ f=document.createElement('div'); f.className='rv-flash'; document.body.appendChild(f); } f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); }
-function rvModal(html,onClick){ const m=document.createElement('div'); m.className='rvx-modal'; m.innerHTML=`<div class="rvx-mbox" role="dialog" aria-modal="true"><button class="rvx-x" type="button" aria-label="とじる">✕</button>${html}</div>`; document.body.appendChild(m);
+function rvModal(html,onClick){ const m=document.createElement('div'); m.className='rvx-modal'; m.innerHTML=`<div class="rvx-mbox" role="dialog" aria-modal="true"><button class="rvx-x" type="button" aria-label="戻る">← 戻る</button>${html}</div>`; document.body.appendChild(m);
   m.addEventListener('click',e=>{ if(e.target===m||e.target.closest('.rvx-x')){ m.remove(); return; } if(onClick) onClick(e,m); }); try{ m.querySelector('.rvx-x').focus(); }catch(e){} return m; }
 const esc2=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -25863,7 +25903,7 @@ function rvDetail(cid,tid){ const C=rvCat(cid), T=rvType(cid,tid); let ci=0; con
   const rule=()=>{ let r=[]; if(T.mode==='pass') r.push('運転する人がいて、Channel は乗せてもらいます。'); else if(T.age) r.push(`${T.mode==='drive'?'運転できる':'ひとりで乗れる'}のは${T.age}歳から。${age<T.age?`いまの Channel（${age}歳）は、大人の人といっしょに乗ります。`:''}`); if(T.range) r.push(`${C.id==='ufo'?'このUFO':'この飛行機'}で飛べる距離は、約${T.range.toLocaleString()}kmまで。`); return r.join('<br>'); };
   const full=()=>rvRides().length>=RV_MAX;
   const html=()=>`<h2>${C.e} ${esc2(T.n)}</h2><div class="rvx-big">${rvCardSVG(cid,tid,ci)}</div><p class="rvx-p">${esc2(T.d)}</p><div class="rvx-cn">色：${C.cols[ci][0]}</div><div class="rvx-cols">${C.cols.map((c,i)=>`<button class="rvx-sw" type="button" style="background:${c[1]}" aria-label="${c[0]}" aria-pressed="${i===ci}" data-ci="${i}"></button>`).join('')}</div><p class="rvx-rule">${rule()}<br>試作版のレンタルは1週間。Higher Self が Channel のかわりに借りて、あずかります。</p>${C.paid&&!window.LB_UFO_FREE?`<div class="rvh-btns"><button class="rv-btn" type="button" disabled>🛸 有料版で持てるようになります</button></div><p class="rvx-p" style="text-align:center">いまは見るだけです。</p>`:!RV_RENT_ON?`<div class="rvh-btns"><button class="rv-btn" type="button" disabled>💎 準備中</button></div><p class="rvx-p" style="text-align:center">レンタルは、まだ準備中です。いまは見るだけです。</p>`:`<div class="rvh-btns"><button class="rv-btn" type="button" data-a="rent" ${full()?'disabled':''}>${full()?'いっぱいです（2台まで）':'🔑 1週間かりる'}</button></div>`}${RV_RENT_ON&&full()?'<p class="rvx-p" style="text-align:center">あずかっている乗り物を返すと、借りられます。</p>':''}`;
-  const m=rvModal(html(),(e,m)=>{ const sw=e.target.closest('[data-ci]'); if(sw){ ci=+sw.dataset.ci; m.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="とじる">✕</button>`+html(); return; }
+  const m=rvModal(html(),(e,m)=>{ const sw=e.target.closest('[data-ci]'); if(sw){ ci=+sw.dataset.ci; m.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="戻る">← 戻る</button>`+html(); return; }
     const b=e.target.closest('[data-a="rent"]'); if(b&&!b.disabled&&RV_RENT_ON){ const a=rvRides(); if(a.length>=RV_MAX) return; const now=Date.now(); a.push({ cat:cid, type:tid, col:ci, start:now, end:now+RV_WEEK }); rvSet(K_RIDES,a); m.remove(); rvRender(); rvToast(`🔑 ${T.n}を借りました（1週間）`); try{ rvQ('.rvx-own').scrollIntoView({ behavior:'smooth', block:'center' }); }catch(_){} } }); }
 // 乗っている写真
 function rvShoot(r,saved,opt){ const me=rvMe(); const T=rvType(r.cat,r.type); let bg=saved?saved.bg||0:0; let hsOn=saved?saved.hs!==0:1;
@@ -25872,7 +25912,7 @@ function rvShoot(r,saved,opt){ const me=rvMe(); const T=rvType(r.cat,r.type); le
   const who=rvRiders(T,base.look,base.age);
   const trav=base.scene==='hotel'||base.scene==='meal';
   const html=()=>`<h2>${saved?'📷 ':'📸 '}${ttl?esc2(ttl):esc2(T.n)+(saved?'':'に乗って')}</h2><div class="rvx-stage">${rvPhotoSVG(Object.assign({},base,{ bg, hs:hsOn?1:0, still:saved?1:0 }))}</div><p class="rvx-cap">${base.place?`📍 ${esc2(base.place)}　`:''}${saved?saved.d:''}${who.note&&!saved&&!trav?`<br>${who.note}`:''}</p>${saved?'':`<div class="rvh-btns">${trav?'':`<button class="rv-btn rv-sub" type="button" data-a="bg">🔄 場面をかえる</button>`}${rvHasHS()?`<button class="rv-btn rv-sub" type="button" data-a="hs">${hsOn?'✨ Higher Self を写さない':'✨ Higher Self も写す'}</button>`:''}<button class="rv-btn" type="button" data-a="snap">📸 写真をとる</button></div>`}`;
-  rvModal(html(),(e,m)=>{ const b=e.target.closest('[data-a]'); if(!b) return; if(b.dataset.a==='bg'||b.dataset.a==='hs'){ if(b.dataset.a==='bg') bg=(bg+1)%3; else hsOn=!hsOn; m.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="とじる">✕</button>`+html(); }
+  rvModal(html(),(e,m)=>{ const b=e.target.closest('[data-a]'); if(!b) return; if(b.dataset.a==='bg'||b.dataset.a==='hs'){ if(b.dataset.a==='bg') bg=(bg+1)%3; else hsOn=!hsOn; m.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="戻る">← 戻る</button>`+html(); }
     if(b.dataset.a==='snap'){ rvFlash(); const al=rvGet(K_ALB,[]); al.unshift(Object.assign({},base,{ bg, hs:hsOn?1:0, d:rvToday(), at:Date.now() })); rvSet(K_ALB,al.slice(0,40)); rvRender(); rvToast('📷 乗り物アルバムに保存しました'); } }); }
 // 飛行機で飛ぶ
 function rvFly(r){ const me=rvMe(); const T=rvType(r.cat,r.type); const from=rvWhere(me); if(!from){ rvToast('いまの場所の空港が見つかりませんでした'); return; }
@@ -25892,7 +25932,7 @@ function rvFly(r){ const me=rvMe(); const T=rvType(r.cat,r.type); const from=rvW
       const sk=m.querySelector('[data-skip]'); if(sk) sk.remove();
       const arr=m.querySelector('.rvx-arr'); if(!arr) return; arr.innerHTML=`<div class="rvx-from" style="text-align:center">🛬 <b>${esc2(to.name)}</b>に着きました！${to.kw?`<br><small>空港から${esc2(toName)}までは、${esc2(to.kw)}。</small>`:''}</div><div class="rvh-btns"><button class="rv-btn" type="button" data-shot="landing">📸 着陸の写真をとる</button><button class="rv-btn" type="button" data-trav="1">🧳 ${esc2(toName)}の旅を楽しむ</button>${id?`<button class="rv-btn rv-sub" type="button" data-mb="${id}">🟡 ${esc2(toName)}を街ブラする</button>`:''}</div>`; } }); };
   const m=rvModal(step1(),(e,mm)=>{ const t=e.target;
-    const ab=t.closest('[data-area]'); if(ab){ area=ab.dataset.area||null; mm.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="とじる">✕</button>`+step1(); return; }
+    const ab=t.closest('[data-area]'); if(ab){ area=ab.dataset.area||null; mm.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="戻る">← 戻る</button>`+step1(); return; }
     const db=t.closest('[data-d]'); if(db&&!db.disabled){ const d=RV_DEST.find(x=>x.id===db.dataset.d); let tz=null; const mbc=RV_MBC(); if(mbc){ const c=mbc.find(x=>x.id===d.id); if(c) tz=c.tz; } go(d,RV_CITYN[d.id]||d.id,d.id,tz||RV_TZI[d.id]||null); return; }
     if(t.closest('[data-home]')&&home){ if(rvDist(from,home)>T.range){ rvToast(`この飛行機では遠すぎます（約${T.range.toLocaleString()}kmまで）`); return; } go(home,rvPlaceName(me)||'家',null,null); return; }
     const mb=t.closest('[data-mb]'); if(mb){ const id=mb.dataset.mb; mm.remove(); rvClose(); try{ if(typeof window.machiBuraOpen==='function') window.machiBuraOpen(id); }catch(_){} return; }
@@ -26015,7 +26055,7 @@ function hsTripOpen(){ try{ rvCss(); }catch(e){} let home=rvGet(K_HSHOME,null), 
     <p class="rvx-p">行きたい街をえらんでね。着いたら、その街を観光できます。</p><div class="rvx-dests">${L.map(d=>{ const near=d.km<120; return `<button class="rvx-d" type="button" data-hd="${d.id}"><span><b>${esc2(d.city)}</b><small>${esc2(d.name)}（${d.code}）</small></span><span class="rvx-km">${near?'近いので<br>電車・車で':`${d.km.toLocaleString()}km<br>${rvHM(d.km/830+.4)}`}</span></button>`; }).join('')}</div>
     ${alb.length?`<h3 class="rvx-h3">📸 旅の写真</h3><div class="hs-alb">${alb.slice(0,6).map(x=>`<div>${hsTripPhotoSVG(Object.assign({ still:1 },HS_PLANE,x))}<small>${esc2(x.place||'')} ${x.d||''}</small></div>`).join('')}</div>`:''}
     ${trips.length?`<h3 class="rvx-h3">🧳 旅の記録</h3>${trips.slice(0,8).map(x=>`<p class="rvx-trip">${x.d}　${esc2(x.fromN)}（${x.from}）→ ${esc2(x.toN)}（${x.to}）　${esc2(x.city||'')}</p>`).join('')}`:''}`; };
-  const draw=()=>{ m.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="とじる">✕</button>`+(picking?prefHTML():mainHTML()); };
+  const draw=()=>{ m.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="戻る">← 戻る</button>`+(picking?prefHTML():mainHTML()); };
   let leg=null;
   const fly=(to,cityName,id)=>{ const from=fromAp(); const km=rvDist(from,to); const T=rvType('plane','narrow'), C=rvCat('plane');
     leg={ from, to, cityName, id }; const box=m.querySelector('.rvx-mbox');
@@ -26025,7 +26065,7 @@ function hsTripOpen(){ try{ rvCss(); }catch(e){} let home=rvGet(K_HSHOME,null), 
       const arr=m.querySelector('.rvx-arr'); if(!arr) return; arr.innerHTML=`<div class="rvx-from" style="text-align:center">🛬 <b>${esc2(to.name)}</b>に着きました！${id&&to.kw?`<br><small>空港から${esc2(cityName)}までは、${esc2(to.kw)}。</small>`:''}</div><div class="rvh-btns"><button class="rv-btn" type="button" data-shot="landing">📸 着陸の写真をとる</button>${id?`<button class="rv-btn" type="button" data-mb="${id}">🟡 ${esc2(cityName)}を観光する</button>`:''}<button class="rv-btn rv-sub" type="button" data-back="1">← 旅のページへ</button></div>`; } }); };
   const shot=(k)=>{ if(!leg) return; const ap=k==='takeoff'?leg.from:leg.to; const pet=hsPet(); let pm=pet?'side':'none'; const p=Object.assign({},HS_PLANE,{ scene:k, code:ap.code, place:ap.name, tod:rvTod('Asia/Tokyo'), pet });
     const html=()=>`<h2>${k==='takeoff'?'🛫 離陸':'🛬 着陸'}の写真</h2><div class="rvx-stage">${hsTripPhotoSVG(Object.assign({},p,{ pm }))}</div><p class="rvx-cap">📍 ${esc2(ap.name)}${pet?`　🐾 ${esc2(pet.name)}もいっしょ`:''}</p><div class="rvh-btns">${pet?`<button class="rv-btn rv-sub" type="button" data-pm="side" aria-pressed="${pm==='side'}">🐾 横にならぶ</button><button class="rv-btn rv-sub" type="button" data-pm="hold" aria-pressed="${pm==='hold'}">🤗 抱っこする</button>`:''}<button class="rv-btn" type="button" data-snap="1">📸 写真をとる</button></div>`;
-    rvModal(html(),(e,mm)=>{ const b=e.target.closest('[data-pm]'); if(b){ pm=b.dataset.pm; mm.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="とじる">✕</button>`+html(); return; }
+    rvModal(html(),(e,mm)=>{ const b=e.target.closest('[data-pm]'); if(b){ pm=b.dataset.pm; mm.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="戻る">← 戻る</button>`+html(); return; }
       if(e.target.closest('[data-snap]')){ const a=rvGet(K_HSALB,[]); a.unshift(Object.assign({ d:rvToday() },p,{ pm })); rvSet(K_HSALB,a.slice(0,24)); mm.remove(); rvToast('📸 旅の写真に残しました'); } }); };
   const m=rvModal('',(e,mm)=>{ const t=e.target;
     const pf=t.closest('[data-pref]'); if(pf){ rvSet(K_HSHOME,pf.dataset.pref); picking=false; draw(); return; }
