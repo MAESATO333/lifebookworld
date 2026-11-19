@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.111">
+<meta name="lifebook-version" content="v178.112">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -841,7 +841,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.111';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.112';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -16999,7 +16999,7 @@ function mpPageHTML(){ const p=mpGet(); if(mpStageLog(p)) mpSet(p); if(p.per==nu
   ${gone?`<div class="mp-rb"><p>🌈 ${esc(p.name)}は、${p.life}歳まで、たくさんの愛情に包まれて生きました。</p><p>いまは虹の橋のたもとで、元気に走りまわっています。いつかまた会える日まで、ゆっくり待っていてくれるそうです。</p><p>💗 もらった愛情 ${p.love||0}　📷 思い出の写真 ${(p.photos||[]).length}枚　🏠 いっしょにいた日 ${mpTogether(p)}日</p><p class="tiny">思い出のアルバムは、ずっとここに残ります。</p></div>`:`${(w=>w.all.length?`<p class="tiny muted">あなた（Higher Self）が、だれにお願いしますか？${w.all.some(x=>x.k==='ch')?'':'（Channel は、まだ小さくて動けません。3歳になったら、お世話できます）'}</p><div class="mp-who">${w.all.map(x=>`<button type="button" class="mp-w${x.k===w.k?' on':''}" data-mpw="${esc(x.k)}">${esc(x.call==='Channel'?x.n+'（Channel）':x.call+'の'+x.n)}</button>`).join('')}</div>`:'')(mpWho())}<div class="mp-acts">${Object.keys(MP_ACT).map(k=>`<button type="button" class="mp-a${(k==='food'?done.filter(x=>x==='food').length>=2:done.includes(k))?' done':''}" data-mpa="${k}">${MP_ACT[k][1]} ${k==='play'&&p.kind==='dog'?'さんぽに行ってあげて':MP_ACT[k][0]}${k==='food'?(n=>n>=2?' ✓':n?' （あと1回）':'')(done.filter(x=>x==='food').length):done.includes(k)?' ✓':''}</button>`).join('')}<button type="button" class="mp-a mp-cam" data-mp="photo">📷 写真をとる</button></div>
   ${mpFoodHTML(p)}${(an=>an?`<p class="mp-anniv">${esc(an)}</p>`:'')(mpAnniv(p))}${mpAnnivHTML(p)}${typeof mpWcHTML==='function'?mpWcHTML(p):''}${p.cry?`<span class="mp-cry">${esc(p.cry)}</span>`:''}<p class="mp-msg" id="mpMsg" role="status">${esc(p.msg||'きょうも、見守ってあげてね。')}</p><p class="tiny muted">${esc(p.name)}は、${esc(per.d)}。</p>${mpChatHTML(p)}`}
   <p class="tiny muted">見守った日</p><div class="stp-row">${days.map(x=>{ const on=S.has(dayKey(x)); return `<span class="stp ${on?'on':''} ${dayKey(x)===dayKey()?'today':''}"><small>${W[x.getDay()]}</small>${on?'<i aria-hidden="true"></i>':x.getDate()}</span>`; }).join('')}</div>
-  ${mpDiaryHTML(p)}<h4 class="mp-h4">📷 ${esc(p.name)}のアルバム</h4>${typeof hsAlbOpen==='function'?'<button type="button" class="linkish hsa-lnk" data-hsaopen="1">📒 Higher Self のアルバム（ぜんぶの写真）を見る</button>':''}${ph.length?`<div class="mp-album">${ph.map(x=>`<figure class="mp-ph">${x.h&&typeof pgHousePhoto==='function'?pgHousePhoto(p,x):mpArt(p,x.k)}<figcaption>${esc(String(x.c).replace(/^\d+年\d+月\d+日/,mpStoryDate(x.t)))}</figcaption></figure>`).join('')}</div>`:'<p class="tiny muted">まだ写真はありません。「写真をとる」を押すと、いまの姿がアルバムに残ります。</p>'}
+  ${mpDiaryHTML(p)}<h4 class="mp-h4">📷 ${esc(p.name)}の写真</h4><div class="np-row"><button type="button" class="mp-btn" data-hsago="pet">📒 アルバムを開く（${ph.length}枚）</button></div><p class="tiny muted">「写真をとる」でとった写真は、ぜんぶ 📒 アルバム に入ります。</p>
   <div class="mp-row">${gone?`<button type="button" class="mp-btn" data-mp="again">新しい家族を迎える</button>`:''}<button type="button" class="linkish" data-mp="close">もどる</button></div>
   <p class="mp-src">寿命の目安：犬の平均は約14.6歳、猫は約15.8歳（日本ペットフード協会 2023年）。この中では、約1か月で1歳、年をとります。</p>`; }
 function mpAdopt(){ const k=_mpPick.kind, br=_mpPick.col||(document.getElementById('mpBreed')||{}).value||_mpPick.breed; const inp=document.getElementById('mpName'); let nm=(inp&&inp.value||'').trim().slice(0,12); if(!nm){ const er=document.getElementById('mpNameErr'); if(er) er.hidden=false; if(inp){ inp.focus(); inp.classList.add('mp-in-err'); } return; }
@@ -19737,7 +19737,7 @@ function flPhNewList(){ try{ const vt=+store.get('fl.phViewedT',0)||0; const a=(
   const b=(store.get('gw.got',[])||[]).filter(x=>x&&(x.rt||x.t||0)>vt).map(x=>({ by:x.fromBy||'友だち', t:x.t, rt:x.rt||x.t, gw:1 })); return a.concat(b).sort((x,y)=>(y.rt||0)-(x.rt||0)); }catch(e){ return []; } }
 function flPhNewN(){ return flPhNewList().length; }
 function flPhNewListHTML(){ try{ const L=flPhNewList(); if(!L.length) return ''; const when=t=>typeof pgWhen==='function'?pgWhen(t):'';
-  return `<button type="button" class="pg-hmb fl-hmb" data-fl-open="album">📷 写真が <b>${L.length}枚</b> 届いています</button><ul class="fl-newl">${L.slice(0,5).map(g=>`<li>📷 <b>${esc(g.by)}さん</b>から、${g.gw?'Gateway の写真':'お花の写真'}が届きました<small>${when(g.t)}</small></li>`).join('')}${L.length>5?`<li class="pg-more">ほかに ${L.length-5}枚</li>`:''}</ul>`; }catch(e){ return ''; } }
+  return `<button type="button" class="pg-hmb fl-hmb" data-hsago="fl">📷 写真が <b>${L.length}枚</b> 届いています</button><ul class="fl-newl">${L.slice(0,5).map(g=>`<li>📷 <b>${esc(g.by)}さん</b>から、${g.gw?'Gateway の写真':'お花の写真'}が届きました<small>${when(g.t)}</small></li>`).join('')}${L.length>5?`<li class="pg-more">ほかに ${L.length-5}枚</li>`:''}</ul>`; }catch(e){ return ''; } }
 function flPlace(){ try{ const app=document.getElementById('app'); if(!app||typeof page==='undefined'||page!=='home'||app.querySelector('.fl-tile')) return; const t=app.querySelector('.hm-mypet'); if(!t) return; const box=document.createElement('div'); box.innerHTML=flTileHTML(); t.after(box.firstElementChild); }catch(e){} }
 (function(){ if(typeof render1!=='function') return; const _r=render1; render1=function(){ const r=_r.apply(this,arguments); flPlace(); return r; }; })();
 setTimeout(flPlace,0);
@@ -19801,8 +19801,8 @@ var _flDone=null, _flLastTab=''; function flGk(g){ return String(g&&(g.id||g.t)|
 function flOpen(tab){ if(tab) _flTab=tab; let d=document.getElementById('flDlg'); const keepY=d&&!d.hidden&&_flLastTab===_flTab&&d.querySelector('.fl-in')?d.querySelector('.fl-in').scrollTop:0; if(_flLastTab!==_flTab) _flDone=null; _flLastTab=_flTab; if(!d){ d=document.createElement('div'); d.id='flDlg'; d.className='pa-ov fl-ov'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','お花'); document.body.appendChild(d);
     d.addEventListener('click',flClick); d.addEventListener('input',flInput); d.addEventListener('change',flInput); }
   d.innerHTML=`<div class="pa-in fl-in"><button type="button" class="pa-x" data-fl-x="1" aria-label="戻る">← 戻る</button><h3 class="fl-h">💐 お花</h3>
-   <div class="fl-tabs" role="tablist">${[['pick','えらぶ・飾る'],['send','贈る'],['got','届いたお花'],['shelf','🪴 棚'],['album','花束アルバム']].map(([k,t])=>`<button type="button" role="tab" aria-selected="${_flTab===k}" class="fl-tab${_flTab===k?' on':''}" data-fl-tab="${k}">${t}</button>`).join('')}</div>
-   <div class="fl-body">${_flTab==='send'?flSendHTML():_flTab==='got'?flGotHTML():_flTab==='album'?flAlbumHTML():_flTab==='shelf'?flShelfHTML():flPickHTML()}</div>
+   <div class="fl-tabs" role="tablist">${[['pick','えらぶ・飾る'],['send','贈る'],['got','届いたお花'],['shelf','🪴 棚'],['album','📷 写真']].map(([k,t])=>`<button type="button" role="tab" aria-selected="${_flTab===k}" class="fl-tab${_flTab===k?' on':''}" data-fl-tab="${k}">${t}</button>`).join('')}</div>
+   <div class="fl-body">${_flTab==='send'?flSendHTML():_flTab==='got'?flGotHTML():_flTab==='phsend'?flPhSendOnlyHTML():_flTab==='album'?flPhotoTabHTML():_flTab==='shelf'?flShelfHTML():flPickHTML()}</div>
    ${_flMsg?`<p class="fl-msg" role="status">${esc(_flMsg)}</p>`:''}<button type="button" class="pa-x pa-back" data-fl-x="1">← 戻る</button></div>`;
   if(keepY) try{ d.querySelector('.fl-in').scrollTop=keepY; }catch(e){}
   d.hidden=false; document.body.classList.add('gsz-open'); }
@@ -19864,7 +19864,7 @@ function flClick(e){ const t=e.target; const d=document.getElementById('flDlg');
   const ps=t.closest('[data-fl-phsend]'); if(ps){ _flPhSend=+ps.dataset.flPhsend; _flPhTo=''; _flPhTos=null; _flPhMsg=''; _flPhH=null; _flMsg=''; flOpen(); return; }
   if(t.closest('[data-fl-phcancel]')){ _flPhSend=-1; flOpen(); return; }
   if(t.closest('[data-fl-phgo]')){ const g=id=>document.getElementById(id); flPhReadH(); if(!(_flPhTos||[]).length){ _flMsg='だれに送るか、Higher Self名をえらんでね（5人まで）。'; flOpen(); return; } if(_flPhH.some(x=>!x)){ _flMsg='お礼の俳句を、3行とも書いてね。'; flOpen(); return; } _flPhMsg=_flPhH.join('／').slice(0,30); const ph=store.get(KEY_FLALB,[])[_flPhSend]; if(typeof flPhSendMany==='function'&&ph) flPhSendMany(_flPhTos.slice(0,5),ph,_flPhMsg); else { _flMsg='いまは送れません。サイトの LIFE BOOK から送ってね。'; flOpen(); } return; }
-  if(t.closest('[data-fl-photo]')){ if(flTakePhoto()){ _flMsg='📷 写真に撮りました！花束アルバムに入れました。'; _flTab='album'; } flOpen(); return; }
+  if(t.closest('[data-fl-photo]')){ if(flTakePhoto()){ _flMsg='📷 写真に撮りました！📒 アルバムに入れました。'; _flTab='album'; } flOpen(); return; }
   const pd=t.closest('[data-fl-phdel]'); if(pd){ const L=store.get(KEY_FLALB,[]); L.splice(+pd.dataset.flPhdel,1); store.set(KEY_FLALB,L); _flMsg='写真を消しました。'; flOpen(); return; }
   if(t.closest('[data-fl-idea]')){ _flH=flHaikuIdea(_flOcc,1); flOpen(); return; }
   if(t.closest('[data-fl-send]')){ flReadForm(); if(typeof flSend==='function') flSend(_flTo,flPick(),_flOcc,_flH); else { _flMsg='いまは贈れません。サイトの LIFE BOOK から贈ってね。'; flOpen(); } return; } }
@@ -19877,7 +19877,7 @@ function flInput(e){ const t=e.target; if(t.id==='flQ'){ _flQ=t.value; const d=d
   if(/^flPhH\d$/.test(t.id)){ const i=+t.id[5], m=flMora(t.value), want=[5,7,5][i]; if(_flPhH) _flPhH[i]=t.value; const sp=t.parentNode.querySelector('.fl-mc'); if(sp){ sp.textContent=m==null?'読みで'+want+'音':m+'/'+want+'音'; sp.classList.toggle('ok',m===want); } return; }
   if(/^flH\d$/.test(t.id)){ flReadForm(); const i=+t.id[3], m=flMora(t.value), want=[5,7,5][i]; const sp=t.parentNode.querySelector('.fl-mc'); if(sp){ sp.textContent=m==null?'読みで'+want+'音':m+'/'+want+'音'; sp.classList.toggle('ok',m===want); } return; }
   if(t.id==='flTo'){ _flTo=t.value; if(e.type==='change'){ flReadForm(); flOpen(); } } }
-document.addEventListener('click',e=>{ const ph=e.target.closest&&e.target.closest('.fl-tile [data-fl-photo]'); if(ph){ e.preventDefault(); if(flTakePhoto()){ _flMsg='📷 写真に撮りました！花束アルバムに入れました。'; flOpen('album'); } return; } const c=e.target.closest&&e.target.closest('[data-fl-change],[data-fl-clear]'); if(c){ e.preventDefault(); const rm=store.get(KEY_FLROOM,null); if(c.dataset.flClear){ flTableSync([]); flRefreshTile(); try{ if(typeof render==='function') render(); }catch(_){} return; } if(rm&&rm.items){ _flPick={ items:rm.items.map(x=>({ f:x.f, c:x.c })), ves:rm.ves==='wrap'?'vase':rm.ves }; flSavePick(); } _flMsg='いま飾っているお花です。足したり、はずしたり、色や花びんを変えてから「部屋に飾る」を押してね。'; flOpen('pick'); return; } const b=e.target.closest&&e.target.closest('[data-fl-open]'); if(b){ e.preventDefault(); _flMsg=''; flOpen(b.dataset.flOpen); } });
+document.addEventListener('click',e=>{ const ph=e.target.closest&&e.target.closest('.fl-tile [data-fl-photo]'); if(ph){ e.preventDefault(); if(flTakePhoto()){ _flMsg='📷 写真に撮りました！📒 アルバムに入れました。'; flOpen('album'); } return; } const c=e.target.closest&&e.target.closest('[data-fl-change],[data-fl-clear]'); if(c){ e.preventDefault(); const rm=store.get(KEY_FLROOM,null); if(c.dataset.flClear){ flTableSync([]); flRefreshTile(); try{ if(typeof render==='function') render(); }catch(_){} return; } if(rm&&rm.items){ _flPick={ items:rm.items.map(x=>({ f:x.f, c:x.c })), ves:rm.ves==='wrap'?'vase':rm.ves }; flSavePick(); } _flMsg='いま飾っているお花です。足したり、はずしたり、色や花びんを変えてから「部屋に飾る」を押してね。'; flOpen('pick'); return; } const b=e.target.closest&&e.target.closest('[data-fl-open]'); if(b){ e.preventDefault(); _flMsg=''; flOpen(b.dataset.flOpen); } });
 document.addEventListener('keydown',e=>{ const d=document.getElementById('flDlg'); if(d&&!d.hidden&&e.key==='Escape') flClose(); });
 // --- 部屋の絵に、飾ったお花を出す（いまの Channel の部屋だけ） ---
 var _flOn=false;
@@ -20030,10 +20030,10 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // ゲームに入っているお知らせ（LBN_BUILTIN）＋ 管理者が Firebase の os/news に書いたお知らせ（{ n:[{ i, d:ミリ秒, t:題, b:説明 }] }）。新しい順に3つ、のこりは「これまでのお知らせ」。
 const LBN_BUILTIN=[
   { i:'v178-spacebank', d:Date.UTC(2026,10,19,8,10), t:'🪐 LIFEBOOK 宇宙銀行がオープンしました', b:'Life Home のいちばん上のボタンの下に「🪐 LIFEBOOK 宇宙銀行」ができました。宇宙を旅するお城の銀行が、LIFE BOOK の中だけの「光（ヒカリ）」を発行しています。毎日の光は、友だちが多いほど増えます。友だちに光を贈ると、半分が「ありがとう返し」でもどってきます。光は、うちのペットへの夢プレゼント・キラキラの服・花束にも使えます。7日間使わなかった光は、お城の中の「みんなの森」の木になります。' },
-  { i:'v178-parkphoto', d:Date.UTC(2026,10,19,4,25), t:'📷 公園の写真がとれるようになりました', b:'公園の右下の「📷 写真」を押すと、その時に公園を走っているペットたちを写せます。服や帽子もそのまま写ります。写真は 📒 Higher Self のアルバムに入り、友だちの Higher Self にも送れます。' },
+  { i:'v178-parkphoto', d:Date.UTC(2026,10,19,4,25), t:'📷 公園の写真がとれるようになりました', b:'公園の右下の「📷 写真」を押すと、その時に公園を走っているペットたちを写せます。服や帽子もそのまま写ります。写真は 📒 アルバムに入り、友だちの Higher Self にも送れます。' },
   { i:'v178-petrealestate', d:Date.UTC(2026,10,19,3,41), t:'🏢 ペットの家が大きくなり、不動産も始められます', b:'ペットのつながりの木の友だちのペットがふえると、ペットの家が2階建て・3階建て・4階建てに。101匹をこえると5階建てのビルになり、最上階で「（ペットの名前）不動産」を始めます。友だちの Higher Self から「部屋をかりたい」と申しこまれたら、一戸建てのペットハウスを1匹に1軒 貸せます。' },
-  { i:'v178-treephoto', d:Date.UTC(2026,10,19,3,40), t:'📷 ペットのつながりの木で、集合写真が撮れます', b:'ペットのつながりの木の「📷 集合写真」で、うちのペットと友だちのペットの集合写真が撮れます。📒 Higher Self のアルバムに保存され、友だちの Higher Self にも送れます。' },
-  { i:'v178-hsalbum', d:Date.UTC(2026,10,19,3,0), t:'📒 Higher Self のアルバムができました', b:'ペット・ペットの家・街ブラ・乗り物・Gateway の写真や動く写真・お花の部屋の写真が、ぜんぶ1つのアルバムに新しい順で並びます。マイページのアルバム欄や、ペットのアルバムから開けます。ペットの家の「📒 アルバムに保存」で、お部屋の様子も写真に残せます。' },
+  { i:'v178-treephoto', d:Date.UTC(2026,10,19,3,40), t:'📷 ペットのつながりの木で、集合写真が撮れます', b:'ペットのつながりの木の「📷 集合写真」で、うちのペットと友だちのペットの集合写真が撮れます。📒 アルバムに保存され、友だちの Higher Self にも送れます。' },
+  { i:'v178-hsalbum', d:Date.UTC(2026,10,19,3,0), t:'📒 アルバムができました', b:'ペット・ペットの家・街ブラ・乗り物・Gateway の写真や動く写真・お花の部屋の写真が、ぜんぶ1つのアルバムに新しい順で並びます。マイページのアルバム欄や、ペットのアルバムから開けます。ペットの家の「📒 アルバムに保存」で、お部屋の様子も写真に残せます。' },
   { i:'v178-petclothes', d:Date.UTC(2026,10,19,2,51), t:'👕 うちのペットに、服を着せられるようになりました', b:'うちのペットのページの「👕 服を着せる」から、形・色・模様を組み合わせて、100種類以上の服を着せられます。着せたまま写真をとって、アルバムに残したり、画像として保存したりもできます。服を着せられるのは、飼い主だけです。' },
   { i:'v178-pethouse', d:Date.UTC(2026,10,19,2,50), t:'🏠 ペットの家ができました', b:'うちのペットを押すと、ペットの家の大きな部屋が見られます。友だちからもらったプレゼントやおもちゃが、お部屋にかざられます。帽子やリボンは、ペットが動いてもいっしょに動き、「はずす」で外すこともできます。' },
   { i:'v178-petgifts', d:Date.UTC(2026,10,19,2,40), t:'🎁 ペットに贈れるプレゼントが、9種類になりました', b:'友だちのペットに、💗可愛い！・🎁ごはんのほかに、🧸おもちゃ・🍪おやつ・🎀おしゃれ・🛏️ベッド・💐お花・🪮おていれが贈れるようになりました。そのペットのお誕生日には、🎂ケーキも贈れます。中身は動物ごとにちがいます。もらったペットは、リボンをつけて公園を走ったり、ベッドで眠ったり、おもちゃで遊んだりします。' },
@@ -20557,7 +20557,7 @@ window.addEventListener('hashchange',gwHash); setTimeout(gwHash,250); /* v178.78
 // --- 受けとる（お花の写真と同じ場所に届く。p が 'GW1:' で始まるもの） ---
 function gwRecv(docId,x){ try{ const seen=store.get(GW_SEEN,[]); if(!seen.includes(docId)){ const rec=JSON.parse(String(x.p).slice(4)); if(rec&&typeof rec==='object'){
       store.set(GW_SEEN,seen.concat([docId]).slice(-300)); store.set(GW_GOT,(store.get(GW_GOT,[])||[]).concat([{ id:docId, rec, fromBy:String(x.by||'友だち').slice(0,20), t:+x.t||Date.now(), rt:Date.now() }]).slice(-60));
-      try{ if(typeof pgToast==='function') pgToast(`${String(x.by||'友だち').slice(0,20)}さんから、Gateway の写真が届きました💌（「💐 お花」の写真で見られます）`); }catch(_){}
+      try{ if(typeof pgToast==='function') pgToast(`${String(x.by||'友だち').slice(0,20)}さんから、Gateway の写真が届きました💌（📒 アルバムで見られます）`); }catch(_){}
       try{ const dl=document.getElementById('flDlg'); if(dl&&!dl.hidden&&typeof flOpen==='function') flOpen(); else if(typeof flRefreshTile==='function') flRefreshTile(); }catch(_){} try{ if(typeof mqBadgeSync==='function') mqBadgeSync(); }catch(_){} } }
   }catch(e){} try{ FB.D.deleteDoc(FB.D.doc(FB.db,'ids',myId(),'photo',docId)); }catch(_){} }
 // お花のアルバムに「Gateway の写真」をならべる
@@ -21572,21 +21572,21 @@ function hsAlbCap(it){ const x=it.x; let c='';
   return `<b>${HSA_TY[it.ty]}</b>${it.t?` <small>${hsAlbDate(it.t)}</small>`:''}${c?`<br>${esc(String(c).slice(0,60))}`:''}`; }
 function hsAlbList(){ return _hsaF==='all'?_hsaL:_hsaL.filter(it=>it.ty===_hsaF||(_hsaF==='pet'&&it.ty==='house')); }
 function hsAlbHTML(){ const A=hsAlbList(), show=A.slice(0,_hsaN);
-  const cnt={}; _hsaL.forEach(it=>{ const k=it.ty==='house'?'pet':it.ty==='treeg'?'tree':it.ty==='parkg'?'park':it.ty; cnt[k]=(cnt[k]||0)+1; });
+  const cnt={}; _hsaL.forEach(it=>{ const k=it.ty==='house'?'pet':it.ty==='treeg'?'tree':it.ty==='parkg'?'park':it.ty==='flg'?'fl':it.ty==='gwg'?'gw':it.ty; cnt[k]=(cnt[k]||0)+1; });
   const chips=HSA_F.filter(f=>f[0]==='all'||cnt[f[0]]).map(f=>`<button type="button" class="mp-w${_hsaF===f[0]?' on':''}" data-hsaf="${f[0]}">${f[1]} ${f[0]==='all'?_hsaL.length:cnt[f[0]]}</button>`).join('');
-  return `<h3 class="gsz-h">📒 Higher Self のアルバム</h3><p class="tiny muted">あなた（Higher Self）が撮った写真が、ぜんぶここに集まります。新しい順です。写真を押すと大きく見られます。</p>
+  return `<h3 class="gsz-h">📒 アルバム</h3><p class="tiny muted">撮った写真・動く写真・友だちから届いた写真は、ぜんぶ この1つのアルバムに入ります。新しい順です。写真を押すと大きく見られます。</p>
   <div class="hsa-f">${chips}</div>${A.length?`<div class="hsa-g">${show.map((it,i)=>`<button type="button" class="hsa-c" data-hsai="${_hsaL.indexOf(it)}"><span class="hsa-a"></span><span class="hsa-t">${hsAlbCap(it)}</span></button>`).join('')}</div>${A.length>_hsaN?`<div class="np-row"><button type="button" class="mp-btn" data-hsamore="1">もっと見る（あと${A.length-_hsaN}枚）</button></div>`:''}`
   :'<p class="tiny muted">まだ写真がありません。ペットの「📷 写真をとる」「📒 アルバムに保存」、街ブラの「📸 写真をとる」などで撮ると、ここに集まります。</p>'}`; }
 function hsAlbFill(){ const d=document.getElementById('gsZoom'); if(!d) return; const cs=[...d.querySelectorAll('.hsa-c:not(.hsa-done)')]; if(!cs.length) return;
   const draw=el=>{ if(el.classList.contains('hsa-done')) return; el.classList.add('hsa-done'); const it=_hsaL[+el.dataset.hsai]; if(!it) return; const a=el.querySelector('.hsa-a'); a.innerHTML=hsAlbArt(it);
-    try{ if(it.ty==='gw'&&typeof gwFill==='function') gwFill(a); if(it.ty==='machi') window.lbMb.freeze(a,it.x.t); a.querySelectorAll('svg').forEach(v=>{ try{ if(it.ty!=='gw') v.pauseAnimations&&v.pauseAnimations(); }catch(_){} }); }catch(_){} };
+    try{ if((it.ty==='gw'||it.ty==='gwg')&&typeof gwFill==='function') gwFill(a); if(it.ty==='machi') window.lbMb.freeze(a,it.x.t); a.querySelectorAll('svg').forEach(v=>{ try{ if(it.ty!=='gw') v.pauseAnimations&&v.pauseAnimations(); }catch(_){} }); }catch(_){} };
   if(_hsaIO){ try{ _hsaIO.disconnect(); }catch(_){} _hsaIO=null; }
   if('IntersectionObserver' in window){ _hsaIO=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ draw(e.target); _hsaIO&&_hsaIO.unobserve(e.target); } }),{ root:null, rootMargin:'200px' }); cs.forEach(c=>_hsaIO.observe(c)); }
   else cs.slice(0,12).forEach(draw); }
 function hsAlbOpen(keep){ if(!keep){ _hsaF='all'; _hsaN=24; } _hsaL=hsAlbItems(); if(typeof gsZoomOpen!=='function') return; gsZoomOpen(`<div class="hsa">${hsAlbHTML()}</div>`); const d=document.getElementById('gsZoom'); if(d) d.classList.add('hsa-on'); setTimeout(hsAlbFill,30); }
 function hsAlbBig(i){ const it=_hsaL[i]; if(!it) return; const L=hsAlbList(), k=L.indexOf(it);
   gsZoomOpen(`<div class="hsa hsa-big"><div class="hsa-ba">${hsAlbArt(it)}</div><p class="hsa-bc">${hsAlbCap(it)}</p><div class="pa-nav"><button type="button" class="pa-b" data-hsab="${k>0?_hsaL.indexOf(L[k-1]):-1}" ${k<=0?'disabled':''}>← まえ</button><span>${k+1} / ${L.length}</span><button type="button" class="pa-b" data-hsab="${k<L.length-1?_hsaL.indexOf(L[k+1]):-1}" ${k>=L.length-1?'disabled':''}>つぎ →</button></div><div class="np-row"><button type="button" class="mp-btn" data-hsaback="1">📒 アルバムにもどる</button></div></div>`);
-  try{ const d=document.getElementById('gsZoom'); if(it.ty==='gw'&&typeof gwFill==='function') gwFill(d); }catch(_){} }
+  try{ const d=document.getElementById('gsZoom'); if((it.ty==='gw'||it.ty==='gwg')&&typeof gwFill==='function') gwFill(d); }catch(_){} }
 // ペットの家を、そのまま写真に（いまの時刻・プレゼント・おしゃれ・服で）
 function hsAlbSaveHouse(){ const p=mpGet(); if(!p||(typeof mpGone==='function'&&mpGone(p))) return; const t=new Date(); const fx={}; try{ const f=pgFxMine(p); Object.keys(f).forEach(k=>{ fx[k]={ e:f[k].e, f:f[k].f, by:f[k].by, t:f[k].t, until:f[k].until }; }); }catch(e){}
   const st=typeof mpStage==='function'?mpStage(p):['',1]; p.photos=p.photos||[];
@@ -21656,12 +21656,12 @@ function pkSnap(){ const run=document.querySelector('.pr-run'); if(!run) return;
   if(!list.length) return; list.sort((a,b)=>b.y-a.y);
   const t=Date.now(), d=pkEncode({ t, W:Math.round(R.width), H:Math.round(R.height), list }); const A=pkAlbum(); A.unshift({ t, d, n:list.length }); store.set(PK_ALB,A.slice(0,30));
   try{ let f=document.querySelector('.mbx-flash'); if(!f){ f=document.createElement('div'); f.className='mbx-flash'; document.body.appendChild(f); } f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); setTimeout(()=>f.classList.remove('on'),600); }catch(_){}
-  pkSendOpen(t,'📒 Higher Self のアルバムに保存しました'); }
+  pkSendOpen(t,'📒 アルバムに保存しました'); }
 let _pkTo=null;
 function pkSendOpen(t,msg){ const r=pkAlbum().find(x=>x.t===+t); if(!r) return; const fr=typeof flFriends==='function'?flFriends():[];
   gsZoomOpen(`<h3 class="gsz-h">📷 公園の写真</h3>${msg?`<p class="pt-msg">${esc(msg)}</p>`:''}<div class="gsz-art pk-art">${pkHTML(r.d)}</div>
   <h4 class="pt-h">💌 友だちの Higher Self に送る</h4>${fr.length?`<div class="gw-tos pt-tos">${fr.map(f=>`<button type="button" class="mp-w${f.id===_pkTo?' on':''}" data-pkto="${esc(f.id)}">${esc(f.by||'友だち')}さん</button>`).join('')}</div><div class="np-row"><button type="button" class="mp-btn" data-pkgo="${r.t}">💌 この写真を送る</button></div><p class="tiny muted">1人の友だちに送れる写真は、1日${typeof FL_PH_DAYMAX!=='undefined'?FL_PH_DAYMAX:10}枚までです（ほかの写真とあわせて）。</p>`:'<p class="tiny muted">友だちとつながると、送れるようになります。</p>'}
-  <div class="np-row">${typeof hsAlbOpen==='function'?'<button type="button" class="linkish" data-hsaopen="1">📒 Higher Self のアルバムを見る</button>':''}</div>`); pkLater(); }
+  <div class="np-row">${typeof hsAlbOpen==='function'?'<button type="button" class="linkish" data-hsaopen="1">📒 アルバムを見る</button>':''}</div>`); pkLater(); }
 async function pkSend(t){ const r=pkAlbum().find(x=>x.t===+t); if(!r) return; const fr=(typeof flFriends==='function'?flFriends():[]).find(f=>f.id===_pkTo); if(!fr) return pkSendOpen(t,'だれに送るか、選んでください。');
   const p='PK1:'+r.d; if(p.length>1000) return pkSendOpen(t,'この写真は大きすぎて、送れませんでした。');
   const b=document.querySelector('[data-pkgo]'); if(b){ b.disabled=true; b.textContent='おくっています…'; }
@@ -21673,13 +21673,13 @@ async function pkSend(t){ const r=pkAlbum().find(x=>x.t===+t); if(!r) return; co
     pkSendOpen(t,`${fr.by||'友だち'}さんに、公園の写真を送りました💌`); }
   catch(err){ pkSendOpen(t,String(err&&err.code||'').includes('permission')?'まだ写真は送れません（サーバーの準備中です）。':'うまく送れませんでした。少しあとで、もう一度ためしてね。'); } }
 function pkRecv(docId,x){ try{ const seen=store.get(PK_SEEN,[]); if(!seen.includes(docId)){ const d=String(x.p).slice(4); const D=pkDecode(d); if(D&&D.list.length){ store.set(PK_SEEN,seen.concat([docId]).slice(-300)); store.set(PK_GOT,(store.get(PK_GOT,[])||[]).concat([{ id:docId, d, fromBy:String(x.by||'友だち').slice(0,20), t:+x.t||Date.now() }]).slice(-40));
-      try{ if(typeof pgToast==='function') pgToast(`${String(x.by||'友だち').slice(0,20)}さんから、公園の写真が届きました💌（📒 Higher Self のアルバムで見られます）`); }catch(_){} } } }catch(e){}
+      try{ if(typeof pgToast==='function') pgToast(`${String(x.by||'友だち').slice(0,20)}さんから、公園の写真が届きました💌（📒 アルバムで見られます）`); }catch(_){} } } }catch(e){}
   try{ FB.D.deleteDoc(FB.D.doc(FB.db,'ids',myId(),'photo',docId)); }catch(_){} }
 document.addEventListener('click',e=>{ const a=e.target.closest&&e.target.closest('[data-pksnap],[data-pkto],[data-pkgo]'); if(!a) return; e.preventDefault(); e.stopPropagation();
   if(a.dataset.pksnap) pkSnap();
   else if(a.dataset.pkto){ _pkTo=a.dataset.pkto; document.querySelectorAll('[data-pkto]').forEach(x=>x.classList.toggle('on',x===a)); }
   else if(a.dataset.pkgo) pkSend(a.dataset.pkgo); },true);
-// 📒 Higher Self のアルバムにも入れる（自分の公園の写真・届いた公園の写真）
+// 📒 アルバムにも入れる（自分の公園の写真・届いた公園の写真）
 if(typeof hsAlbItems==='function'){ const HI=hsAlbItems; hsAlbItems=function(){ const L=HI.apply(this,arguments); try{ pkAlbum().forEach(r=>L.push({ ty:'park', t:r.t, x:r })); (store.get(PK_GOT,[])||[]).forEach(r=>L.push({ ty:'parkg', t:r.t, x:r })); }catch(e){} return L.sort((a,b)=>b.t-a.t); }; }
 if(typeof hsAlbArt==='function'){ const HA=hsAlbArt; hsAlbArt=function(it){ if(it&&(it.ty==='park'||it.ty==='parkg')){ pkLater(); return pkHTML(it.x.d)||'<p class="tiny muted">写真を描けませんでした</p>'; } return HA.apply(this,arguments); }; }
 if(typeof hsAlbCap==='function'){ const HC=hsAlbCap; hsAlbCap=function(it){ if(it&&(it.ty==='park'||it.ty==='parkg')){ const D=pkDecode(it.x.d); return `<b>🏞️ 公園</b> <small>${hsAlbDate(it.t)}</small><br>${it.ty==='parkg'?`💌 ${esc(it.x.fromBy)}さんから・`:''}${D?`${D.list.length}匹`:''}${it.ty==='park'?'<br>💌 押すと、友だちに送れます':''}`; } return HC.apply(this,arguments); }; }
@@ -21696,7 +21696,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 .pk-ph .pk-n{ font-size:max(5px,2.6cqw); padding:0 1.4cqw; white-space:nowrap; margin-bottom:1px; }
 @media (min-width:641px){ body .pg-hctl .mp-who,body .pg-hctl .mp-acts{ grid-template-columns:repeat(auto-fill,minmax(122px,1fr))!important; gap:7px!important; } body .pg-hctl .mp-w,body .pg-hctl .mp-a,body .pg-hctl .mp-acts button{ height:36px!important; min-height:36px!important; border-radius:18px!important; font-size:13.5px!important; padding:0 8px!important; letter-spacing:0!important; } }
 </style>`); }catch(e){}
-// v178.96（MITSUさん 2026-11-19）：ペットのつながりの木の「集合写真」。とると 📒 Higher Self のアルバムに入り、友だちの Higher Self にも送れる
+// v178.96（MITSUさん 2026-11-19）：ペットのつながりの木の「集合写真」。とると 📒 アルバムに入り、友だちの Higher Self にも送れる
 // 写真は小さなメモ（うちのペットと、友だちのペットの種類・名前）。送る時は お花・Gateway の写真と同じ場所（photo）に 'PT1:' をつけて送る（1000文字まで・ルールの変更なし）
 const PT_ALB='pt.album', PT_GOT='pt.got', PT_SEEN='pt.seen';
 function ptClean(v,n){ return String(v||'').replace(/[~^]/g,'').slice(0,n); }
@@ -21712,12 +21712,12 @@ function ptAlbum(){ const a=store.get(PT_ALB,[]); return Array.isArray(a)?a:[]; 
 function ptSnap(i){ const me=typeof mpGet==='function'?mpGet():null; if(!me||!PB_ALL[me.breed]) return; const list=(gsChunks(gsFrPets(typeof _gsFr!=='undefined'?_gsFr:store.get(KEY_FRIEND,[])),GS_PPER)[+i||0])||[]; if(!list.length) return;
   const t=Date.now(), d=ptEncode({ breed:me.breed, name:me.name, g:typeof mpGone==='function'&&mpGone(me) },list,t); const A=ptAlbum(); A.unshift({ t, d, n:list.length }); store.set(PT_ALB,A.slice(0,30));
   try{ let f=document.querySelector('.mbx-flash'); if(!f){ f=document.createElement('div'); f.className='mbx-flash'; document.body.appendChild(f); } f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); setTimeout(()=>f.classList.remove('on'),600); }catch(_){}
-  ptSendOpen(t,'📒 Higher Self のアルバムに保存しました'); }
+  ptSendOpen(t,'📒 アルバムに保存しました'); }
 let _ptTo=null;
 function ptSendOpen(t,msg){ const r=ptAlbum().find(x=>x.t===+t); if(!r) return; const fr=typeof flFriends==='function'?flFriends():[];
   gsZoomOpen(`<h3 class="gsz-h">📷 ペットの木の集合写真</h3>${msg?`<p class="pt-msg">${esc(msg)}</p>`:''}<div class="gsz-art pt-art">${ptSVG(r.d)}</div>
   <h4 class="pt-h">💌 友だちの Higher Self に送る</h4>${fr.length?`<div class="gw-tos pt-tos">${fr.map(f=>`<button type="button" class="mp-w${f.id===_ptTo?' on':''}" data-ptto="${esc(f.id)}">${esc(f.by||'友だち')}さん</button>`).join('')}</div><div class="np-row"><button type="button" class="mp-btn" data-ptgo="${r.t}">💌 この写真を送る</button></div><p class="tiny muted">1人の友だちに送れる写真は、1日${typeof FL_PH_DAYMAX!=='undefined'?FL_PH_DAYMAX:10}枚までです（お花・Gateway の写真とあわせて）。</p>`:'<p class="tiny muted">友だちとつながると、送れるようになります。</p>'}
-  <div class="np-row">${typeof hsAlbOpen==='function'?'<button type="button" class="linkish" data-hsaopen="1">📒 Higher Self のアルバムを見る</button>':''}</div>`); }
+  <div class="np-row">${typeof hsAlbOpen==='function'?'<button type="button" class="linkish" data-hsaopen="1">📒 アルバムを見る</button>':''}</div>`); }
 async function ptSend(t){ const r=ptAlbum().find(x=>x.t===+t); if(!r) return; const fr=(typeof flFriends==='function'?flFriends():[]).find(f=>f.id===_ptTo); if(!fr) return ptSendOpen(t,'だれに送るか、選んでください。');
   const p='PT1:'+r.d; if(p.length>1000) return ptSendOpen(t,'この写真は大きすぎて、送れませんでした。');
   const b=document.querySelector('[data-ptgo]'); if(b){ b.disabled=true; b.textContent='おくっています…'; }
@@ -21729,13 +21729,13 @@ async function ptSend(t){ const r=ptAlbum().find(x=>x.t===+t); if(!r) return; co
     ptSendOpen(t,`${fr.by||'友だち'}さんに、集合写真を送りました💌`); }
   catch(err){ ptSendOpen(t,String(err&&err.code||'').includes('permission')?'まだ写真は送れません（サーバーの準備中です）。':'うまく送れませんでした。少しあとで、もう一度ためしてね。'); } }
 function ptRecv(docId,x){ try{ const seen=store.get(PT_SEEN,[]); if(!seen.includes(docId)){ const d=String(x.p).slice(4); if(ptDecode(d)){ store.set(PT_SEEN,seen.concat([docId]).slice(-300)); store.set(PT_GOT,(store.get(PT_GOT,[])||[]).concat([{ id:docId, d, fromBy:String(x.by||'友だち').slice(0,20), t:+x.t||Date.now() }]).slice(-40));
-      try{ if(typeof pgToast==='function') pgToast(`${String(x.by||'友だち').slice(0,20)}さんから、ペットの木の集合写真が届きました💌（📒 Higher Self のアルバムで見られます）`); }catch(_){} } } }catch(e){}
+      try{ if(typeof pgToast==='function') pgToast(`${String(x.by||'友だち').slice(0,20)}さんから、ペットの木の集合写真が届きました💌（📒 アルバムで見られます）`); }catch(_){} } } }catch(e){}
   try{ FB.D.deleteDoc(FB.D.doc(FB.db,'ids',myId(),'photo',docId)); }catch(_){} }
 document.addEventListener('click',e=>{ const a=e.target.closest&&e.target.closest('[data-ptsnap],[data-ptto],[data-ptgo],[data-ptsend]'); if(!a) return; e.preventDefault(); e.stopPropagation();
   if(a.dataset.ptsnap!=null) ptSnap(a.dataset.ptsnap);
   else if(a.dataset.ptto){ _ptTo=a.dataset.ptto; document.querySelectorAll('[data-ptto]').forEach(x=>x.classList.toggle('on',x===a)); }
   else if(a.dataset.ptgo) ptSend(a.dataset.ptgo); else if(a.dataset.ptsend) ptSendOpen(a.dataset.ptsend); },true);
-// 📒 Higher Self のアルバムにも入れる（自分の集合写真・届いた集合写真）
+// 📒 アルバムにも入れる（自分の集合写真・届いた集合写真）
 if(typeof hsAlbItems==='function'){ const HI=hsAlbItems; hsAlbItems=function(){ const L=HI.apply(this,arguments); try{ ptAlbum().forEach(r=>L.push({ ty:'tree', t:r.t, x:r })); (store.get(PT_GOT,[])||[]).forEach(r=>L.push({ ty:'treeg', t:r.t, x:r })); }catch(e){} return L.sort((a,b)=>b.t-a.t); }; }
 if(typeof hsAlbArt==='function'){ const HA=hsAlbArt; hsAlbArt=function(it){ if(it&&(it.ty==='tree'||it.ty==='treeg')) return ptSVG(it.x.d)||'<p class="tiny muted">写真を描けませんでした</p>'; return HA.apply(this,arguments); }; }
 if(typeof hsAlbCap==='function'){ const HC=hsAlbCap; hsAlbCap=function(it){ if(it&&(it.ty==='tree'||it.ty==='treeg')){ const D=ptDecode(it.x.d); return `<b>🌳 ペットの木</b> <small>${hsAlbDate(it.t)}</small><br>${it.ty==='treeg'?`💌 ${esc(it.x.fromBy)}さんから・`:''}${D?`${esc(D.me.name)}と ${D.list.length}匹`:''}${it.ty==='tree'?'<br>💌 押すと、友だちに送れます':''}`; } return HC.apply(this,arguments); }; }
@@ -22051,7 +22051,7 @@ function flPhListen(){ if(_flPL||!flOn()) return; _flPL=true; const { collection
   onSnapshot(collection(FB.db,'ids',myId(),'photo'),snap=>{ const got=[]; snap.forEach(d=>{ const x=d.data()||{}; if(typeof x.p!=='string') return; if(x.p.startsWith('RT1:')){ if(typeof rtRecv==='function') rtRecv(d.id,x); return; } if(x.p.startsWith('PK1:')){ if(typeof pkRecv==='function') pkRecv(d.id,x); return; } if(x.p.startsWith('PT1:')){ if(typeof ptRecv==='function') ptRecv(d.id,x); return; } if(x.p.startsWith('GW1:')){ if(typeof gwRecv==='function') gwRecv(d.id,x); return; } got.push(Object.assign(flPhDecode(x.p),{ id:d.id, fromBy:String(x.by||'友だち').slice(0,20), m:String(x.m||'').slice(0,30), t:+x.t||Date.now(), rt:Date.now() })); });
     if(!got.length) return; const seen=store.get('fl.phSeen',[]); const nu=got.filter(g=>!seen.includes(g.id)&&(g.items.length||g.sh.length||g.bg.length));
     if(nu.length){ store.set('fl.phSeen',seen.concat(nu.map(g=>g.id)).slice(-300)); store.set(KEY_FLPHGOT,store.get(KEY_FLPHGOT,[]).concat(nu).slice(-60));
-      try{ if(typeof pgToast==='function') pgToast(`${nu[0].fromBy}さんから、お花の写真が届きました💌`); }catch(_){}
+      try{ if(typeof pgToast==='function') pgToast(`${nu[0].fromBy}さんから、お花の写真が届きました💌（📒 アルバムで見られます）`); }catch(_){}
       try{ const dl=document.getElementById('flDlg'); if(dl&&!dl.hidden) flOpen(); else flRefreshTile(); }catch(_){} try{ if(typeof lbnRefresh==='function') lbnRefresh(); }catch(_){} }
     got.forEach(g=>{ try{ deleteDoc(FB.D.doc(FB.db,'ids',myId(),'photo',g.id)); }catch(_){} }); },()=>{ _flPL=false; }); }
 setInterval(flPhListen,4000); setTimeout(flPhListen,1800);
@@ -22241,14 +22241,12 @@ async function acKeepsFill(){ const box=document.getElementById('acKeeps'); if(!
 
 // ---- マイページの欄（アルバム・ペット・本棚・友だち）：開いた欄だけ作る（軽くするため） ----
 function acRow(ic,name,n,unit,act,thumbs){ return `<div class="ac-row"><span class="ac-ic" aria-hidden="true">${ic}</span><span class="ac-rn">${name}<small>${n}${unit}</small></span>${act?`<button class="frd-b frd-pink ac-go" type="button" data-acgo="${act}">見る</button>`:''}</div>${thumbs||''}`; }
-function acAlbumPane(){ let h=typeof hsAlbOpen==='function'?'<button class="frd-b frd-pink ac-wide" type="button" data-acgo="hsalb">📒 Higher Self のアルバム（ぜんぶの写真）</button>':'';
+function acAlbumPane(){ let h=typeof hsAlbOpen==='function'?'<button class="frd-b frd-pink ac-wide" type="button" data-acgo="hsalb">📒 アルバム（ぜんぶの写真）</button>':'';
   try{ if(cur&&typeof albumPhotos==='function'){ const n=albumPhotos(cur.P,cur.L,Math.floor(clock().age),30).length; h+=acRow('📖','人生のアルバム',n,'枚','life'); } }catch(e){}
   try{ if(typeof eaCollected==='function'){ const ids=eaCollected(); const th=ids.length?`<div class="ac-th">${ids.slice(-8).reverse().map(id=>`<img src="ea-photo/${encodeURIComponent(id)}.webp" alt="" loading="lazy" decoding="async">`).join('')}</div>`:''; h+=acRow('🌏','地球の名所の絵はがき',ids.length,'枚','earth',th); } }catch(e){}
-  try{ const a=JSON.parse(localStorage.getItem('hitotsu.machiAlbum')||'[]'); h+=acRow('🏙️','街ブラの写真',Array.isArray(a)?a.length:0,'枚',typeof machiBuraOpen==='function'?'machi':''); }catch(e){}
-  try{ const a=JSON.parse(localStorage.getItem('hitotsu.rideAlbum')||'[]'); h+=acRow('🚲','乗り物の写真',Array.isArray(a)?a.length:0,'枚',typeof ridesOpen==='function'?'ride':''); }catch(e){}
+
   // Higher Self の旅は、まだ行けないので、ここには載せない（2026-11-18 MITSUさん）
-  try{ const a=JSON.parse(localStorage.getItem('hitotsu.gwAlbum')||'[]'); if(Array.isArray(a)&&a.length) h+=acRow('🌊','Gateway の写真',a.length,'枚',''); }catch(e){}
-  return `<p class="tiny muted">集めた写真と絵はがきです。「見る」で、それぞれのアルバムが開きます。</p>${h}`; }
+  return `<p class="tiny muted">撮った写真・動く写真・届いた写真は、ぜんぶ「📒 アルバム」に入っています。下は、Channel の人生の思い出と、集めた絵はがきです。</p>${h}`; }
 function acPetPane(){ const p=typeof mpGet==='function'?mpGet():null;
   if(!p||!p.name) return `<p class="ac-empty">まだ「うちのペット」がいません。</p><button class="frd-b frd-pink ac-wide" type="button" data-acgo="pet">🐾 ペットのページを開く</button>`;
   const k=(typeof MP_KIND!=='undefined'&&MP_KIND.find(x=>x[0]===p.kind))||null; const br=(typeof PB_ALL!=='undefined'&&PB_ALL[p.breed]&&PB_ALL[p.breed].name)||'';
@@ -24438,7 +24436,7 @@ function mbxModal(c,v,saved){ const vv=mbxV(c,v); if(!vv) return; mbxCss(); cons
     if(a==='flip'){ flip=!flip; st.classList.toggle('mbx-flip',flip); }
     if(a==='zoom'){ big=!big; st.classList.toggle('big',big); b.textContent=big?'🔍 もどす':'🔍 大きく'; if(big) st.scrollLeft=(st.scrollWidth-st.clientWidth)/2; }
     if(a==='shot'){ const s=st.querySelector('svg'); const t=s&&s.getCurrentTime?s.getCurrentTime():0; let f=document.querySelector('.mbx-flash'); if(!f){ f=document.createElement('div'); f.className='mbx-flash'; document.body.appendChild(f); } f.classList.remove('on'); void f.offsetWidth; f.classList.add('on');
-      const al=mbxGet(); al.unshift({ c:MB_CITIES[c].id, v, t:+t.toFixed(2), f:flip?1:0, d:mbxToday(), tod, s:rs }); mbxSet(al.slice(0,30)); mbxAlbum(); mbxTileRefresh();mbxToast('📔 観光アルバムに保存しました'); } }); }
+      const al=mbxGet(); al.unshift({ c:MB_CITIES[c].id, v, t:+t.toFixed(2), f:flip?1:0, d:mbxToday(), tod, s:rs }); mbxSet(al.slice(0,30)); mbxAlbum(); mbxTileRefresh();mbxToast('📒 アルバムに保存しました'); } }); }
 // 🟡街ブラの画面
 function mbxQ(s){ return mbxEl&&mbxEl.querySelector(s); }
 function mbxMap(){ const R=mbxLv.reg&&MBM_REG.find(r=>r.id===mbxLv.reg), C=mbxLv.cty&&MBM_C[mbxLv.cty];
@@ -24463,7 +24461,7 @@ function machiBuraOpen(cityId){ try{ mbxCss(); const goId=typeof cityId==='strin
   <div class="mbx-top"><b>🏙️ 街ブラ</b><button class="mbx-pbtn mbx-sub2 mbx-close" type="button">← 戻る</button></div>
   <section class="mbx-panel"><div><h1>どこへ行く？</h1><p class="mbx-sub">地図をタップして、行きたい街をえらんでね</p></div><nav class="mbx-crumbs" aria-label="いまの場所"></nav><div class="mbx-map"></div><p class="mbx-legend">ピンのほかに、下のボタンからもえらべます</p></section>
   <section class="mbx-panel mbx-city" hidden><div class="mbx-row"><div><h1 class="mbx-cname"></h1><p class="mbx-sub"><span class="mbx-carea"></span><span class="mbx-ltime mbx-ctime"></span></p></div><button class="mbx-pbtn mbx-sub2 mbx-back" type="button">◀ 地図にもどる</button></div><p class="mbx-sub">この街の写真は3枚。押すと大きくなります。</p><div class="mbx-photos"></div><p class="mbx-credit mbx-ccred"></p></section>
-  <section class="mbx-panel"><div><h1>📔 観光アルバム</h1><p class="mbx-sub">📸でとった写真が、ここにたまっていきます。</p></div><div class="mbx-album"></div></section>
+  <section class="mbx-panel"><div><h1>📒 アルバム</h1><p class="mbx-sub">📸でとった写真は、ぜんぶ 📒 アルバム に入ります。</p><button type="button" class="mbx-btn hsa-go" data-hsago="machi">📒 アルバムを開く</button></div><div class="mbx-album" hidden></div></section>
   <button class="mbx-pbtn mbx-sub2 mbx-close" type="button" style="align-self:center">← Life Home にもどる</button></div>`;
   document.body.appendChild(el); mbxEl=el; document.documentElement.style.overflow='hidden';
   el.querySelectorAll('.mbx-close').forEach(b=>b.addEventListener('click',mbxClose));
@@ -24520,9 +24518,9 @@ function mbxPick(){ const d=new Date(); const n=d.getFullYear()*400+d.getMonth()
 function mbxTileBuild(){ const P=mbxPick(), al=mbxGet(); const C=MB_CITIES[P.ci], v=mbxV(P.ci,P.vi);
   const list=al.map((a,i)=>({ a, i, ci:mbxCI(a.c) })).filter(x=>x.ci>=0&&mbxV(x.ci,x.a.v)).slice(0,3);
   const s=document.createElement('section'); s.className='hm-tile mbx-tile';
-  s.innerHTML=`<h3>🏙️ 街ブラ<span class="hm-n">📔 観光アルバム ${al.length}枚</span></h3>
+  s.innerHTML=`<h3>🏙️ 街ブラ<span class="hm-n">📒 街ブラの写真 ${al.length}枚</span></h3>
   <div class="mbx-tg"><button type="button" class="mbx-today" data-c="${P.ci}" data-v="${P.vi}" aria-label="${C.name}の写真をひらく"><small>きょうのおすすめの街</small><img src="${MB_THUMB2[P.key]}" alt="" width="320" height="220" decoding="async"><b>${C.name}</b><span>${C.area}・${v.t}</span><span class="mbx-ltime" data-mbxlt="${P.ci}">${mbxLtxt(P.ci)}</span></button>
-  <div class="mbx-recent"><small>最近の観光アルバム</small>${list.length?`<div class="mbx-rg">${list.map(x=>`<button type="button" class="mbx-ra" data-i="${x.i}" aria-label="${mbxV(x.ci,x.a.v).pl}の写真"><span class="${x.a.f?'mbx-flip':''}" style="display:block">${mbxDraw(x.ci,x.a.v,x.a.tod||'day',x.a.s)}</span><b>${MB_CITIES[x.ci].name.replace(/^.*・/,'')}</b></button>`).join('')}</div>`:'<p class="mbx-empty">まだ写真がありません。街の写真を開いて「📸 写真をとる」を押すと、ここにたまります。</p>'}</div></div>
+  <div class="mbx-recent"><small>最近の写真（📒 アルバム）</small>${list.length?`<div class="mbx-rg">${list.map(x=>`<button type="button" class="mbx-ra" data-i="${x.i}" aria-label="${mbxV(x.ci,x.a.v).pl}の写真"><span class="${x.a.f?'mbx-flip':''}" style="display:block">${mbxDraw(x.ci,x.a.v,x.a.tod||'day',x.a.s)}</span><b>${MB_CITIES[x.ci].name.replace(/^.*・/,'')}</b></button>`).join('')}</div>`:'<p class="mbx-empty">まだ写真がありません。街の写真を開いて「📸 写真をとる」を押すと、ここにたまります。</p>'}</div></div>
   <div class="hm-foot mbx-tf"><button type="button" class="mbx-pbtn mbx-goc" data-id="${C.id}">${C.name.replace(/^.*・/,'')}へ行く</button><button type="button" class="mbx-pbtn mbx-sub2 mbx-gow">🌏 地図から街をえらぶ</button></div>`;
   s.querySelectorAll('.mbx-ra').forEach(el=>mbxFreeze(el,al[+el.dataset.i].t));
   s.addEventListener('click',e=>{ const t=e.target.closest('.mbx-today'); if(t){ mbxStripModal(+t.dataset.c,+t.dataset.v); return; }
@@ -24535,7 +24533,7 @@ function mbxTileRefresh(){ try{ const app=document.getElementById('app'); if(app
 (function(){ if(typeof render1!=='function') return; const _r=render1; render1=function(){ const r=_r.apply(this,arguments); mbxPlace(); return r; }; })();
 setTimeout(mbxPlace,0);
 window.machiBuraOpen=machiBuraOpen;
-window.lbMb={ list:()=>mbxGet().map(a=>({ a, ci:mbxCI(a.c) })).filter(x=>x.ci>=0&&mbxV(x.ci,x.a.v)), art:x=>{ mbxCss(); return `<span class="${x.a.f?'mbx-flip':''}" style="display:block">${mbxDraw(x.ci,x.a.v,x.a.tod||'day',x.a.s)}</span>`; }, pl:x=>(mbxV(x.ci,x.a.v)||{}).pl||'', freeze:(el,t)=>mbxFreeze(el,t) };
+window.lbMb={ del:a=>{ const J=JSON.stringify(a); mbxSet(mbxGet().filter(y=>JSON.stringify(y)!==J)); try{ mbxTileRefresh(); }catch(_){} }, list:()=>mbxGet().map(a=>({ a, ci:mbxCI(a.c) })).filter(x=>x.ci>=0&&mbxV(x.ci,x.a.v)), art:x=>{ mbxCss(); return `<span class="${x.a.f?'mbx-flip':''}" style="display:block">${mbxDraw(x.ci,x.a.v,x.a.tod||'day',x.a.s)}</span>`; }, pl:x=>(mbxV(x.ci,x.a.v)||{}).pl||'', freeze:(el,t)=>mbxFreeze(el,t) };
 })();
 </script>
 <script>
@@ -26103,7 +26101,7 @@ function rvShoot(r,saved,opt){ const me=rvMe(); const T=rvType(r.cat,r.type); le
   const trav=base.scene==='hotel'||base.scene==='meal';
   const html=()=>`<h2>${saved?'📷 ':'📸 '}${ttl?esc2(ttl):esc2(T.n)+(saved?'':'に乗って')}</h2><div class="rvx-stage">${rvPhotoSVG(Object.assign({},base,{ bg, hs:hsOn?1:0, still:saved?1:0 }))}</div><p class="rvx-cap">${base.place?`📍 ${esc2(base.place)}　`:''}${saved?saved.d:''}${who.note&&!saved&&!trav?`<br>${who.note}`:''}</p>${saved?'':`<div class="rvh-btns">${trav?'':`<button class="rv-btn rv-sub" type="button" data-a="bg">🔄 場面をかえる</button>`}${rvHasHS()?`<button class="rv-btn rv-sub" type="button" data-a="hs">${hsOn?'✨ Higher Self を写さない':'✨ Higher Self も写す'}</button>`:''}<button class="rv-btn" type="button" data-a="snap">📸 写真をとる</button></div>`}`;
   rvModal(html(),(e,m)=>{ const b=e.target.closest('[data-a]'); if(!b) return; if(b.dataset.a==='bg'||b.dataset.a==='hs'){ if(b.dataset.a==='bg') bg=(bg+1)%3; else hsOn=!hsOn; m.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="戻る">← 戻る</button>`+html(); }
-    if(b.dataset.a==='snap'){ rvFlash(); const al=rvGet(K_ALB,[]); al.unshift(Object.assign({},base,{ bg, hs:hsOn?1:0, d:rvToday(), at:Date.now() })); rvSet(K_ALB,al.slice(0,40)); rvRender(); rvToast('📷 乗り物アルバムに保存しました'); } }); }
+    if(b.dataset.a==='snap'){ rvFlash(); const al=rvGet(K_ALB,[]); al.unshift(Object.assign({},base,{ bg, hs:hsOn?1:0, d:rvToday(), at:Date.now() })); rvSet(K_ALB,al.slice(0,40)); rvRender(); rvToast('📒 アルバムに保存しました'); } }); }
 // 飛行機で飛ぶ
 function rvFly(r){ const me=rvMe(); const T=rvType(r.cat,r.type); const from=rvWhere(me); if(!from){ rvToast('いまの場所の空港が見つかりませんでした'); return; }
   let area=null; const dests=RV_DEST.filter(d=>d.code!==from.code||d.id!==from.city).map(d=>Object.assign({},d,{ km:rvDist(from,d), area:RV_AREA_OF[d.id]||'asia' })).filter(d=>d.km>15);
@@ -26146,7 +26144,7 @@ function ridesOpen(tab){ try{ rvCss(); const gone=rvSweep(); if(rvEl) return; if
   el.innerHTML=`<div class="rvx-wrap"><div class="rvx-top"><b>🔑 乗り物レンタル</b><button class="rv-btn rv-sub rv-sm rvx-close" type="button">← 戻る</button></div>
   <section class="rvx-panel"><div><h1>🅿️ あずかっている乗り物<span class="rvx-cnt"></span></h1><p class="rvx-p">Higher Self が Channel のかわりに借りて、あずかっています。<b>レンタルは、まだ準備中です。</b>いまは見るだけです。</p></div><div class="rvx-own"></div></section>
   <section class="rvx-panel"><div><h1>🔑 乗り物をえらぶ</h1><p class="rvx-p">本物にある種類から、好きな形と色をえらんでね。</p></div><div class="rvx-tabs" role="tablist"></div><div class="rvx-grid"></div></section>
-  <section class="rvx-panel"><div><h1>📷 乗り物アルバム</h1><p class="rvx-p">📸でとった写真が、ここにたまっていきます。</p></div><div class="rvx-alb"></div></section>
+  <section class="rvx-panel"><div><h1>📒 アルバム</h1><p class="rvx-p">📸でとった写真は、ぜんぶ 📒 アルバム に入ります。</p><button type="button" class="mp-btn hsa-go" data-hsago="ride">📒 アルバムを開く</button></div><div class="rvx-alb" hidden></div></section>
   <div class="rvx-trips"></div>
   <p class="rvx-p" style="text-align:center">有料版では、借りるだけでなく、ずっと持っていられるようになる予定です。</p>
   <button class="rv-btn rv-sub rvx-close" type="button" style="align-self:center">← Life Home にもどる</button></div>`;
@@ -26269,6 +26267,7 @@ function hsTripOpen(){ try{ rvCss(); }catch(e){} let home=rvGet(K_HSHOME,null), 
 window.hsTripOpen=hsTripOpen;
 window.lbVehicles={ list:lbVList, g:lbVG, svg:lbVSvg, pick:lbVPick, rented:lbVRented, look:rvRandLook, person:(x,y,look,o)=>rvPerson(x,y,look,o||{}), GROUND:G, WATER:W };
 window.ridesOpen=ridesOpen;
+window.lbRvDel=function(x){ const J=JSON.stringify(x); rvSet(K_ALB,rvGet(K_ALB,[]).filter(y=>JSON.stringify(y)!==J)); };
 window.lbRvAlb=function(){ const a=rvGet(K_ALB,[]); return Array.isArray(a)?a.filter(x=>x&&rvType(x.cat,x.type)):[]; };
 window.lbRvPhoto=function(x){ rvCss(); const T=rvType(x.cat,x.type); return { svg:rvPhotoSVG(Object.assign({ still:1 },x)), n:T?T.n:'' }; };
 
@@ -26464,7 +26463,7 @@ function hkUseMine(s){ const p=hkPet(), b=hkBal(s);
     return `<h2 class="hk-h">🌙 夢を創る部屋<small>${hkEsc(p.name)}の夢を、光でかなえます</small></h2>
     ${HK_DREAMS.map(D=>{ const ok=done.has(D[0]); return `<div class="hk-card hk-dc"><div class="hk-dt"><b>${D[1]} ${hkEsc(D[2])}</b><span>${D[3]}光</span></div>
       ${ok?`<div class="hk-art">${hkDreamSVG(p,D[0],p.cl||null)}</div><p class="hk-note">🌙 かなえました。${hkEsc(D[4])}</p>`:`<button type="button" class="hk-btn" data-hk="buy" data-hkb="d:${D[0]}"${D[3]>b?' disabled':''}>✨ ${D[3]}光で かなえる</button>`}</div>`; }).join('')}
-    <p class="hk-note hk-c">かなえた夢は、絵になって「📒 Higher Self のアルバム」にも残ります。</p>`; }
+    <p class="hk-note hk-c">かなえた夢は、絵になって「📒 アルバム」にも残ります。</p>`; }
   if(hkView==='clothes'){ if(typeof pgClOk==='function'&&!pgClOk(p.kind)) return `<h2 class="hk-h">✨ 服を創る部屋</h2><div class="hk-card hk-c"><p>${hkEsc(p.name)}は 水の中で くらすので、服は着られません。</p></div>`;
     if(!hkClInit){ hkClInit=true; if(p.cl&&p.cl.c>=HK_CC0&&p.cl.m>=HK_CM0) hkCl={ s:p.cl.s, c:p.cl.c, m:p.cl.m }; }
     const own=hkOwn(s), k=hkClKey(hkCl), have=own.includes(k), wearing=p.cl&&hkClKey(p.cl)===k;
@@ -26566,5 +26565,71 @@ setInterval(()=>{ if(!document.hidden) hkBarSync(false); },1500);
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>hkBarSync(true)); else hkBarSync(true);
 })();
 
+</script>
+<script>
+// ===== v178.112 アルバムをひとつに（MITSUさん 2026-11-19「一つのアルバムにして、全て同じ場所に」） =====
+// 届いた写真（お花・Gateway）も 📒 アルバムに。大きく見た時に「💌 送る」「📤 SNS にシェア」「この写真を消す」。ほかのアルバムの入口は、ぜんぶここを開く。
+(function(){
+if(typeof hsAlbItems!=='function') return;
+try{ HSA_TY.flg='💐 お花'; HSA_TY.gwg='🌊 Gateway'; }catch(e){}
+{ const AI=hsAlbItems; hsAlbItems=function(){ const L=AI.apply(this,arguments);
+  try{ (store.get(KEY_FLPHGOT,[])||[]).forEach(x=>{ if(x) L.push({ ty:'flg', t:+x.t||0, x }); }); }catch(e){}
+  try{ (store.get(GW_GOT,[])||[]).forEach(x=>{ if(x&&x.rec) L.push({ ty:'gwg', t:+x.t||0, x }); }); }catch(e){}
+  return L.sort((a,b)=>b.t-a.t); }; }
+{ const HA=hsAlbArt; hsAlbArt=function(it){ try{ if(it&&it.ty==='flg') return flPhotoSVG(it.x); if(it&&it.ty==='gwg') return gwPhHTML('g:'+it.x.id); }catch(e){} return HA.apply(this,arguments); }; }
+{ const HC=hsAlbCap; hsAlbCap=function(it){ if(it&&(it.ty==='flg'||it.ty==='gwg')){ const x=it.x; let c='💌 '+esc(String(x.fromBy||'友だち').slice(0,20))+'さんから';
+    try{ if(it.ty==='flg'&&typeof flPhCap==='function') c+='・'+esc(String(flPhCap(x)).slice(0,40)); if(it.ty==='gwg'&&x.rec&&x.rec.s&&x.rec.s.length) c+='・🎬 動く写真'; }catch(e){}
+    return `<b>${HSA_TY[it.ty]}</b>${it.t?` <small>${hsAlbDate(it.t)}</small>`:''}<br>${c}`; } return HC.apply(this,arguments); }; }
+{ const HL=hsAlbList; hsAlbList=function(){ if(_hsaF==='fl') return _hsaL.filter(it=>it.ty==='fl'||it.ty==='flg'); if(_hsaF==='gw') return _hsaL.filter(it=>it.ty==='gw'||it.ty==='gwg'); return HL.apply(this,arguments); }; }
+// 開いたら、届いた写真の「新しい」しるしを消す（前は「花束アルバム」を開くと消えた）
+{ const HO=hsAlbOpen; hsAlbOpen=function(){ const r=HO.apply(this,arguments); try{ store.set('fl.phViewedT',Date.now()); if(typeof mqBadgeSync==='function') setTimeout(mqBadgeSync,0); if(typeof flRefreshTile==='function') setTimeout(flRefreshTile,0); }catch(e){} return r; }; }
+window.hsAlbGo=function(f){ try{ const fl=document.getElementById('flDlg'); if(fl&&!fl.hidden&&typeof flClose==='function') flClose(); }catch(e){} _hsaF=f&&HSA_F.some(x=>x[0]===f)?f:'all'; _hsaN=24; hsAlbOpen(true); };
+// 大きく見た時のボタン
+function isMov(it){ const r=it.ty==='gw'?it.x:it.ty==='gwg'?it.x.rec:null; return !!(r&&r.s&&r.s.length); }
+function actHTML(it,i){ const b=[];
+  if(it.ty==='fl'||it.ty==='gw') b.push(`<button type="button" class="mp-btn" data-hsaact="send" data-i="${i}">💌 Higher Self に送る</button>`);
+  b.push(isMov(it)?'<button type="button" class="mp-btn" data-gwmovie=".hsa-big">📤 SNS にシェア・保存</button>':'<button type="button" class="mp-btn" data-lbshare=".hsa-big">📤 SNS にシェア</button>');
+  if(['pet','house','machi','ride','gw','gwg','fl','flg'].includes(it.ty)) b.push(`<button type="button" class="linkish hsa-del" data-hsaact="del" data-i="${i}">この写真を消す</button>`);
+  return `<div class="hsa-act">${b.join('')}</div>`; }
+{ const HB=hsAlbBig; hsAlbBig=function(i){ const r=HB.apply(this,arguments); try{ const it=_hsaL[i], box=document.querySelector('#gsZoom .hsa-big'); if(it&&box){ const nv=box.querySelector('.pa-nav'); if(nv) nv.insertAdjacentHTML('beforebegin',actHTML(it,i)); } }catch(e){} return r; }; }
+function delIt(it){ const x=it.x;
+  if(it.ty==='pet'||it.ty==='house'){ const p=mpGet(); if(p&&Array.isArray(p.photos)){ p.photos=p.photos.filter(y=>!(y.t===x.t&&y.c===x.c)); mpSet(p); } }
+  else if(it.ty==='machi'){ if(window.lbMb&&window.lbMb.del) window.lbMb.del(x); }
+  else if(it.ty==='ride'){ if(window.lbRvDel) window.lbRvDel(x); }
+  else if(it.ty==='gw'){ const a=gwAlbum().filter(r=>String(r.t)!==String(x.t)); localStorage.setItem('hitotsu.gwAlbum',JSON.stringify(a)); }
+  else if(it.ty==='gwg'){ store.set(GW_GOT,(store.get(GW_GOT,[])||[]).filter(g=>g&&g.id!==x.id)); }
+  else if(it.ty==='fl'){ store.set(KEY_FLALB,(store.get(KEY_FLALB,[])||[]).filter(y=>!(y&&y.t===x.t))); }
+  else if(it.ty==='flg'){ const J=JSON.stringify(x); store.set(KEY_FLPHGOT,(store.get(KEY_FLPHGOT,[])||[]).filter(y=>JSON.stringify(y)!==J)); } }
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-hsago],[data-hsaact]'); if(!t) return; e.preventDefault(); e.stopPropagation();
+  if(t.dataset.hsago!=null){ window.hsAlbGo(t.dataset.hsago); return; }
+  const it=_hsaL[+t.dataset.i]; if(!it) return;
+  if(t.dataset.hsaact==='del'){ if(t.dataset.arm!=='1'){ t.dataset.arm='1'; t.textContent='本当に消す（もう一度押す）'; setTimeout(()=>{ if(t.isConnected){ t.dataset.arm=''; t.textContent='この写真を消す'; } },4000); return; }
+    try{ delIt(it); }catch(err){} try{ pgToast('写真を消しました'); }catch(_){} hsAlbOpen(true); return; }
+  if(t.dataset.hsaact==='send'){
+    if(it.ty==='gw'){ gwSendOpen(String(it.x.t)); return; }
+    if(it.ty==='fl'){ const L=store.get(KEY_FLALB,[])||[]; const k=L.findIndex(y=>y&&y.t===it.x.t); if(k<0) return; gsZoomClose(); _flPhSend=k; _flPhTo=''; _flPhTos=null; _flPhMsg=''; _flPhH=null; _flMsg=''; flOpen('phsend'); try{ document.querySelector('#flDlg .fl-in').scrollTop=0; }catch(_){} return; } } },true);
+// サイトの Gateway の「📒 アルバム」から来た時（play.html#hsalb=gw）
+function hsHash(){ const m=/[#&]hsalb=?(\w*)/.exec(location.hash||''); if(!m) return; try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} setTimeout(()=>window.hsAlbGo(m[1]||'all'),300); }
+window.addEventListener('hashchange',hsHash); setTimeout(hsHash,400);
+try{ document.head.insertAdjacentHTML('beforeend',`<style>
+#gsZoom.hsa-on{ z-index:9400; }
+/* ピンクのボタンは、ぜんぶ同じ大きさ・形（MITSUさん 2026-11-19「スッキリさせたい」） */
+.hsa-act{ display:flex; flex-direction:column; align-items:center; gap:10px; margin:10px 0 6px; } .hsa-del{ text-align:center; font-size:13px; }
+#gsZoom .hsa-act .mp-btn, #gsZoom .hsa .np-row .mp-btn, #gsZoom:has(.hsa) .gsz-back, .hsa-go{ box-sizing:border-box !important; display:flex !important; align-items:center !important; justify-content:center !important; width:min(280px,100%) !important; height:48px !important; min-height:48px !important; margin:0 auto !important; padding:0 12px !important; border:0 !important; border-radius:999px !important; background:#EE7FA5 !important; color:#fff !important; font:inherit !important; font-weight:700 !important; font-size:15px !important; line-height:1.2 !important; box-shadow:0 3px 0 #D2648B !important; cursor:pointer !important; }
+#gsZoom .hsa .np-row{ display:flex !important; justify-content:center !important; margin:10px 0 !important; } #gsZoom:has(.hsa) .gsz-back{ margin-top:10px !important; }
+#gsZoom .hsa-big .pa-nav{ display:flex; align-items:center; justify-content:center; gap:10px; width:min(280px,100%); margin:12px auto 0; } #gsZoom .hsa-big .pa-nav span{ flex:0 0 auto; font-size:14px; color:#6A5A64; }
+#gsZoom .hsa-big .pa-b{ box-sizing:border-box !important; flex:1 1 0 !important; height:48px !important; min-height:48px !important; margin:0 !important; padding:0 6px !important; border:0 !important; border-radius:999px !important; background:#EE7FA5 !important; color:#fff !important; font:inherit !important; font-weight:700 !important; font-size:15px !important; box-shadow:0 3px 0 #D2648B !important; cursor:pointer !important; } #gsZoom .hsa-big .pa-b:disabled{ opacity:.35 !important; cursor:default !important; }
+.hsa-go{ margin-top:10px !important; } #gsZoom .hsa-big{ padding-top:46px; } .fl-ph-tab .mp-btn{ min-height:42px; }
+</style>`); }catch(e){}
+})();
+// お花の「📷 写真」タブ：撮るボタンと、📒 アルバムを開くボタンだけ
+function flPhotoTabHTML(){ const L=store.get(KEY_FLALB,[])||[], G=store.get(KEY_FLPHGOT,[])||[]; const rm=store.get(KEY_FLROOM,null); const can=(rm&&rm.items&&rm.items.length)||flShelf().length||flBig().length;
+  return `<div class="fl-ph-tab">${can?'<div class="fl-act"><button type="button" class="mp-btn" data-fl-photo="1">📷 いま飾っているお花を写真に撮る</button></div>':'<p class="tiny muted">お花を部屋に飾ると、写真に撮れます。</p>'}
+  <p class="tiny">撮った写真・友だちから届いた写真は、ぜんぶ「📒 アルバム」に入ります。送る・SNS にシェア・消すも、アルバムの写真を押してできます。</p>
+  <div class="fl-act"><button type="button" class="mp-btn" data-hsago="fl">📒 アルバムを開く（お花の写真 ${L.length+G.length}枚）</button></div></div>`; }
+// アルバムから「💌 送る」を押した時：その写真と、送る人・お礼の俳句だけを出す
+function flPhSendOnlyHTML(){ const L=store.get(KEY_FLALB,[])||[], ph=L[_flPhSend];
+  if(!ph) return `<div class="fl-act"><button type="button" class="mp-btn" data-hsago="fl">📒 アルバムにもどる</button></div>`;
+  return `<p class="fl-lb">💌 この写真を、友だちの Higher Self に送る</p><ul class="fl-alb"><li><figure>${flPhotoSVG(ph)}<figcaption>${flPhDate(ph.t)}<br><span class="tiny muted">${esc(flPhCap(ph))}</span></figcaption></figure>${flPhSendForm(ph)}</li></ul><div class="fl-act"><button type="button" class="linkish" data-hsago="fl">📒 アルバムにもどる</button></div>`; }
 </script>
 </body></html>

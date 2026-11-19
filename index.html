@@ -904,7 +904,7 @@ function page(){ var a=alb(), end=Math.min(a.length,shown+4);
   shown=end; more.hidden=shown>=a.length; if(!a.length) grid.innerHTML='<p class="pd-empty">まだ写真がありません。海辺の街で、いいなと思った場面で 📷 を押してください。</p>'; }
 function openAlb(){ if(!D||!dlg) return; if(dlg.parentNode!==document.body) document.body.appendChild(dlg); grid.innerHTML=''; shown=0; dlg.hidden=false; document.body.style.overflow='hidden'; page(); }
 function closeAlb(){ dlg.hidden=true; grid.innerHTML=''; document.body.style.overflow=''; }
-if(albB) albB.addEventListener('click',openAlb);
+if(albB) albB.addEventListener('click',function(){ location.href='play.html#hsalb=gw'; }); /* v178.112：アルバムはひとつ（📒 アルバム）に */
 if(dlg) dlg.addEventListener('click',function(ev){ var t=ev.target; if(t===dlg||t.closest('[data-close]')){ closeAlb(); return; } if(t.id==='pdMore'){ page(); return; }
   var d=t.closest('[data-del]'); if(d){ if(d.dataset.arm!=='1'){ d.dataset.arm='1'; d.textContent='本当に消す'; setTimeout(function(){ d.dataset.arm=''; d.textContent='消す'; },4000); return; }
     albSet(alb().filter(function(r){ return String(r.t)!==d.dataset.del; })); var f=d.closest('figure'); if(f) f.remove(); shown=Math.max(0,shown-1); albCount(); if(!alb().length) page(); } });
