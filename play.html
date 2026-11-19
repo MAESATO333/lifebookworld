@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.90">
+<meta name="lifebook-version" content="v178.91">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -747,7 +747,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.90';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.91';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -16867,7 +16867,7 @@ function mpTileHTML(){ const p=mpGet();
   const gone=mpGone(p), st=mpStage(p), a=Math.floor(Math.min(mpAge(p),p.life)), b=PB_ALL[p.breed]||{};
   return `<div class="mp-card" data-mp="open" role="button" tabindex="0">${mpArt(p,st[1])}<div class="mp-info"><b>${esc(p.name)}</b><small>${esc(b.name||'')}</small>
     <span class="mp-day">${gone?`🌈 虹の橋をわたりました（${p.life}歳）`:`うちに来て <b>${mpDays(p)}</b> 日目`}</span>${gone?'':`<span class="mp-age">${a}歳・${st[0]}${mpHuman(p)!=null?`（人なら約${mpHuman(p)}歳）`:''}</span>`}<span class="mp-love"><svg class="lb-heart lb-heart-s" viewBox="0 0 7 6" shape-rendering="crispEdges" aria-hidden="true"><path fill="#E0566B" d="M1 0h2v1h1V0h2v1h1v2H6v1H5v1H4v1H3V5H2V4H1V3H0V1h1z"/><path fill="#fff" opacity=".7" d="M1 1h1v1H1z"/></svg>愛情 ${p.love||0}</span></div></div>
-    <button type="button" class="linkish" data-mp="open">${esc(p.name)}のページをひらく</button>`; }
+    <button type="button" class="linkish" data-mp="open">${esc(p.name)}の部屋を見る</button>`; }
 function mpAnniv(p){ const d=mpDays(p); const m={7:'うちに来て1週間！',30:'うちに来て30日！',100:'うちに来て100日の記念日！',365:'うちに来て1年！',500:'うちに来て500日！',1000:'うちに来て1000日！'}[d]; if(m&&p.lastAnD!==d&&!mpGone(p)){ p.lastAnD=d; mpLog(p,m.replace(/！$/,'。'),'anniv'); mpSet(p); } if(m) return `🎉 ${m} ${p.name}と、これからもいっしょに。`; const a=Math.floor(mpAge(p)); if(a>=1&&p.lastBd!==a&&!mpGone(p)){ p.lastBd=a; p.anMsg={ d:dayKey(), t:`🎂 ${p.name}が${a}歳になりました！ おめでとう。` }; mpLog(p,`${a}歳の誕生日。`,'bd'); mpSet(p); } return p.anMsg&&p.anMsg.d===dayKey()?p.anMsg.t:''; }
 function mpOpen(view){ let d=document.getElementById('mpDlg'); if(!d){ d=document.createElement('div'); d.id='mpDlg'; d.className='mp-ov'; document.body.appendChild(d); }
   d.hidden=false; d.innerHTML=`<div class="mp-box" role="dialog" aria-modal="true" aria-label="うちのペット">${view==='new'||!mpGet()?mpNewHTML():mpPageHTML()}</div>`; d.onclick=e=>{ if(e.target===d) mpClose(); }; }
@@ -21855,7 +21855,7 @@ function acPetPane(){ const p=typeof mpGet==='function'?mpGet():null;
   let cnt=null; try{ cnt=typeof pmCounts==='function'?pmCounts(p):null; }catch(e){}
   return `<div class="ac-life"><span class="ac-pe" aria-hidden="true">${k?k[2]:'🐾'}</span><b class="ac-name">${esc(p.name)}</b><span>${esc(br||(k?k[1]:''))}</span>${age!=null?`<span>${gone?'旅立ちました':age+'歳'}${hum&&!gone?`（人間でいうと ${hum}歳）`:''}</span>`:''}
   ${cnt?`<span class="ac-sub2">友だちから 💗可愛い！ ${cnt.l||0} ・ 🎁ごはん ${cnt.f||0}</span>`:''}</div>
-  <button class="frd-b frd-pink ac-wide" type="button" data-acgo="pet">🐾 ペットのページを開く</button>`; }
+  <button class="frd-b frd-pink ac-wide" type="button" data-acgo="pet">🏠 ${esc(p.name)}の部屋を見る</button>`; }
 function acShelfPane(){ const arc=store.get(KEY_ARC,[])||[]; if(!arc.length) return '<p class="ac-empty">まだ、思い出のLIFE BOOK はありません。人生を見守り終えると、ここに並びます。</p>';
   return `<p class="tiny muted">見守り終えた人生です。押すと、その人生のレポートが読めます。</p><div class="ac-list">${arc.map((a,i)=>{ let nm='人生', cn=''; try{ const P=makeBirth(a.seed,{ country:a.country||null, force:a.force||null }); nm=P.full; cn=P.country.name+(P.deathAge!=null?` ・ ${P.deathAge}歳まで`:''); }catch(e){}
     return `<button type="button" class="ac-li" data-acarc="${i}"><b>📕 ${esc(nm)}</b><small>${esc(cn)}</small></button>`; }).join('')}</div>`; }
