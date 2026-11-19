@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.106">
+<meta name="lifebook-version" content="v178.107">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -119,6 +119,26 @@ html.hk-open,html.hk-open body{ overflow:hidden; }
 .hk-h3{ font-size:15px; margin:14px 0 6px; } .hk-chips{ display:flex; flex-wrap:wrap; gap:8px; }
 .hk-chip{ border:2px solid #ffd6e8; background:#fff; border-radius:999px; padding:8px 14px; font:inherit; font-weight:800; font-size:15px; color:#3a3340; cursor:pointer; min-height:42px; } .hk-chip.on{ background:#ff5fa2; border-color:#ff5fa2; color:#fff; } .hk-chip:disabled{ opacity:.4; }
 .hk-btn:disabled{ opacity:.5; }
+/* v178.107 光を使う */
+.hk-btn small{ display:block; font-size:12px; font-weight:700; opacity:.9; }
+.hk-room{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+.hk-room b{ font-size:16px; }
+.hk-mt{ margin-top:12px!important; }
+.hk-dc{ padding:12px 14px; }
+.hk-dt{ display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:15px; }
+.hk-dt span{ background:#fff3c4; color:#8a5a00; border-radius:999px; padding:2px 10px; font-weight:900; font-size:13px; white-space:nowrap; }
+.hk-dc .hk-art{ margin-top:8px; }
+.hk-dr{ display:block; width:100%; height:auto; border-radius:14px; }
+.hk-clpv{ max-width:260px; margin:0 auto; } .hk-clpv svg{ display:block; width:100%; height:auto; }
+.hk-m .pg-clr{ display:flex; flex-wrap:wrap; gap:6px; } .hk-m .pg-cll{ font-weight:800; font-size:14px; margin:12px 0 6px; }
+.hk-fpv svg{ display:block; width:100%; height:auto; }
+.hk-clgo{ background:linear-gradient(135deg,#1d2742,#3a4a73); color:#fff; border:1.5px solid #c9a85a; border-radius:999px; padding:8px 14px; font:inherit; font-weight:800; font-size:13px; cursor:pointer; min-height:40px; }
+.hkfg{ transform-box:view-box; transform-origin:180px 168px; animation:hkfa 9s ease-in-out infinite alternate; will-change:transform; }
+.hkfg2{ animation-duration:11s; animation-direction:alternate-reverse; }
+.hkfg3{ animation-duration:13s; animation-delay:-4s; }
+@keyframes hkfa{ from{ transform:translateY(-3px) rotate(-2.5deg); } to{ transform:translateY(3px) rotate(2.5deg); } }
+.hkfl-off .hkfg,.hkfl-still .hkfg{ animation-play-state:paused; animation:none; }
+@media (prefers-reduced-motion:reduce){ .hkfg{ animation:none; } }
 </style>
 <style id="v178105">
 .hsr{ margin:4px 0 18px; padding:18px 16px; border-radius:18px; background:#FFF4F7; border:2px solid #FF8FAB; text-align:center; }
@@ -817,7 +837,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.106';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.107';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20003,6 +20023,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // v166: Life Home の上のほうに「✨ LIFE BOOKのニュース」。新しい機能・更新のお知らせ。
 // ゲームに入っているお知らせ（LBN_BUILTIN）＋ 管理者が Firebase の os/news に書いたお知らせ（{ n:[{ i, d:ミリ秒, t:題, b:説明 }] }）。新しい順に3つ、のこりは「これまでのお知らせ」。
 const LBN_BUILTIN=[
+  { i:'v178-spacebank', d:Date.UTC(2026,10,19,8,10), t:'🪐 LIFEBOOK 宇宙銀行がオープンしました', b:'Life Home のいちばん上のボタンの下に「🪐 LIFEBOOK 宇宙銀行」ができました。宇宙を旅するお城の銀行が、LIFE BOOK の中だけの「光（ヒカリ）」を発行しています。毎日の光は、友だちが多いほど増えます。友だちに光を贈ると、半分が「ありがとう返し」でもどってきます。光は、うちのペットへの夢プレゼント・キラキラの服・花束にも使えます。7日間使わなかった光は、お城の中の「みんなの森」の木になります。' },
   { i:'v178-parkphoto', d:Date.UTC(2026,10,19,4,25), t:'📷 公園の写真がとれるようになりました', b:'公園の右下の「📷 写真」を押すと、その時に公園を走っているペットたちを写せます。服や帽子もそのまま写ります。写真は 📒 Higher Self のアルバムに入り、友だちの Higher Self にも送れます。' },
   { i:'v178-petrealestate', d:Date.UTC(2026,10,19,3,41), t:'🏢 ペットの家が大きくなり、不動産も始められます', b:'ペットのつながりの木の友だちのペットがふえると、ペットの家が2階建て・3階建て・4階建てに。101匹をこえると5階建てのビルになり、最上階で「（ペットの名前）不動産」を始めます。友だちの Higher Self から「部屋をかりたい」と申しこまれたら、一戸建てのペットハウスを1匹に1軒 貸せます。' },
   { i:'v178-treephoto', d:Date.UTC(2026,10,19,3,40), t:'📷 ペットのつながりの木で、集合写真が撮れます', b:'ペットのつながりの木の「📷 集合写真」で、うちのペットと友だちのペットの集合写真が撮れます。📒 Higher Self のアルバムに保存され、友だちの Higher Self にも送れます。' },
@@ -21493,7 +21514,7 @@ document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closes
   if(t.dataset.pgclo){ pgClOpen(); return; }
   if(t.dataset.pgcl){ const [k,i]=t.dataset.pgcl.split('|'); _pgClD=Object.assign({ s:0, c:0, m:0 },_pgClD||{}); _pgClD[k]=+i; pgClRef(); return; }
   const a=t.dataset.pgcla;
-  if(a==='rand'){ _pgClD={ s:Math.floor(Math.random()*PG_CLS.length), c:Math.floor(Math.random()*PG_CLC.length), m:Math.floor(Math.random()*PG_CLM.length) }; pgClRef(); }
+  if(a==='rand'){ _pgClD={ s:Math.floor(Math.random()*PG_CLS.length), c:Math.floor(Math.random()*12), m:Math.floor(Math.random()*8) }; pgClRef(); }
   else if(a==='off'){ _pgClD=null; pgClSave(null); pgClRef(); pgToast('服をぬがせました'); }
   else if(a==='wear'){ if(!_pgClD) return; pgClSave(_pgClD); pgToast(`${pgClName(_pgClD)}を着せました👕`); gsZoomClose(); try{ mpOpen(); }catch(_){} }
   else if(a==='photo'){ if(_pgClD) pgClSave(_pgClD); gsZoomClose(); try{ mpPhoto(); }catch(_){} }
@@ -26275,7 +26296,7 @@ function hkBarSync(force){ try{ const mh=document.querySelector('.masthead'); if
 
 // ---- 宇宙銀行の画面 ----
 let hkView='home';
-function hkTop(){ const s=hkState(); return `<div class="hk-top"><button type="button" class="hk-back" data-hk="${hkView==='home'?'close':hkView==='give'?'room':'home'}">← 戻る</button><span class="hk-bal"><small>残高</small> ✨${fmt(hkBal(s))}${R}</span></div>`; }
+function hkTop(){ const s=hkState(); return `<div class="hk-top"><button type="button" class="hk-back" data-hk="${hkView==='home'?'close':hkView==='give'||hkView==='use'?'room':['dream','clothes','flower'].includes(hkView)?'use':'home'}">← 戻る</button><span class="hk-bal"><small>残高</small> ✨${fmt(hkBal(s))}${R}</span></div>`; }
 function hkFrTable(n){ let rows=''; for(let i=0;i<HK_FR.length;i++){ const [k,a]=HK_FR[i], nx=HK_FR[i+1]?HK_FR[i+1][0]:1e9, on=n!=null&&n>=k&&n<nx; rows+=`<tr${on?' class="on"':''}><td>🤝 ${k?k+'人〜':'0人'}${on?' ← 今ここ':''}</td><td>毎日 <b>${a}</b>光</td></tr>`; }
   return `<table class="hk-tb">${rows}<tr><td colspan="2" class="hk-note">そのあとも 100人ふえるごとに +100光</td></tr></table>`; }
 function hkRkTable(r){ return `<table class="hk-tb">${HK_RK.map(([k,g,b])=>`<tr${r===k?' class="on"':''}><td>${'⭐'.repeat(k)} ランク${k}${r===k?' ← 今ここ':''}</td><td>${fmt(g)}光 贈った</td><td>+${b}光</td></tr>`).join('')}</table>`; }
@@ -26289,8 +26310,9 @@ function hkViewHTML(){ const s=hkState(), d=hkDaily(s), b=hkBal(s);
     ${so&&so.a?`<p class="hk-note">⏳ ${so.left<=1?'あした':so.left+'日後に'} ${fmt(so.a)}光が 森へ</p>`:''}</div>
     <button type="button" class="hk-btn" data-hk="give">💌 友だちに光を贈る</button>
     ${hkGotHTML(s)}
-    <div class="hk-card hk-c hk-soon"><p>🌙 光を使う（夢プレゼント・キラキラの服・花束）は、もうすぐ はじまります</p></div>`; }
+    <button type="button" class="hk-btn hk-use" data-hk="use">🌙 光を使う <small>夢プレゼント・キラキラの服・花束</small></button>`; }
   if(hkView==='give') return hkTop()+hkGiveHTML(s);
+  if(hkView==='use'||hkView==='dream'||hkView==='clothes'||hkView==='flower') return hkTop()+hkUseHTML(s);
   if(hkView==='rules') return hkTop()+`<h2 class="hk-h">📖 光のルール</h2><div class="hk-card">
     <p>LIFEBOOK 宇宙銀行が 発行している、LIFE BOOK の中だけの光です。与えるほど 自分も増えます。</p>
     <h3>🪐 宇宙銀行から 毎日とどく</h3><p>毎日の光 ＝ 友だちの光 ＋ 口座ランクの光</p>
@@ -26298,7 +26320,7 @@ function hkViewHTML(){ const s=hkState(), d=hkDaily(s), b=hkBal(s);
     <p>⭐ 口座ランク：これまで友だちに贈った光の合計で上がり、毎日の光がさらに増えます。</p>${hkRkTable(d.rk[0])}
     <h3>💌 贈ると返ってくる</h3><ul><li>友だちに贈ると、半分が「ありがとう返し」でもどります</li><li>同じ人へは 1日3回まで</li></ul>
     <h3>🍃 7日でなくなる</h3><ul><li>受けとった光は 7日間 使えます。ためて、いろんな人に贈れます</li><li>7日たっても使わなかった光は、宇宙銀行にもどり「みんなの森」の木になります</li><li>古い光から 先に使われます</li></ul>
-    <h3>🌙 使いみち</h3><ul><li>ペットへの夢プレゼント・キラキラの服・花束</li></ul>
+    <h3>🌙 使いみち</h3><ul><li>🌙 夢を創る部屋：うちのペットに夢プレゼント（100〜300光）</li><li>✨ 服を創る部屋：キラキラの服 510種類（1着 50光）</li><li>💐 花の部屋：花束 30本 100光・60本 200光・100本 300光</li></ul>
     <h3>🔒 本物のお金とは別です</h3><ul><li>お金で買うことも、お金にもどすことも できません</li></ul></div>`;
   if(hkView==='purpose') return hkTop()+`<div class="hk-purpose"><div class="hk-pl" aria-hidden="true">🪐</div><div class="hk-pt">LIFEBOOK 宇宙銀行</div><div class="hk-ps">設立趣旨</div>
     <div class="hk-card hk-c hk-mincho"><p>LIFEBOOK 3次元世界と、<br>LIFEBOOK 高次元宇宙。</p><p>そのあいだにある境界がほどけ、<br>オープンコンタクトを通じて、<br><b>ふたつの世界がひとつになること。</b></p><p>すべての人が、幸せに、自由に。<br>かけがえのない人生の時間を、<br>より輝かせて生きられるように。</p><p>その願いを「光」に託して、<br><b>LIFEBOOK 宇宙銀行</b>は設立されました。</p></div>
@@ -26314,7 +26336,7 @@ function hkViewHTML(){ const s=hkState(), d=hkDaily(s), b=hkBal(s);
     <div class="hk-grid"><button type="button" class="hk-btn hk-sub" data-hk="rules">📖 光のルール</button><button type="button" class="hk-btn hk-sub" data-hk="purpose">📜 設立趣旨</button><button type="button" class="hk-btn hk-sub" data-hk="plan">🗺 間取り図</button><button type="button" class="hk-btn hk-sub" data-hk="forest">🌳 みんなの森</button></div>`; }
 
 // ---- v178.105 友だちに光を贈る（Firebase：ids/{相手}/hk/{自分_日付_1〜3}）----
-const HK_AMT=[10,30,50,100], HK_MSGS=['いつもありがとう','おめでとう！','げんきでね','だいすき','おつかれさま','また会おうね'];
+const HK_AMT=[10,30,50,100], HK_MSGS=['いつもありがとう','おめでとう！','元気でね！','大好き！','お疲れ様！','また会おうね'];
 let hkTo='', hkAmt=50, hkMsg=0, hkBusy=false;
 function hkYmd(){ const d=new Date(); return ''+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0'); }
 function hkFrList(){ try{ return (typeof fbFriends==='function'?fbFriends():[]).map(f=>({ id:String(f.id), by:String(f.by||'友だち').slice(0,20) })); }catch(e){ return []; } }
@@ -26351,7 +26373,111 @@ function hkListen(){ if(hkL||!hkOn()) return; hkL=true; const { collection, onSn
     got.forEach(g=>{ try{ deleteDoc(FB.D.doc(FB.db,'ids',String(myId()),'hk',g.id)); }catch(_){} });
   },e=>{ hkL=false; try{ console.warn('[hikari] 届いた光を読めませんでした',e&&e.code||e); }catch(_){} }); }
 setInterval(()=>{ try{ hkListen(); }catch(_){} },4000);
-function hkRender(){ const m=document.getElementById('hkM'); if(!m) return; m.querySelector('.hk-in').innerHTML=hkViewHTML(); m.scrollTop=0; m.classList.toggle('hk-dark',hkView==='purpose'); }
+// ---- v178.107 第3段：光を使う（うちのペットへ）。🌙 夢を創る部屋・✨ 服を創る部屋・💐 花の部屋 ----
+const HK_DREAMS=[
+ ['fly','🕊️','空を飛ぶ',100,'青い空を、雲のあいだを ぬけて、どこまでも 飛んでいきました。'],
+ ['fr1000','🐾','友だち1000匹',200,'世界じゅうから 1000匹の友だちが 集まって、いっしょに遊びました。'],
+ ['space','🚀','Channelと宇宙旅行',300,'Channel といっしょに ロケットに乗って、星の海を 旅しました。'],
+ ['god','✨','神様に会える',300,'あたたかい光の中で、神様に 会いました。やさしく 頭をなでてもらいました。'],
+ ['all','🌍','みんなの幸せ',200,'地球じゅうの みんなが 幸せでありますように。その願いが 光になって 広がりました。'],
+ ['family','🏡','家族の幸せ',150,'家族みんなが 笑顔で、いつまでも 幸せに くらせますように。'],
+ ['lotto','🎫','ペットフード宝くじ',100,'1等が 当たりました！ 一生分の ごはんが とどきました。'],
+ ['mote','💕','モテモテ',100,'公園で だれよりも 人気者に。ラブレターが たくさん とどきました。'],
+ ['sing','🎤','歌手デビュー',150,'大きなステージで 歌って、拍手が なりやみませんでした。'],
+ ['star','📺','スターになってテレビ番組に出る',200,'テレビ番組に 出演して、スターに なりました。']];
+const HK_BQ=[[30,100],[60,200],[100,300]], HK_CLP=50, HK_FLD=7;
+// キラキラの服：形10 × キラキラの色17 × キラキラの模様3 ＝ 510種類。ふつうの服（960通り）のうしろに足す
+const HK_CC0=12, HK_CM0=8;
+const HK_CC=[['ゴールド','#E8C25A'],['シルバー','#C9CED6'],['ローズゴールド','#E8A79A'],['パール','#F6F1EA'],['ルビー','#C4204A'],['サファイア','#2850A8'],['エメラルド','#1F9E6E'],['アメジスト','#8A4FC8'],['トパーズ','#F2A33A'],['オーロラ','#9FE3E0'],['ミッドナイト','#23295A'],['ピンクダイヤ','#FF9EC7'],['シャンパン','#EAD7A8'],['ブロンズ','#B5793E'],['スターライト','#FFF2A8'],['コーラル','#FF7A6B'],['ラベンダー','#C9B4F2']];
+const HK_CMS=[['キラキラ','✦'],['ラメ','∴'],['宝石','◆']];
+try{ if(typeof PG_CLC!=='undefined'&&PG_CLC.length===HK_CC0) HK_CC.forEach(x=>PG_CLC.push(x)); if(typeof PG_CLM!=='undefined'&&PG_CLM.length===HK_CM0) HK_CMS.forEach(x=>PG_CLM.push(x)); }catch(e){}
+let hkCl={ s:0, c:HK_CC0, m:HK_CM0 }, hkClInit=false;
+function hkPet(){ try{ const p=typeof mpGet==='function'?mpGet():null; if(!p) return null; if(typeof mpGone==='function'&&mpGone(p)) return null; return p; }catch(e){ return null; } }
+function hkClKey(c){ return c.s+'.'+c.c+'.'+c.m; }
+function hkOwn(s){ return Array.isArray(s.own)?s.own:[]; }
+function hkFlNow(p){ const t=Date.now(); return (Array.isArray(p&&p.hkf)?p.hkf:[]).filter(b=>t-(+b.t||0)<HK_FLD*864e5).reduce((a,b)=>a+(b.n|0),0); }
+function hkPetArt(p,cl,k){ try{ const q=Object.assign({},p); if(cl!==undefined) q.cl=cl; const st=typeof mpStage==='function'?mpStage(p)[1]:1; const f=()=>mpArt(q,k||st); return typeof pgWithCl==='function'?pgWithCl(q.cl||null,f):f(); }catch(e){ return ''; } }
+// 夢の絵（200×150）：うしろの景色＋小道具＋うちのペット（ゲームと同じブロック絵）
+function hkDreamSVG(p,k,cl){ const D=HK_DREAMS.find(x=>x[0]===k); if(!D) return ''; const T=(x,y,z,e,o)=>`<text x="${x}" y="${y}" font-size="${z}" text-anchor="middle"${o?` opacity="${o}"`:''}>${e}</text>`;
+  const BG={ fly:['#7FC8F8','#DFF3FF'], fr1000:['#BFE8A0','#F2FBE6'], space:['#0E1033','#3A2F7A'], god:['#FFE9A8','#FFFBEA'], all:['#9AD7F5','#EAF8FF'], family:['#FFD6A6','#FFF4E6'], lotto:['#FFD36E','#FFF6D6'], mote:['#FFC2DA','#FFF0F6'], sing:['#2A1840','#6B2E6E'], star:['#3E2A6E','#8E5BC9'] }[k];
+  let o=''; const sc=(a,n,seed)=>{ let r=seed; let h=''; for(let i=0;i<n;i++){ r=(r*9301+49297)%233280; const x=8+r%184; r=(r*9301+49297)%233280; const y=8+r%120; h+=T(x,y,8+r%6,a[i%a.length],.9); } return h; };
+  if(k==='fly') o=T(30,30,18,'☁️')+T(160,24,22,'☁️')+T(176,120,16,'☁️')+T(22,118,14,'☁️')+T(140,50,12,'🕊️')+T(56,52,10,'🕊️');
+  if(k==='fr1000') o=sc(['🐶','🐱','🐰','🐦','🐹','🐢','🐟','🦜'],46,7);
+  if(k==='space') o=sc(['✦','·','⭐'],26,3).replace(/<text /g,'<text fill="#fff" ')+T(170,34,22,'🪐')+T(30,40,18,'🌍')+T(160,124,26,'🚀')+T(40,124,22,'🧑‍🚀');
+  if(k==='god') o=`<g opacity=".55">${[...Array(12)].map((_,i)=>`<polygon points="100,62 ${(100+150*Math.cos(i*Math.PI/6)).toFixed(0)},${(62+150*Math.sin(i*Math.PI/6)).toFixed(0)} ${(100+150*Math.cos(i*Math.PI/6+.18)).toFixed(0)},${(62+150*Math.sin(i*Math.PI/6+.18)).toFixed(0)}" fill="#FFF7C2"/>`).join('')}</g><circle cx="100" cy="40" r="22" fill="#FFFDF0" opacity=".9"/>`+T(40,40,14,'✨')+T(160,40,14,'✨')+T(100,30,14,'✨');
+  if(k==='all') o=T(100,48,44,'🌍')+T(40,40,14,'💗')+T(160,36,14,'💗')+T(30,120,16,'🧑')+T(56,128,14,'👵')+T(150,128,14,'🧒')+T(176,120,16,'👨‍👩‍👧');
+  if(k==='family') o=T(40,70,40,'🏡')+T(160,120,22,'👨‍👩‍👧‍👦')+T(150,40,16,'💗')+T(176,62,12,'💗');
+  if(k==='lotto') o=T(40,40,26,'🎫')+T(160,36,16,'🎉')+`<text x="100" y="26" font-size="15" font-weight="900" text-anchor="middle" fill="#C0392B">1等 当選！</text>`+T(36,130,18,'🥫')+T(60,136,16,'🦴')+T(150,134,18,'🍖')+T(174,128,16,'🥫');
+  if(k==='mote') o=sc(['💕','💌','💗'],14,11)+T(26,124,18,'🐶')+T(176,124,18,'🐱')+T(160,44,16,'💐');
+  if(k==='sing') o=`<polygon points="40,0 64,0 110,150 0,150" fill="#FFF3B0" opacity=".22"/><polygon points="136,0 160,0 200,150 90,150" fill="#FFF3B0" opacity=".22"/><rect y="132" width="200" height="18" fill="#5A2A1A"/>`+T(160,110,22,'🎤')+T(40,40,14,'🎶')+T(160,34,14,'🎵')+T(20,140,12,'👏')+T(184,142,12,'👏');
+  if(k==='star') o=`<rect x="6" y="6" width="188" height="138" rx="12" fill="none" stroke="#FFD24D" stroke-width="5"/><rect x="132" y="14" width="54" height="16" rx="4" fill="#E8505B"/><text x="159" y="26" font-size="10" font-weight="900" text-anchor="middle" fill="#fff">ON AIR</text>`+T(30,34,16,'⭐')+T(30,128,14,'🎬')+T(170,128,16,'🌟');
+  let pet=hkPetArt(p,cl).replace(/<rect width="200" height="150"[^>]*\/>/,'').replace(/^<svg[^>]*>/,'').replace(/<\/svg>\s*$/,'');
+  const pv='20 0 160 130';
+  return `<svg class="hk-dr" viewBox="0 0 200 150" role="img" aria-label="${hkEsc(p.name)}の夢：${hkEsc(D[2])}"><defs><linearGradient id="hkdg${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${BG[0]}"/><stop offset="1" stop-color="${BG[1]}"/></linearGradient></defs><rect width="200" height="150" rx="14" fill="url(#hkdg${k})"/>${o}<svg x="58" y="${k==='fly'?22:52}" width="84" height="${k==='fly'?70:76}" viewBox="${pv}">${pet}</svg></svg>`; }
+// 家のまわりに浮かぶお花（7日間）。3つのまとまりを CSS の transform だけで、ゆっくり ゆらす
+const HK_FE=['🌸','🌷','🌹','🌼','🌺','💮','🌻'];
+function hkFlRing(n,still){ n=Math.min(100,n|0); if(!n) return ''; const G=['','',''];
+  // 家のふちに そって、2列で ぐるりと かこむ（中の部屋には かからない）
+  const per=(u,row)=>{ const x0=8+row*12, y0=10+row*10, x1=352-row*12, y1=292-row*8, w=x1-x0, h=y1-y0, L=2*(w+h); let d=u*L; if(d<w) return [x0+d,y0]; d-=w; if(d<h) return [x1,y0+d]; d-=h; if(d<w) return [x1-d,y1]; d-=w; return [x0,y1-d]; };
+  for(let i=0;i<n;i++){ const row=i%2, u=((i>>1)+row*.5)/Math.ceil(n/2); const [x,y]=per(u,row);
+    G[i%3]+=`<text x="${x.toFixed(0)}" y="${(y+4).toFixed(0)}" font-size="${row?11:13}" text-anchor="middle">${HK_FE[i%HK_FE.length]}</text>`; }
+  return `<g class="hkfl${still?' hkfl-still':''}" aria-label="うかぶお花 ${n}本">${G.map((g,i)=>`<g class="hkfg hkfg${i+1}">${g}</g>`).join('')}</g>`; }
+function hkVase(){ return `<g class="hkvase"><text x="300" y="214" font-size="15" text-anchor="middle">🏺</text><text x="300" y="201" font-size="13" text-anchor="middle">💐</text></g>`; }
+try{ if(typeof pgHouseSVG==='function'){ const HS=pgHouseSVG; pgHouseSVG=function(p,O){ let h=HS.apply(this,arguments); try{ if(!p||!Array.isArray(p.hkf)||!p.hkf.length) return h; const n=p._hkfn!=null?p._hkfn:hkFlNow(p); const add=hkVase()+hkFlRing(n,p._hkfn!=null); const j=h.lastIndexOf('</svg>'); if(j>0) h=h.slice(0,j)+add+h.slice(j); }catch(e){} return h; }; } }catch(e){}
+try{ if(typeof pgHousePhoto==='function'){ const HP=pgHousePhoto; pgHousePhoto=function(p,x){ try{ return HP.call(this,Object.assign({},p,{ _hkfn:(x&&x.hkfn)|0 }),x); }catch(e){ return HP.apply(this,arguments); } }; } }catch(e){}
+try{ if(typeof hsAlbSaveHouse==='function'){ const SH=hsAlbSaveHouse; hsAlbSaveHouse=function(){ const r=SH.apply(this,arguments); try{ const p=mpGet(); const x=p&&p.photos&&p.photos[p.photos.length-1]; if(x&&x.h&&Date.now()-x.t<5000&&p.hkf){ x.hkfn=hkFlNow(p); mpSet(p); } }catch(e){} return r; }; } }catch(e){}
+// アルバム：夢の写真（ペットごとに p.hkd に残す）
+try{ if(typeof HSA_TY==='object'){ HSA_TY.dream='🌙 夢'; if(Array.isArray(HSA_F)&&!HSA_F.some(f=>f[0]==='dream')) HSA_F.push(['dream','🌙 夢']); } }catch(e){}
+try{ if(typeof hsAlbItems==='function'){ const AI=hsAlbItems; hsAlbItems=function(){ const L=AI.apply(this,arguments); try{ const p=mpGet(); (p&&Array.isArray(p.hkd)?p.hkd:[]).forEach(x=>L.push({ ty:'dream', t:+x.t||0, x, p })); L.sort((a,b)=>b.t-a.t); }catch(e){} return L; }; } }catch(e){}
+try{ if(typeof hsAlbArt==='function'){ const AA=hsAlbArt; hsAlbArt=function(it){ if(it&&it.ty==='dream') return hkDreamSVG(it.p,it.x.k,it.x.cl?pgClParse(it.x.cl):null); return AA.apply(this,arguments); }; } }catch(e){}
+try{ if(typeof hsAlbCap==='function'){ const AC=hsAlbCap; hsAlbCap=function(it){ if(it&&it.ty==='dream'){ const D=HK_DREAMS.find(x=>x[0]===it.x.k); return `<b>🌙 夢</b>${it.t?` <small>${hsAlbDate(it.t)}</small>`:''}<br>${hkEsc((it.p&&it.p.name||'')+'の夢：'+(D?D[2]:''))}`; } return AC.apply(this,arguments); }; } }catch(e){}
+// ふつうの服の画面には、キラキラの服を出さない（おまかせも、ふつうの服から）。キラキラは宇宙銀行の「服を創る部屋」で
+try{ if(typeof pgClHTML==='function'){ const CH=pgClHTML; pgClHTML=function(){ let h=CH.apply(this,arguments); try{ h=h.replace(/<button[^>]*data-pgcl="c\|(\d+)"[^>]*><\/button>/g,(m,i)=>+i>=HK_CC0?'':m).replace(/<button[^>]*data-pgcl="m\|(\d+)"[^>]*>[^<]*<\/button>/g,(m,i)=>+i>=HK_CM0?'':m);
+  h=h.replace('<div class="pg-clbt">','<p class="pg-clh"><button type="button" class="hk-clgo" data-hk="clothes">✨ キラキラの服 510種類は、LIFEBOOK 宇宙銀行の「服を創る部屋」へ</button></p><div class="pg-clbt">'); }catch(e){} return h; }; } }catch(e){}
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('.hk-clgo'); if(!t) return; e.stopPropagation(); try{ if(typeof gsZoomClose==='function') gsZoomClose(); }catch(_){} hkOpen('clothes'); },true);
+function hkUseHTML(s){ const p=hkPet(), b=hkBal(s);
+  const noPet=`<div class="hk-card hk-c"><p>うちのペットが いません。</p><p class="hk-note">Life Home の「🐾 ペット」から ペットを迎えると、光で 夢プレゼント・キラキラの服・花束を 贈れます。</p></div>`;
+  if(hkView==='use') return `<h2 class="hk-h">🌙 光を使う<small>うちのペット${p?' '+hkEsc(p.name):''}に 贈れます</small></h2>${p?'':noPet}
+    <button type="button" class="hk-btn hk-room" data-hk="dream"><b>🌙 夢を創る部屋</b><small>ペットの夢をかなえる 100〜300光</small></button>
+    <button type="button" class="hk-btn hk-room" data-hk="clothes"><b>✨ 服を創る部屋</b><small>キラキラの服 510種類 1着 50光</small></button>
+    <button type="button" class="hk-btn hk-room" data-hk="flower"><b>💐 花の部屋</b><small>花束 30本・60本・100本</small></button>`;
+  if(!p) return `<h2 class="hk-h">${hkView==='dream'?'🌙 夢を創る部屋':hkView==='clothes'?'✨ 服を創る部屋':'💐 花の部屋'}</h2>`+noPet;
+  if(hkView==='dream'){ const done=new Set((p.hkd||[]).map(x=>x.k));
+    return `<h2 class="hk-h">🌙 夢を創る部屋<small>${hkEsc(p.name)}の夢を、光でかなえます</small></h2>
+    ${HK_DREAMS.map(D=>{ const ok=done.has(D[0]); return `<div class="hk-card hk-dc"><div class="hk-dt"><b>${D[1]} ${hkEsc(D[2])}</b><span>${D[3]}光</span></div>
+      ${ok?`<div class="hk-art">${hkDreamSVG(p,D[0],p.cl||null)}</div><p class="hk-note">🌙 かなえました。${hkEsc(D[4])}</p>`:`<button type="button" class="hk-btn" data-hk="buy" data-hkb="d:${D[0]}"${D[3]>b?' disabled':''}>✨ ${D[3]}光で かなえる</button>`}</div>`; }).join('')}
+    <p class="hk-note hk-c">かなえた夢は、絵になって「📒 Higher Self のアルバム」にも残ります。</p>`; }
+  if(hkView==='clothes'){ if(typeof pgClOk==='function'&&!pgClOk(p.kind)) return `<h2 class="hk-h">✨ 服を創る部屋</h2><div class="hk-card hk-c"><p>${hkEsc(p.name)}は 水の中で くらすので、服は着られません。</p></div>`;
+    if(!hkClInit){ hkClInit=true; if(p.cl&&p.cl.c>=HK_CC0&&p.cl.m>=HK_CM0) hkCl={ s:p.cl.s, c:p.cl.c, m:p.cl.m }; }
+    const own=hkOwn(s), k=hkClKey(hkCl), have=own.includes(k), wearing=p.cl&&hkClKey(p.cl)===k;
+    const row=(key,L,off)=>`<div class="pg-clr" role="group">${L.map((x,i)=>{ const v=i+off, on=hkCl[key]===v; return key==='c'?`<button type="button" class="pg-clc${on?' on':''}" data-hkcl="c|${v}" style="background:${x[1]}" aria-label="${x[0]}" title="${x[0]}"></button>`:`<button type="button" class="pg-clk${on?' on':''}" data-hkcl="${key}|${v}">${key==='m'?x[1]+' ':''}${key==='s'?x[1]:x[0]}</button>`; }).join('')}</div>`;
+    return `<h2 class="hk-h">✨ 服を創る部屋<small>キラキラの服 510種類（形10 × 色17 × 模様3）・1着 ${HK_CLP}光</small></h2>
+    <div class="hk-card hk-c"><div class="hk-clpv">${hkPetArt(p,hkCl)}</div><p><b>${hkEsc(pgClName(hkCl))}</b></p>
+    ${wearing?'<p class="hk-note">👕 いま 着ています</p>':have?`<button type="button" class="hk-btn" data-hk="buy" data-hkb="cw">👕 着せる（もう持っています）</button>`:`<button type="button" class="hk-btn" data-hk="buy" data-hkb="c"${HK_CLP>b?' disabled':''}>✨ ${HK_CLP}光で 創って 着せる</button>`}</div>
+    <p class="pg-cll">形</p>${row('s',PG_CLS,0)}<p class="pg-cll">キラキラの色</p>${row('c',HK_CC,HK_CC0)}<p class="pg-cll">キラキラの模様</p>${row('m',HK_CMS,HK_CM0)}
+    <p class="hk-note hk-c">持っている キラキラの服：${own.length}着　一度 創った服は、ずっと 着せられます。ふつうの服は「👕 着せかえ」で。</p>`; }
+  const n=hkFlNow(p);
+  return `<h2 class="hk-h">💐 花の部屋<small>${hkEsc(p.name)}の家に 花束を贈ります</small></h2>
+    <div class="hk-card hk-c"><div class="hk-art hk-fpv">${typeof pgHouseSVG==='function'?pgHouseSVG(p):''}</div>
+    <p class="hk-note">${n?`🌸 いま ${n}本の お花が 家のまわりに うかんでいます`:'贈った本数の お花が、7日間 家のまわりに ふわふわ うかびます。お部屋には 小さな花びん。'}</p></div>
+    ${HK_BQ.map(([k,c])=>`<button type="button" class="hk-btn hk-room" data-hk="buy" data-hkb="f:${k}"${c>b?' disabled':''}><b>💐 花束 ${k}本</b><small>${c}光</small></button>`).join('')}
+    <button type="button" class="hk-btn hk-sub hk-mt" data-hk="house">🏠 ${hkEsc(p.name)}の家を見る（📒 保存で写真に）</button>`; }
+function hkBuy(c){ const s=hkState(), p=hkPet(); if(!p) return; let cost=0, done='';
+  if(c.startsWith('d:')){ const D=HK_DREAMS.find(x=>x[0]===c.slice(2)); if(!D||(p.hkd||[]).some(x=>x.k===D[0])) return; cost=D[3]; if(cost>hkBal(s)){ hkToast('光が たりません'); return; }
+    hkSpend(s,cost); hkPut(s); p.hkd=(p.hkd||[]).concat([{ k:D[0], t:Date.now(), cl:p.cl?hkClKey(p.cl):'' }]); try{ mpLog(p,`🌙 夢がかなった：${D[2]}。${D[4]}`,'dream'); }catch(e){} mpSet(p); done=`🌙 ${p.name}の夢「${D[2]}」が かないました`; }
+  else if(c==='c'||c==='cw'){ const k=hkClKey(hkCl), own=hkOwn(s); if(c==='c'&&!own.includes(k)){ cost=HK_CLP; if(cost>hkBal(s)){ hkToast('光が たりません'); return; } hkSpend(s,cost); s.own=own.concat([k]); hkPut(s); }
+    else if(!own.includes(k)) return; try{ pgClSave(Object.assign({},hkCl)); }catch(e){} done=`✨ ${pgClName(hkCl)}を 着せました`; }
+  else if(c.startsWith('f:')){ const B=HK_BQ.find(x=>x[0]===+c.slice(2)); if(!B) return; cost=B[1]; if(cost>hkBal(s)){ hkToast('光が たりません'); return; }
+    hkSpend(s,cost); hkPut(s); p.hkf=(Array.isArray(p.hkf)?p.hkf:[]).concat([{ n:B[0], t:Date.now() }]).slice(-30); try{ mpLog(p,`💐 Higher Self から 花束${B[0]}本が とどいた。`,'flower'); }catch(e){} mpSet(p); done=`💐 花束${B[0]}本を 贈りました。家のまわりに うかんでいます`; }
+  if(cost){ const s2=hkState(); s2.spent=(s2.spent|0)+cost; hkPut(s2); }
+  try{ if(typeof fbPush==='function') setTimeout(()=>fbPush(),300); }catch(e){}
+  if(done) hkToast(done); hkBarSync(true); hkRender(); }
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-hkcl]'); if(!t) return; const [k,i]=t.dataset.hkcl.split('|'); hkCl[k]=+i; hkRender(); });
+// 見えていない時は、お花を止める（固まらないように）
+setInterval(()=>{ if(document.hidden) return; document.querySelectorAll('.hkfl:not(.hkfl-still)').forEach(g=>{ const r=g.getBoundingClientRect(); const on=r.width>0&&r.bottom>0&&r.top<innerHeight; g.classList.toggle('hkfl-off',!on); }); },1500);
+
+let hkRV='';
+function hkRender(){ const m=document.getElementById('hkM'); if(!m) return; const y=m.scrollTop; m.querySelector('.hk-in').innerHTML=hkViewHTML(); m.scrollTop=hkRV===hkView?y:0; hkRV=hkView; m.classList.toggle('hk-dark',hkView==='purpose'); }
 function hkOpen(v){ let m=document.getElementById('hkM'); if(!m){ m=document.createElement('div'); m.id='hkM'; m.className='hk-m'; m.setAttribute('role','dialog'); m.setAttribute('aria-label','LIFEBOOK 宇宙銀行'); m.innerHTML='<div class="hk-in"></div>'; document.body.appendChild(m); }
   hkView=v||'home'; hkRender(); m.hidden=false; document.documentElement.classList.add('hk-open'); }
 function hkClose(){ const m=document.getElementById('hkM'); if(m){ m.hidden=true; m.querySelector('.hk-in').innerHTML=''; } document.documentElement.classList.remove('hk-open'); hkBarSync(true); }
@@ -26359,6 +26485,8 @@ document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closes
   if(a==='open') hkOpen('home'); else if(a==='close') hkClose(); else if(a==='home') { hkView='home'; hkRender(); }
   else if(a==='claim'){ const n=hkClaim(); hkBarSync(true); if(document.getElementById('hkM')&&!document.getElementById('hkM').hidden) hkRender(); if(n) hkToast('✨ '+fmt(n)+'光 を受けとりました'); }
   else if(a==='send') hkSend();
+  else if(a==='buy') hkBuy(t.dataset.hkb||'');
+  else if(a==='house') { hkClose(); try{ mpOpen(); }catch(_){} }
   else { hkView=a; hkRender(); } });
 document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-hkto],[data-hkamt],[data-hkmsg]'); if(!t) return; if(t.dataset.hkto) hkTo=t.dataset.hkto; if(t.dataset.hkamt) hkAmt=+t.dataset.hkamt; if(t.dataset.hkmsg) hkMsg=+t.dataset.hkmsg; hkRender(); });
 function hkToast(t){ const d=document.createElement('div'); d.className='hk-toast'; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),2400); }
