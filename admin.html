@@ -130,6 +130,12 @@ textarea:focus{ outline:2px solid var(--pink2); }
       <div id="newsList"><p class="empty">読みこみ中…</p></div>
     </section>
 
+    <section class="card" id="ctCard">
+      <h2>📮 お問い合わせ</h2>
+      <p class="sub">サイトの「お問い合わせ」から届いたものです。新しい順に50件まで出ます。メールアドレスを押すと、お返事のメールが書けます。</p>
+      <div id="ctList"><p class="empty">読みこみ中…</p></div>
+    </section>
+
     <div class="tiles" id="tiles"></div>
 
     <section class="card">
@@ -207,10 +213,23 @@ U.onAuthStateChanged(auth,async user=>{
   if(!user||user.isAnonymous){ $('#gate').hidden=false; $('#main').hidden=true; $('#who').hidden=true; return; }
   $('#whoName').textContent=user.displayName||user.email||''; $('#who').hidden=false;
   $('#gate').querySelector('h2').textContent='読みこみ中…'; $('#login').hidden=true;
-  try{ await loadAll(); $('#gate').hidden=true; $('#main').hidden=false; draw(); osmLoad(); newsLoad(); }
+  try{ await loadAll(); $('#gate').hidden=true; $('#main').hidden=false; draw(); osmLoad(); newsLoad(); ctLoad(); }
   catch(e){ $('#gate').querySelector('h2').textContent='このアカウントでは見られません'; $('#login').hidden=false;
     $('#gateMsg').innerHTML=e&&e.code==='permission-denied'?'運営者として登録したGoogleアカウントでログインしてください。':'<span class="err">読みこめませんでした</span>（'+esc(e.code||e.message)+'）'; console.warn(e); }
 });
+
+
+// ---- お問い合わせ（contact/{auto} = { nm, em, kind, body, at }） ----
+async function ctLoad(){ const { collection, getDocs, query, orderBy, limit }=D; const box=$('#ctList');
+  try{ const snap=await getDocs(query(collection(db,'contact'),orderBy('at','desc'),limit(50)));
+    if(snap.empty){ box.innerHTML='<p class="empty">まだお問い合わせはありません</p>'; return; }
+    const dt=t=>{ if(!t||!t.toMillis) return ''; const d=new Date(t.toMillis()); return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); };
+    box.innerHTML=snap.docs.map(x=>{ const d=x.data(); return '<div class="ct-item" style="border-top:1px solid #e5e9f0;padding:10px 0"><div style="font-size:13px;color:#667">'+esc(dt(d.at))+'・'+esc(d.kind)+'</div><div><b>'+esc(d.nm)+'</b>　<a href="mailto:'+encodeURIComponent(d.em).replace(/%40/g,'@')+'">'+esc(d.em)+'</a></div><div style="white-space:pre-wrap;margin:6px 0">'+esc(d.body)+'</div><button class="btn" type="button" data-ct="'+esc(x.id)+'" style="font-size:12px;padding:4px 12px">消す</button></div>'; }).join('');
+    box.querySelectorAll('[data-ct]').forEach(b=>b.onclick=()=>ctDel(b));
+  }catch(e){ box.innerHTML='<p class="empty">読みこめませんでした（'+esc(e.code||e.message)+'）。ルール v187 を公開すると見られます。</p>'; }
+}
+async function ctDel(b){ if(b.dataset.arm!=='1'){ b.dataset.arm='1'; b.textContent='本当に消す'; setTimeout(()=>{ b.dataset.arm=''; b.textContent='消す'; },5000); return; }
+  const { doc, deleteDoc }=D; try{ await deleteDoc(doc(db,'contact',b.dataset.ct)); ctLoad(); }catch(e){ b.textContent='消せませんでした'; } }
 
 // ---- Over Soul Message（os/board = { m:[{i,t,d}] } 新しい順・最大30件） ----
 let OSM=[], osmArm=0;
