@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.97">
+<meta name="lifebook-version" content="v178.98">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -753,7 +753,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.97';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.98';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21574,7 +21574,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // v178.95（MITSUさん 2026-11-19）：ペットのつながりの木の友だちのペットがふえると、家が大きくなる
 // 31匹以上→2階建て、60匹→3階、90匹→4階、101匹以上→5階建てのビル。最上階は「○○不動産」のオフィス
 function pgFrPetN(){ try{ return gsFrPets(typeof flFriends==='function'?flFriends():store.get(KEY_FRIEND,[])).length; }catch(e){ return 0; } }
-function pgFloorsOf(n){ return n>100?5:n>=90?4:n>=60?3:n>30?2:1; }
+function pgFloorsOf(n){ return n>=300?6:n>100?5:n>=90?4:n>=60?3:n>30?2:1; }
 function pgFloors(){ return pgFloorsOf(pgFrPetN()); }
 function pgAgencyName(p){ return `${String(p&&p.name||'うちのペット')}不動産`; }
 const PG_FLW=[['#EEF6FF','#BFE3FF'],['#F2FBEF','#C9EBC0'],['#FFF6E6','#FFD8B0'],['#F6F0FF','#E3D7FF'],['#FFF0F5','#FFD3E0']];
@@ -21586,15 +21586,25 @@ function pgFloorRoom(y,f,V,p,office,nTen){ const H=70, c=PG_FLW[(f+(V.pid||'').l
   [70,130,190,250].forEach((x,i)=>{ const lit=(f*7+i*3)%4!==0; g+=`<rect x="${x}" y="${y+14}" width="38" height="30" rx="3" fill="${lit?'#FFF3B0':'#BFE3FF'}" stroke="#fff" stroke-width="3"/><line x1="${x+19}" y1="${y+14}" x2="${x+19}" y2="${y+44}" stroke="#fff" stroke-width="2"/>`; });
   const deco=['🪴','🧸','📚','🛋️','🎨','🌙','⭐','🪀']; g+=`<text x="${56+((f*53)%240)}" y="${y+H-16}" font-size="13">${deco[f%deco.length]}</text>`;
   return g+`<text x="300" y="${y+12}" font-size="9" fill="#8A7A84" text-anchor="end">${f+1}F</text>`; }
-function pgFloorWrap(svg,p,O){ try{ if(p&&p._rt!=null) return svg; const F=O&&O.fl?O.fl:(O?1:pgFloors()); if(F<=1) return svg; const D=70*(F-1), V=pgHouseV(p);
+function pgFloorWrap(svg,p,O){ try{ if(p&&p._rt!=null) return svg; const F0=O&&O.fl?O.fl:(O?1:pgFloors()), castle=F0>=6, F=Math.min(5,F0); if(F<=1) return svg; const D=70*(F-1), V=pgHouseV(p);
   const a=svg.indexOf('>')+1, i=svg.indexOf('<rect x="30" y="92"'), z=svg.lastIndexOf('</svg>'); if(a<=0||i<0||z<0) return svg;
   let pre=svg.slice(a,i), room=svg.slice(i,z); const open=svg.slice(0,a).replace('viewBox="0 0 360 300"',`viewBox="0 0 360 ${300+D}"`);
   pre=pre.replace('<rect width="360" height="300" rx="18"',`<rect width="360" height="${300+D}" rx="18"`).replace(/<rect y="272" width="360" height="28"/,`<rect y="${272+D}" width="360" height="28"`);
   let badge=''; room=room.replace(/<rect x="10" y="10" width="\d+" height="22" rx="11"[^>]*\/><text x="18" y="25"[^>]*>[^<]*<\/text>/,m=>{ badge=m; return ''; });
   const office=F>=5, nTen=office&&typeof rtTenants==='function'?rtTenants().length:0; let fl='';
   for(let k=F-1;k>=1;k--){ const y=92+(F-1-k)*70; fl+=pgFloorRoom(y,k,V,p,office&&k===F-1,nTen); }
-  if(F>=5) pre=pre.replace(/🏠 ([^<]*)の家<\/text>/,(m,n)=>`🏢 ${n}ビル</text>`);
+  if(castle){ pre=pre.replace(V.roof,pgCastleRoof()).replace(/🏠 ([^<]*)の家<\/text>/,(m,n)=>`🏰 ${n}城</text>`); }
+  else if(F>=5) pre=pre.replace(/🏠 ([^<]*)の家<\/text>/,(m,n)=>`🏢 ${n}ビル</text>`);
+  if(castle) return open+pre+fl+`<g transform="translate(0 ${D})">${room}</g>`+pgCastleTowers(D)+badge+`<text x="300" y="${92+D+12}" font-size="9" fill="#8A7A84" text-anchor="end">1F</text></svg>`;
   return open+pre+fl+`<g transform="translate(0 ${D})">${room}</g>`+badge+`<text x="300" y="${92+D+12}" font-size="9" fill="#8A7A84" text-anchor="end">1F</text></svg>`; }catch(e){ return svg; } }
+
+// v178.96（MITSUさん 2026-11-19）：友だちのペットが300匹から、住む家はお城
+function pgCastleRoof(){ let r=`<rect x="22" y="50" width="316" height="44" fill="#B8B4C8"/><rect x="34" y="60" width="292" height="34" fill="#D3D0E0"/>`; for(let x=22;x<330;x+=28) r+=`<rect x="${x}" y="38" width="16" height="14" fill="#B8B4C8"/>`;
+  return r+`<line x1="180" y1="38" x2="180" y2="8" stroke="#6A5A7A" stroke-width="2"/><path d="M180 8 l22 6 l-22 6z" fill="#E86A92"/><rect x="164" y="64" width="32" height="30" rx="16" fill="#7B5CC9" opacity=".25"/>`; }
+function pgCastleTowers(D){ const T=(x)=>{ const w=34, top=64, bot=272+D; let g=`<rect x="${x}" y="${top}" width="${w}" height="${bot-top}" fill="#C9C5D8" stroke="#9A96AE" stroke-width="2"/>`;
+    for(let y=top+40;y<bot-20;y+=56) g+=`<rect x="${x+11}" y="${y}" width="12" height="18" rx="6" fill="#FFF3B0" stroke="#fff" stroke-width="2"/>`;
+    return g+`<polygon points="${x-4},${top} ${x+w/2},${top-34} ${x+w+4},${top}" fill="#7B5CC9"/><line x1="${x+w/2}" y1="${top-34}" x2="${x+w/2}" y2="${top-52}" stroke="#6A5A7A" stroke-width="2"/><path d="M${x+w/2} ${top-52} l16 5 l-16 5z" fill="#FFB86B"/>`; };
+  return T(0)+T(326); }
 // v178.86（MITSUさん）：ペットだけの家。中が見える大きな部屋に、もらったプレゼント・おもちゃを飾る。うちのペットのページの一番上に出す
 function pgHouseItems(p){ const by={}; (Array.isArray(p&&p.gifts)?p.gifts:[]).forEach(g=>{ if(!g||!g.k) return; (by[g.k]=by[g.k]||[]); const f=String(g.f||''); if(g.k==='love'||g.k==='food'){ by[g.k].push(g); return; } if(!by[g.k].some(x=>x.f===f)) by[g.k].push({ f, e:pgEmo(f)||pgIco(g.k), n:f.replace(/^\S+\s*/,''), by:g.by }); }); return by; }
 // v178.90（MITSUさん 2026-11-19「全員が違うように」）：ペットごとに、家の屋根・かべ紙・床・ラグ・窓・カーテンが少しずつちがう（迎えた時刻と種類から決まる。毎回同じ）
@@ -21739,10 +21749,10 @@ function rtPageHTML(p){ let h=''; const home=rtHome();
   if(home) h+=`<div class="rt-box"><b>${RT_HT[home.ht].e} ${esc(home.ag||'')}から、「${esc(RT_HT[home.ht].n)}」をかりています</b><p class="tiny muted">${esc(home.by)}さんのペットの不動産です。${new Date(home.t).getMonth()+1}月${new Date(home.t).getDate()}日から。</p><button type="button" class="linkish" data-rtleave="1">🏠 元の家にもどる</button></div>`;
   const n=pgFrPetN(), F=pgFloorsOf(n);
   if(F>=5){ const R=rtReqs(), T=rtTenants();
-    h+=`<div class="rt-box"><b>🏢 ${esc(pgAgencyName(p))}</b><p class="tiny muted">5階建てのビルの最上階で、ペット専門の不動産をしています。友だちの Higher Self から申しこみが届くと、ここに出ます。</p>`
+    h+=`<div class="rt-box"><b>🏢 ${esc(pgAgencyName(p))}</b><p class="tiny muted">${F>=6?'お城の最上階で':'5階建てのビルの最上階で'}、ペット専門の不動産をしています。${F<6?'友だちのペットが300匹になると、お城に住みます。':''}友だちの Higher Self から申しこみが届くと、ここに出ます。</p>`
      +(R.length?`<p class="rt-h">📮 部屋をかりたい申しこみ（${R.length}件）</p><ul class="rt-l">${R.map(r=>`<li><b>${esc(r.b)}</b>（${esc(r.by)}さんのペット${PB_ALL[r.p]?'・'+esc(PB_ALL[r.p].name):''}）<span class="rt-bs"><button type="button" class="mp-btn" data-rtyes="${esc(r.from)}">🏠 貸す</button><button type="button" class="linkish" data-rtno="${esc(r.from)}">ことわる</button></span></li>`).join('')}</ul>`:'')
      +`<p class="rt-h">🏠 貸している名簿（${T.length}軒）</p>${T.length?`<table class="rt-t"><tr><th>ペット</th><th>飼い主</th><th>家</th><th>貸した日</th></tr>${T.slice().reverse().map(t=>{ const d=new Date(t.t); return `<tr><td>${esc(t.b)}</td><td>${esc(t.by)}さん</td><td>${RT_HT[t.ht]?RT_HT[t.ht].e+' '+esc(RT_HT[t.ht].n):''}</td><td>${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}</td></tr>`; }).join('')}</table>`:'<p class="tiny muted">まだ貸している家はありません。</p>'}</div>`; }
-  else if(n>0&&!home) h+=`<p class="rt-hint">🏠 ${F}階建て（友だちのペット ${n}匹）。${F===1?'31匹をこえると2階建てに。':''}101匹をこえると、${esc(pgAgencyName(p))}を始めます。</p>`;
+  else if(n>0&&!home) h+=`<p class="rt-hint">🏠 ${F}階建て（友だちのペット ${n}匹）。${F===1?'31匹をこえると2階建てに。':''}101匹をこえると、${esc(pgAgencyName(p))}を始めます。300匹からは、お城に住みます。</p>`;
   return h; }
 if(typeof mpPageHTML==='function'){ const MPR=mpPageHTML; mpPageHTML=function(){ let h=MPR.apply(this,arguments); try{ const p=mpGet(); if(!p||!p.name||(typeof mpGone==='function'&&mpGone(p))) return h; const x=rtPageHTML(p); if(!x) return h; const i=h.indexOf('<div class="pg-hctl">'); if(i>=0){ const j=h.indexOf('<div class="mp-top pg-ht">',i); if(j>0) return h.slice(0,j)+x+h.slice(j); } }catch(e){} return h; }; }
 document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-rtask],[data-rtyes],[data-rtno],[data-rtleave]'); if(!t) return; e.preventDefault(); e.stopPropagation(); if(t.disabled) return;
