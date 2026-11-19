@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.110">
+<meta name="lifebook-version" content="v178.111">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -841,7 +841,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.110';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.111';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -22271,9 +22271,12 @@ function acBindPanes(d){ d.querySelectorAll('[data-actab]').forEach(b=>b.onclick
   d.querySelectorAll('[data-acarc]').forEach(b=>b.onclick=()=>{ const a=(store.get(KEY_ARC,[])||[])[+b.dataset.acarc]; if(!a) return; acClose(); viewing={ seed:a.seed, country:a.country, force:a.force||null, choice:a.choice, bs:a.bs||null }; render(); window.scrollTo(0,0); acFromStart('arc'); }); }
 // v178.60（MITSUさん 2026-11-19）：携帯を横にしている間は、上のボタンをかくす。ロゴの右の「☰ ボタンを出す」で出し入れ（横にするたび、かくれた状態から）
 (function(){ try{ const h=document.querySelector('.masthead'), logo=h&&h.querySelector('.lb-logo'); if(!logo) return; const b=document.createElement('button'); b.type='button'; b.className='lb-landbtn';
-  const set=on=>{ document.body.classList.toggle('lb-land-show',!!on); b.textContent=on?'✕ ボタンをかくす':'☰ ボタンを出す'; b.setAttribute('aria-expanded',on?'true':'false'); };
+  const set=on=>{ document.body.classList.toggle('lb-land-show',!!on); b.textContent=on?(document.documentElement.classList.contains('lb-land')?'✕ ボタンをかくす':'▲ ボタンをかくす'):'☰ ボタンを出す'; if(typeof lbbDot==='function') lbbDot(); b.setAttribute('aria-expanded',on?'true':'false'); };
   b.addEventListener('click',()=>set(!document.body.classList.contains('lb-land-show'))); logo.after(b); set(false);
   window.addEventListener('lb-land-change',()=>set(false)); (function(){ try{ var de=document.documentElement; var chk=function(){ var sw=Math.min(screen.width||9999,screen.height||9999); var touch=(navigator.maxTouchPoints||0)>0||('ontouchstart' in window); var land=false; try{ if(typeof window.orientation==='number') land=Math.abs(window.orientation)===90; else if(screen.orientation&&screen.orientation.type) land=/landscape/.test(screen.orientation.type); else land=window.innerWidth>window.innerHeight; }catch(e){ land=window.innerWidth>window.innerHeight; } if(!land&&window.innerWidth>window.innerHeight*1.25&&typeof window.orientation!=='number'&&!(screen.orientation&&screen.orientation.type)) land=true; var on=!!(touch&&sw<=540&&land); if(de.classList.contains('lb-land')!==on){ de.classList.toggle('lb-land',on); try{ window.dispatchEvent(new Event('lb-land-change')); }catch(e){} } }; chk(); window.addEventListener('resize',chk); window.addEventListener('orientationchange',function(){ chk(); setTimeout(chk,200); setTimeout(chk,600); }); try{ if(screen.orientation&&screen.orientation.addEventListener) screen.orientation.addEventListener('change',chk); }catch(e){} document.addEventListener('visibilitychange',chk); }catch(e){} })(); }catch(e){ try{ console.warn('[landbtn]',e); }catch(_){} } })();
+// v178.111（MITSUさん 2026-11-19）：ボタンをかくしている間、ボタンに新しいお知らせ（🎁・💐・数）があれば、「☰ ボタンを出す」に 🎁 を出す
+function lbbDot(){ try{ const b=document.querySelector('.lb-landbtn'); if(!b) return; const h=!document.body.classList.contains('lb-land-show'); const m=document.querySelector('.masthead'); const any=h&&m&&!!m.querySelector('.mast-r .mq-n,.mast-q .mq-n,.mast-r .fof-top-n:not([hidden]):not(:empty)'); let d=b.querySelector('.lbb-dot'); if(any&&!d){ d=document.createElement('i'); d.className='lbb-dot'; d.setAttribute('aria-hidden','true'); d.textContent='🎁'; b.appendChild(d); } else if(!any&&d) d.remove(); }catch(e){} }
+setInterval(lbbDot,1500); setTimeout(lbbDot,900);
 // ---- 上のボタン2段目：下のほうにある遊びを、すぐ開けるように（携帯は下に長いので）（2026-11-18 MITSUさん） ----
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-mq]'); if(!b) return; e.preventDefault(); const q=b.dataset.mq;
   try{ if(q==='channel'){ albumOpen=true; goLife(); setTimeout(()=>{ const al=document.querySelector('.album')||document.querySelector('.album-btn'); if(al) al.scrollIntoView({ block:'start' }); },80); } else if(q==='pet') mpOpen(); else if(q==='flower') flOpen(flNewN()?'got':flPhNewN()?'album':undefined); else if(q==='ride') ridesOpen(); else if(q==='earth') eaOpenDialog();
@@ -22434,6 +22437,9 @@ body .frd-b{ padding:9px 10px; }
 @media (min-width:641px){ body .gs-pet-w .pc-open,body .gs-pet-w .pc-open + .pg-open{ display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; vertical-align:top; width:calc(50% - 5px); max-width:none; min-height:0; height:36px; margin:12px 0 0; padding:0 8px; font-size:12px; line-height:1.2; white-space:nowrap; border-radius:999px; }
   body .gs-pet-w .pc-open + .pg-open{ margin-left:10px; } }
 @media (min-width:641px) and (max-width:899px){ html:not(.lb-land) .masthead .mastnav .nav-b,html:not(.lb-land) .masthead .fr-top{ font-size:11.5px!important; gap:3px; padding:0 3px!important; white-space:nowrap; letter-spacing:-.04em; } html:not(.lb-land) .masthead .fr-top .mb-l{ white-space:nowrap; } html:not(.lb-land) .masthead .mast-r,html:not(.lb-land) .masthead .mast-q:not([hidden]){ gap:6px!important; } }
+/* v178.111（MITSUさん 2026-11-19）：パソコンの画面でも、上の2段のピンクのボタンは、ふだんはかくす。ロゴの右の「☰ ボタンを出す」で出し入れ。もどすときは、この3行を消す */
+@media (min-width:641px){ html:not(.lb-land) body:not(.lb-land-show) .masthead .mast-r,html:not(.lb-land) body:not(.lb-land-show) .masthead .mast-q{ display:none!important; } html:not(.lb-land) .masthead .lb-logo{ flex:1 1 auto; } html:not(.lb-land) body:not(.lb-land-show) .masthead{ row-gap:8px!important; }
+  html:not(.lb-land) .lb-landbtn{ display:inline-flex; align-items:center; justify-content:center; gap:6px; box-sizing:border-box; position:relative; margin-left:auto; align-self:center; height:40px; padding:0 18px; border-radius:999px; border:2px solid #E86A88; background:#FF8FAA; color:#fff; box-shadow:0 3px 0 #D85878; font:inherit; font-size:13px; font-weight:700; line-height:1; white-space:nowrap; cursor:pointer; } html:not(.lb-land) .lb-landbtn .lbb-dot{ position:absolute; top:-6px; right:-4px; min-width:18px; height:18px; box-sizing:border-box; padding:0 5px; border-radius:999px; background:#fff; color:#D9467A; border:1.5px solid #E86A88; font-size:11px; line-height:15px; } }
 @media (max-width:350px){ .masthead .lb-t{ width:24px; height:26px; font-size:15px; } .masthead .lb-isle{ width:44px; height:50px; flex:none; } .masthead .mastnav .nav-b,.masthead .fr-top{ font-size:8.5px!important; } .masthead .mast-r{ gap:3px!important; } }`;
   const s=document.createElement('style'); s.textContent=css; document.head.appendChild(s);
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',acStart); else acStart(); })();
