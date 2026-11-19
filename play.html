@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.101">
+<meta name="lifebook-version" content="v178.102">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -753,7 +753,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.101';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.102';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -19927,6 +19927,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // v166: Life Home の上のほうに「✨ LIFE BOOKのニュース」。新しい機能・更新のお知らせ。
 // ゲームに入っているお知らせ（LBN_BUILTIN）＋ 管理者が Firebase の os/news に書いたお知らせ（{ n:[{ i, d:ミリ秒, t:題, b:説明 }] }）。新しい順に3つ、のこりは「これまでのお知らせ」。
 const LBN_BUILTIN=[
+  { i:'v178-parkphoto', d:Date.UTC(2026,10,19,4,25), t:'📷 公園の写真がとれるようになりました', b:'公園の右下の「📷 写真」を押すと、その時に公園を走っているペットたちを写せます。服や帽子もそのまま写ります。写真は 📒 Higher Self のアルバムに入り、友だちの Higher Self にも送れます。' },
   { i:'v178-petrealestate', d:Date.UTC(2026,10,19,3,41), t:'🏢 ペットの家が大きくなり、不動産も始められます', b:'ペットのつながりの木の友だちのペットがふえると、ペットの家が2階建て・3階建て・4階建てに。101匹をこえると5階建てのビルになり、最上階で「（ペットの名前）不動産」を始めます。友だちの Higher Self から「部屋をかりたい」と申しこまれたら、一戸建てのペットハウスを1匹に1軒 貸せます。' },
   { i:'v178-treephoto', d:Date.UTC(2026,10,19,3,40), t:'📷 ペットのつながりの木で、集合写真が撮れます', b:'ペットのつながりの木の「📷 集合写真」で、うちのペットと友だちのペットの集合写真が撮れます。📒 Higher Self のアルバムに保存され、友だちの Higher Self にも送れます。' },
   { i:'v178-hsalbum', d:Date.UTC(2026,10,19,3,0), t:'📒 Higher Self のアルバムができました', b:'ペット・ペットの家・街ブラ・乗り物・Gateway の写真や動く写真・お花の部屋の写真が、ぜんぶ1つのアルバムに新しい順で並びます。マイページのアルバム欄や、ペットのアルバムから開けます。ペットの家の「📒 アルバムに保存」で、お部屋の様子も写真に残せます。' },
@@ -20092,7 +20093,7 @@ function prRunHTML(){ const L=prPets(); _prL=L; if(!L.length) return ''; const a
   const lanes=[[],[],[]]; all.forEach(p=>{ const fast=gsHash(p.s+'|sp')%5===0; const ln=fast?2:(lanes[0].length<=lanes[1].length?0:1); if(lanes[ln].length<per) lanes[ln].push(p); else if(lanes[1-Math.min(ln,1)].length<per) lanes[1-Math.min(ln,1)].push(p); });
   const tot=lanes[0].length+lanes[1].length+lanes[2].length; _prF=Math.max(1,tot*(W/(W+140))/4.5); /* v178.5：もっと頻繁に出てくるように 3.5→4.5 */ const base=Math.max(16,per*2.6)*_prF; let h=''; /* v175f：画面に一度に見えるのは3〜4匹。1周のうち 1/_prF の時間で走りぬけ、のこりは外で待つ（全員が順番に出る） */
   lanes.forEach((A,ln)=>A.forEach((p,k)=>{ h+=prOne(p,ln,k,A.length,base); }));
-  return `<div class="pr-run" aria-label="知り合いのペットたち">${prParkSVG()}${h}<span class="pr-tip">👆 ペットを押すと、そのペットのことが見られます</span></div>`; }
+  return `<div class="pr-run" aria-label="知り合いのペットたち">${prParkSVG()}${h}<span class="pr-tip">👆 ペットを押すと、そのペットのことが見られます</span><button type="button" class="pk-snapb" data-pksnap="1" aria-label="公園の写真をとる">📷 写真</button></div>`; }
 // 電光掲示板：さいきんのおしゃべりを、つなげて流す（1周ごとに、新しいおしゃべりに入れかえる）
 function prTickText(){ try{ if(typeof pcEnsure==='function') pcEnsure(); if((!_pcLog||!_pcLog.length)&&typeof pcHTML==='function') pcHTML(); }catch(e){}
   const L=(typeof _pcLog!=='undefined'&&_pcLog||[]).slice(0,10); return L.map(x=>`<span class="pr-m"><i>${(typeof PC_EMO!=='undefined'&&PC_EMO[x.p.k])||'🐾'}</i><b>${esc(x.p.n)}</b>「${esc(x.t)}」</span>`).join(''); }
@@ -21462,7 +21463,7 @@ function hsAlbCap(it){ const x=it.x; let c='';
   return `<b>${HSA_TY[it.ty]}</b>${it.t?` <small>${hsAlbDate(it.t)}</small>`:''}${c?`<br>${esc(String(c).slice(0,60))}`:''}`; }
 function hsAlbList(){ return _hsaF==='all'?_hsaL:_hsaL.filter(it=>it.ty===_hsaF||(_hsaF==='pet'&&it.ty==='house')); }
 function hsAlbHTML(){ const A=hsAlbList(), show=A.slice(0,_hsaN);
-  const cnt={}; _hsaL.forEach(it=>{ const k=it.ty==='house'?'pet':it.ty==='treeg'?'tree':it.ty; cnt[k]=(cnt[k]||0)+1; });
+  const cnt={}; _hsaL.forEach(it=>{ const k=it.ty==='house'?'pet':it.ty==='treeg'?'tree':it.ty==='parkg'?'park':it.ty; cnt[k]=(cnt[k]||0)+1; });
   const chips=HSA_F.filter(f=>f[0]==='all'||cnt[f[0]]).map(f=>`<button type="button" class="mp-w${_hsaF===f[0]?' on':''}" data-hsaf="${f[0]}">${f[1]} ${f[0]==='all'?_hsaL.length:cnt[f[0]]}</button>`).join('');
   return `<h3 class="gsz-h">📒 Higher Self のアルバム</h3><p class="tiny muted">あなた（Higher Self）が撮った写真が、ぜんぶここに集まります。新しい順です。写真を押すと大きく見られます。</p>
   <div class="hsa-f">${chips}</div>${A.length?`<div class="hsa-g">${show.map((it,i)=>`<button type="button" class="hsa-c" data-hsai="${_hsaL.indexOf(it)}"><span class="hsa-a"></span><span class="hsa-t">${hsAlbCap(it)}</span></button>`).join('')}</div>${A.length>_hsaN?`<div class="np-row"><button type="button" class="mp-btn" data-hsamore="1">もっと見る（あと${A.length-_hsaN}枚）</button></div>`:''}`
@@ -21518,6 +21519,74 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 .pg-frc .pg-frp{ width:100%; height:auto; } .pg-frc b{ font-size:13px; color:#B23A64; } .pg-frc small{ font-size:11px; color:#8A7A84; }
 </style>`); }catch(e){}
 
+
+// v178.102（MITSUさん 2026-11-19）：公園の写真。押した時に公園にいるペットたち（服・帽子もそのまま）を写す。📒 アルバムに入り、友だちの Higher Self にも送れる
+// 写真は小さなメモ（種類・名前・服・帽子・場所）。送る時は集合写真と同じ通り道（photo）に 'PK1:' をつけて送る（1000文字まで・ルールの変更なし）
+const PK_ALB='pk.album', PK_GOT='pk.got', PK_SEEN='pk.seen';
+function pkClean(v,n){ return String(v||'').replace(/[~^]/g,'').slice(0,n); }
+function pkEncode(D){ const head=[D.t,D.W,D.H].join('^'); const L=D.list.map(q=>[pkClean(q.id,40),pkClean(q.n,8),q.m?1:0,pkClean(q.cl,10),pkClean(q.w,6),q.x,q.y].join('^'));
+  let d=head+'~'+L.join('~'); while(d.length>990&&L.length>1){ L.pop(); d=head+'~'+L.join('~'); } return d; }
+function pkDecode(d){ try{ const a=String(d||'').split('~'); const h=a[0].split('^'); const list=a.slice(1).map(x=>{ const q=x.split('^'); return PB_ALL[q[0]]?{ id:q[0], n:q[1]||'', m:q[2]==='1', cl:q[3]||'', w:q[4]||'', x:+q[5]||0, y:+q[6]||0 }:null; }).filter(Boolean);
+  return { t:+h[0]||0, W:Math.max(200,+h[1]||390), H:Math.max(80,+h[2]||150), list }; }catch(e){ return null; } }
+function pkPetArt(q){ const b=PB_ALL[q.id]; if(!b) return ''; const quad=b.kind==='dog'||b.kind==='cat'; const pose=quad?{ b:'walk', st:1.6, an:'x' }:prPose({ k:b.kind, s:q.id+q.n });
+  const cl=typeof pgClParse==='function'?pgClParse(q.cl):null; const go=()=>prPetSVG(q.id,pose,'pr-art');
+  try{ return (typeof pgWithCl==='function'?pgWithCl:(c,f)=>f())(cl,()=>(typeof pgWithWear==='function'?pgWithWear:(e,f)=>f())(q.w,go)); }catch(e){ return ''; } }
+function pkHTML(d){ const D=typeof d==='string'?pkDecode(d):d; if(!D) return ''; let bg=''; try{ bg=prParkSVG().replace('class="pr-bg"','class="pk-bg"'); }catch(e){}
+  const pw=(80/D.W*100).toFixed(2);
+  return `<div class="pk-ph" style="aspect-ratio:${D.W}/${D.H}">${bg}${D.list.map(q=>`<span class="pk-p" style="left:${(q.x/10).toFixed(1)}%;bottom:${(q.y/10).toFixed(1)}%;width:${pw}%"><span class="pr-n pk-n">${q.m?'🏠 ':''}${esc(q.n)}</span><span class="pr-hop pk-hop">${pkPetArt(q)}</span></span>`).join('')}</div>`; }
+function pkFitAll(){ try{ document.querySelectorAll('.pk-ph').forEach(r=>prFit(r)); if(typeof pgWearLater==='function') pgWearLater(); }catch(e){} }
+function pkLater(){ setTimeout(pkFitAll,40); setTimeout(pkFitAll,400); }
+function pkAlbum(){ const a=store.get(PK_ALB,[]); return Array.isArray(a)?a:[]; }
+function pkSnap(){ const run=document.querySelector('.pr-run'); if(!run) return; const R=run.getBoundingClientRect(); if(!(R.width>0)) return; const list=[];
+  run.querySelectorAll('.pr-p').forEach(b=>{ const p=_prL[+b.dataset.pr]; const hop=b.querySelector('.pr-hop'); if(!p||!hop) return; const r=hop.getBoundingClientRect(); if(r.right<R.left+12||r.left>R.right-12) return;
+    let cl='', w=''; try{ cl=pgClStr(pgClOf(p)); }catch(e){} try{ w=pgWearOf(p); }catch(e){}
+    list.push({ id:p.id, n:p.n, m:!!p.mine, cl, w, x:Math.round((r.left-R.left)/R.width*1000), y:Math.max(0,Math.round((R.bottom-r.bottom)/R.height*1000)) }); });
+  // うちのペットは、いつも写す（いま画面の外にいる時は、左のほうに入れる）
+  const me=_prL.find(p=>p.mine); if(me&&!list.some(q=>q.m)){ let cl='', w=''; try{ cl=pgClStr(pgClOf(me)); }catch(e){} try{ w=pgWearOf(me); }catch(e){} list.push({ id:me.id, n:me.n, m:true, cl, w, x:Math.round(16/R.width*1000), y:Math.round(14/R.height*1000) }); }
+  if(!list.length){ _prL.filter(p=>!/fish|goldfish|whale/.test(p.k)).slice(0,4).forEach((p,i)=>list.push({ id:p.id, n:p.n, m:!!p.mine, cl:'', w:'', x:60+i*220, y:i%2?60:180 })); }
+  if(!list.length) return; list.sort((a,b)=>b.y-a.y);
+  const t=Date.now(), d=pkEncode({ t, W:Math.round(R.width), H:Math.round(R.height), list }); const A=pkAlbum(); A.unshift({ t, d, n:list.length }); store.set(PK_ALB,A.slice(0,30));
+  try{ let f=document.querySelector('.mbx-flash'); if(!f){ f=document.createElement('div'); f.className='mbx-flash'; document.body.appendChild(f); } f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); setTimeout(()=>f.classList.remove('on'),600); }catch(_){}
+  pkSendOpen(t,'📒 Higher Self のアルバムに保存しました'); }
+let _pkTo=null;
+function pkSendOpen(t,msg){ const r=pkAlbum().find(x=>x.t===+t); if(!r) return; const fr=typeof flFriends==='function'?flFriends():[];
+  gsZoomOpen(`<h3 class="gsz-h">📷 公園の写真</h3>${msg?`<p class="pt-msg">${esc(msg)}</p>`:''}<div class="gsz-art pk-art">${pkHTML(r.d)}</div>
+  <h4 class="pt-h">💌 友だちの Higher Self に送る</h4>${fr.length?`<div class="gw-tos pt-tos">${fr.map(f=>`<button type="button" class="mp-w${f.id===_pkTo?' on':''}" data-pkto="${esc(f.id)}">${esc(f.by||'友だち')}さん</button>`).join('')}</div><div class="np-row"><button type="button" class="mp-btn" data-pkgo="${r.t}">💌 この写真を送る</button></div><p class="tiny muted">1人の友だちに送れる写真は、1日${typeof FL_PH_DAYMAX!=='undefined'?FL_PH_DAYMAX:10}枚までです（ほかの写真とあわせて）。</p>`:'<p class="tiny muted">友だちとつながると、送れるようになります。</p>'}
+  <div class="np-row">${typeof hsAlbOpen==='function'?'<button type="button" class="linkish" data-hsaopen="1">📒 Higher Self のアルバムを見る</button>':''}</div>`); pkLater(); }
+async function pkSend(t){ const r=pkAlbum().find(x=>x.t===+t); if(!r) return; const fr=(typeof flFriends==='function'?flFriends():[]).find(f=>f.id===_pkTo); if(!fr) return pkSendOpen(t,'だれに送るか、選んでください。');
+  const p='PK1:'+r.d; if(p.length>1000) return pkSendOpen(t,'この写真は大きすぎて、送れませんでした。');
+  const b=document.querySelector('[data-pkgo]'); if(b){ b.disabled=true; b.textContent='おくっています…'; }
+  if(!(typeof flOn==='function'&&flOn())&&!(typeof fbWaitOn==='function'&&await fbWaitOn(15000))) return pkSendOpen(t,'いまサーバーにつながるのを待っています。少しあとで、もう一度押してください。');
+  const sent=store.get('fl.phSent',{}), key=fr.id+'|'+flDay(), n=(sent[key]||0)+1; if(n>FL_PH_DAYMAX) return pkSendOpen(t,`${fr.by||'友だち'}さんには、きょうはもう${FL_PH_DAYMAX}枚送りました。また明日ね。`);
+  const me=myId(), by=String(store.get(KEY_ME,'')||'').slice(0,20), id=me+'_'+flDay()+'_'+n;
+  try{ await Promise.race([FB.D.setDoc(FB.D.doc(FB.db,'ids',String(fr.id),'photo',id),{ from:me, by, p, m:'', t:Date.now() }),new Promise((_,ng)=>setTimeout(()=>ng(new Error('timeout')),15000))]);
+    const keep={}; Object.keys(sent).filter(x=>x.endsWith(flDay())).forEach(x=>keep[x]=sent[x]); keep[key]=n; store.set('fl.phSent',keep);
+    pkSendOpen(t,`${fr.by||'友だち'}さんに、公園の写真を送りました💌`); }
+  catch(err){ pkSendOpen(t,String(err&&err.code||'').includes('permission')?'まだ写真は送れません（サーバーの準備中です）。':'うまく送れませんでした。少しあとで、もう一度ためしてね。'); } }
+function pkRecv(docId,x){ try{ const seen=store.get(PK_SEEN,[]); if(!seen.includes(docId)){ const d=String(x.p).slice(4); const D=pkDecode(d); if(D&&D.list.length){ store.set(PK_SEEN,seen.concat([docId]).slice(-300)); store.set(PK_GOT,(store.get(PK_GOT,[])||[]).concat([{ id:docId, d, fromBy:String(x.by||'友だち').slice(0,20), t:+x.t||Date.now() }]).slice(-40));
+      try{ if(typeof pgToast==='function') pgToast(`${String(x.by||'友だち').slice(0,20)}さんから、公園の写真が届きました💌（📒 Higher Self のアルバムで見られます）`); }catch(_){} } } }catch(e){}
+  try{ FB.D.deleteDoc(FB.D.doc(FB.db,'ids',myId(),'photo',docId)); }catch(_){} }
+document.addEventListener('click',e=>{ const a=e.target.closest&&e.target.closest('[data-pksnap],[data-pkto],[data-pkgo]'); if(!a) return; e.preventDefault(); e.stopPropagation();
+  if(a.dataset.pksnap) pkSnap();
+  else if(a.dataset.pkto){ _pkTo=a.dataset.pkto; document.querySelectorAll('[data-pkto]').forEach(x=>x.classList.toggle('on',x===a)); }
+  else if(a.dataset.pkgo) pkSend(a.dataset.pkgo); },true);
+// 📒 Higher Self のアルバムにも入れる（自分の公園の写真・届いた公園の写真）
+if(typeof hsAlbItems==='function'){ const HI=hsAlbItems; hsAlbItems=function(){ const L=HI.apply(this,arguments); try{ pkAlbum().forEach(r=>L.push({ ty:'park', t:r.t, x:r })); (store.get(PK_GOT,[])||[]).forEach(r=>L.push({ ty:'parkg', t:r.t, x:r })); }catch(e){} return L.sort((a,b)=>b.t-a.t); }; }
+if(typeof hsAlbArt==='function'){ const HA=hsAlbArt; hsAlbArt=function(it){ if(it&&(it.ty==='park'||it.ty==='parkg')){ pkLater(); return pkHTML(it.x.d)||'<p class="tiny muted">写真を描けませんでした</p>'; } return HA.apply(this,arguments); }; }
+if(typeof hsAlbCap==='function'){ const HC=hsAlbCap; hsAlbCap=function(it){ if(it&&(it.ty==='park'||it.ty==='parkg')){ const D=pkDecode(it.x.d); return `<b>🏞️ 公園</b> <small>${hsAlbDate(it.t)}</small><br>${it.ty==='parkg'?`💌 ${esc(it.x.fromBy)}さんから・`:''}${D?`${D.list.length}匹`:''}${it.ty==='park'?'<br>💌 押すと、友だちに送れます':''}`; } return HC.apply(this,arguments); }; }
+if(typeof hsAlbBig==='function'){ const HB=hsAlbBig; hsAlbBig=function(i){ const it=_hsaL[i]; if(it&&it.ty==='park') return pkSendOpen(it.x.t,''); const r=HB.apply(this,arguments); pkLater(); return r; }; }
+try{ HSA_TY.park='🏞️ 公園'; HSA_TY.parkg='🏞️ 公園'; HSA_F.splice(2,0,['park','🏞️ 公園']); }catch(e){}
+if(typeof hsAlbList==='function'){ const HL=hsAlbList; hsAlbList=function(){ if(_hsaF==='park') return _hsaL.filter(it=>it.ty==='park'||it.ty==='parkg'); return HL.apply(this,arguments); }; }
+try{ document.head.insertAdjacentHTML('beforeend',`<style>
+.pk-snapb{ position:absolute; right:8px; bottom:6px; z-index:6; height:30px; padding:0 12px; border-radius:15px; border:1.5px solid #E86A92; background:rgba(255,255,255,.94); color:#B23A64; font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.12); }
+.pk-ph{ container-type:inline-size; position:relative; width:100%; overflow:hidden; border-radius:12px; background:#EAF7FF; }
+.pk-ph .pk-bg{ position:absolute; left:0; bottom:0; width:100%; height:100%; }
+.pk-p{ position:absolute; display:flex; flex-direction:column; align-items:center; }
+.pk-ph .pk-hop{ animation:none!important; width:100%; }
+.pk-ph .pr-art{ width:100%; height:auto; aspect-ratio:200/106; }
+.pk-ph .pk-n{ font-size:max(5px,2.6cqw); padding:0 1.4cqw; white-space:nowrap; margin-bottom:1px; }
+@media (min-width:641px){ body .pg-hctl .mp-who,body .pg-hctl .mp-acts{ grid-template-columns:repeat(auto-fill,minmax(122px,1fr))!important; gap:7px!important; } body .pg-hctl .mp-w,body .pg-hctl .mp-a,body .pg-hctl .mp-acts button{ height:36px!important; min-height:36px!important; border-radius:18px!important; font-size:13.5px!important; padding:0 8px!important; letter-spacing:0!important; } }
+</style>`); }catch(e){}
 // v178.96（MITSUさん 2026-11-19）：ペットのつながりの木の「集合写真」。とると 📒 Higher Self のアルバムに入り、友だちの Higher Self にも送れる
 // 写真は小さなメモ（うちのペットと、友だちのペットの種類・名前）。送る時は お花・Gateway の写真と同じ場所（photo）に 'PT1:' をつけて送る（1000文字まで・ルールの変更なし）
 const PT_ALB='pt.album', PT_GOT='pt.got', PT_SEEN='pt.seen';
@@ -21870,7 +21939,7 @@ async function flPhSend(to,ph,msg,many){ const fr=flFriends().find(f=>f.id===to)
   flOpen(); }
 let _flPL=false;
 function flPhListen(){ if(_flPL||!flOn()) return; _flPL=true; const { collection, onSnapshot, deleteDoc }=FB.D;
-  onSnapshot(collection(FB.db,'ids',myId(),'photo'),snap=>{ const got=[]; snap.forEach(d=>{ const x=d.data()||{}; if(typeof x.p!=='string') return; if(x.p.startsWith('RT1:')){ if(typeof rtRecv==='function') rtRecv(d.id,x); return; } if(x.p.startsWith('PT1:')){ if(typeof ptRecv==='function') ptRecv(d.id,x); return; } if(x.p.startsWith('GW1:')){ if(typeof gwRecv==='function') gwRecv(d.id,x); return; } got.push(Object.assign(flPhDecode(x.p),{ id:d.id, fromBy:String(x.by||'友だち').slice(0,20), m:String(x.m||'').slice(0,30), t:+x.t||Date.now(), rt:Date.now() })); });
+  onSnapshot(collection(FB.db,'ids',myId(),'photo'),snap=>{ const got=[]; snap.forEach(d=>{ const x=d.data()||{}; if(typeof x.p!=='string') return; if(x.p.startsWith('RT1:')){ if(typeof rtRecv==='function') rtRecv(d.id,x); return; } if(x.p.startsWith('PK1:')){ if(typeof pkRecv==='function') pkRecv(d.id,x); return; } if(x.p.startsWith('PT1:')){ if(typeof ptRecv==='function') ptRecv(d.id,x); return; } if(x.p.startsWith('GW1:')){ if(typeof gwRecv==='function') gwRecv(d.id,x); return; } got.push(Object.assign(flPhDecode(x.p),{ id:d.id, fromBy:String(x.by||'友だち').slice(0,20), m:String(x.m||'').slice(0,30), t:+x.t||Date.now(), rt:Date.now() })); });
     if(!got.length) return; const seen=store.get('fl.phSeen',[]); const nu=got.filter(g=>!seen.includes(g.id)&&(g.items.length||g.sh.length||g.bg.length));
     if(nu.length){ store.set('fl.phSeen',seen.concat(nu.map(g=>g.id)).slice(-300)); store.set(KEY_FLPHGOT,store.get(KEY_FLPHGOT,[]).concat(nu).slice(-60));
       try{ if(typeof pgToast==='function') pgToast(`${nu[0].fromBy}さんから、お花の写真が届きました💌`); }catch(_){}
