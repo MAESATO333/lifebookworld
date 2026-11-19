@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.88">
+<meta name="lifebook-version" content="v178.89">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -747,7 +747,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.88';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.89';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21303,7 +21303,7 @@ function pgWearOf(pp){ try{ const fx=pgFxOf(pp); return fx.wear&&fx.wear.e||''; 
 if(typeof pbDraw==='function'){ const PDW=pbDraw; pbDraw=function(S,x,y,b,pose){ const em=_pgWear; if(!em||!b||b.kind==='fish'||b.kind==='whale') return PDW.apply(this,arguments);
   const rec=[]; const F={ p:S.p, begin(){}, end(){}, deco(){}, box(...a){ rec.push(a); } }; try{ PDW.call(this,F,x,y,b,pose); }catch(e){ return PDW.apply(this,arguments); }
   if(rec.length<2) return PDW.apply(this,arguments); const v=rec.map(a=>a[3]*a[4]*a[5]); const ti=v.indexOf(Math.max(...v)); let hi=-1, hv=-1; v.forEach((q,i)=>{ if(i!==ti&&q>hv){ hv=q; hi=i; } }); if(hi<0) return PDW.apply(this,arguments);
-  const B=S.box; let n=0; S.box=function(...a){ if(n++===hi){ const [hx,hy,hz,hw,hd,hh]=a; const ex=a[7]; const sz=Math.max(7,Math.min(16,(hw+hd)*13)); a=a.slice(0,7); a[7]=pp=>{ const q=pp(hx+hw/2,hy+hd/2,hz+hh); return (ex?ex(pp):'')+`<text x="${q[0].toFixed(1)}" y="${(q[1]+sz*.3).toFixed(1)}" font-size="${sz.toFixed(1)}" text-anchor="middle">${esc(em)}</text>`; }; } return B.apply(S,a); };
+  const B=S.box; let n=0; S.box=function(...a){ if(n++===hi){ const [hx,hy,hz,hw,hd,hh]=a; const ex=a[7]; const sz=Math.max(6,Math.min(13,(hw+hd)*10)); a=a.slice(0,7); a[7]=pp=>{ const q=pp(hx+hw/2,hy+hd/2,hz+hh); return (ex?ex(pp):'')+`<text x="${q[0].toFixed(1)}" y="${(q[1]-sz*.08).toFixed(1)}" font-size="${sz.toFixed(1)}" text-anchor="middle">${esc(em)}</text>`; }; } return B.apply(S,a); };
   try{ return PDW.apply(this,arguments); }finally{ S.box=B; } }; }
 if(typeof mpArt==='function'){ const MAW=mpArt; mpArt=function(pp,k,pose,t){ const e=t?'':(pp&&!(typeof mpGone==='function'&&mpGone(pp))?(pgFxMine(pp).wear||{}).e:''); return pgWithWear(e,()=>MAW.apply(this,arguments)); }; }
 if(typeof prOne==='function'){ const P6=prOne; prOne=function(pp){ return pgWithWear(pgWearOf(pp),()=>P6.apply(this,arguments)); }; }
@@ -21402,19 +21402,47 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 </style>`); }catch(e){}
 // v178.86（MITSUさん）：ペットだけの家。中が見える大きな部屋に、もらったプレゼント・おもちゃを飾る。うちのペットのページの一番上に出す
 function pgHouseItems(p){ const by={}; (Array.isArray(p&&p.gifts)?p.gifts:[]).forEach(g=>{ if(!g||!g.k) return; (by[g.k]=by[g.k]||[]); const f=String(g.f||''); if(g.k==='love'||g.k==='food'){ by[g.k].push(g); return; } if(!by[g.k].some(x=>x.f===f)) by[g.k].push({ f, e:pgEmo(f)||pgIco(g.k), n:f.replace(/^\S+\s*/,''), by:g.by }); }); return by; }
+// v178.90（MITSUさん 2026-11-19「全員が違うように」）：ペットごとに、家の屋根・かべ紙・床・ラグ・窓・カーテンが少しずつちがう（迎えた時刻と種類から決まる。毎回同じ）
+function pgHouseV(p){ let h=2166136261; const key=String(p&&p.at||'')+'|'+String(p&&p.breed||'')+'|'+String(p&&(p.at?'':p.name)||''); for(let i=0;i<key.length;i++){ h^=key.charCodeAt(i); h=Math.imul(h,16777619); }
+  let r=h>>>0; const R=n=>{ r=Math.imul(r^(r>>>15),2246822507)>>>0; r=(r+0x9E3779B9)>>>0; return (r>>>8)%n; }, P=a=>a[R(a.length)];
+  const rc=P([['#FF8FAB','#FFB8CB'],['#7FB6FF','#B5D6FF'],['#8ED1A0','#BDE8C8'],['#FFB86B','#FFD6A6'],['#B79CFF','#D7C8FF'],['#FF7F7F','#FFB3B3'],['#6FCFCB','#A9E7E4'],['#E3A86B','#F2CFA3']]);
+  const rs=R(4), ch=R(3);
+  let roof=ch===0?'':`<rect x="${ch===1?262:76}" y="${rs===1?32:20}" width="22" height="40" fill="#C98B6B"/><rect x="${ch===1?258:72}" y="${rs===1?28:16}" width="30" height="8" rx="2" fill="#A86F52"/>`;
+  roof+=rs===0?`<polygon points="12,94 180,14 348,94" fill="${rc[0]}"/><polygon points="34,94 180,28 326,94" fill="${rc[1]}"/>`
+    :rs===1?`<polygon points="8,94 180,40 352,94" fill="${rc[0]}"/><polygon points="30,94 180,52 330,94" fill="${rc[1]}"/>`
+    :rs===2?`<path d="M12 94 Q180 -12 348 94Z" fill="${rc[0]}"/><path d="M34 94 Q180 10 326 94Z" fill="${rc[1]}"/>`
+    :`<rect x="14" y="46" width="332" height="50" rx="12" fill="${rc[0]}"/><rect x="30" y="56" width="300" height="38" rx="9" fill="${rc[1]}"/>${[60,120,180,240,300].map(x=>`<circle cx="${x}" cy="50" r="4" fill="${rc[1]}"/>`).join('')}`;
+  const wall=P([['#FFF1E2','#E8C4A0','#FFF9F3','#F6DFC8'],['#EEF6FF','#B9CFE8','#F7FBFF','#DCE8F5'],['#F2FBEF','#BCD9B1','#FAFFF7','#E0EED9'],['#FFF0F5','#E8B4C8','#FFF8FB','#F6DCE6'],['#F6F0FF','#C9B8E8','#FBF8FF','#E6DCF6'],['#FFFBE6','#E8D89A','#FFFDF2','#F4EBC4']]);
+  const [a,b]=P([['#FFD3E0','#E3D7FF'],['#BFE3FF','#FFE3A3'],['#C9EBC0','#FFD3E0'],['#FFD8B0','#C8E6FF'],['#E3D7FF','#FFF0A8'],['#FFC9C9','#C9F0E8'],['#F9D9A8','#D3ECC4']]);
+  const pt=R(8), pid='pgWp'+(h>>>0).toString(36), W=(w,hh,x)=>`<pattern id="${pid}" width="${w}" height="${hh}" patternUnits="userSpaceOnUse">${x}</pattern>`;
+  const pat=pt===0?W(16,16,`<circle cx="4" cy="4" r="1.6" fill="${a}"/><circle cx="12" cy="12" r="1.6" fill="${b}"/>`)
+    :pt===1?W(14,14,`<rect width="6" height="14" fill="${a}" opacity=".7"/>`)
+    :pt===2?W(20,20,`<rect width="10" height="10" fill="${a}" opacity=".55"/><rect x="10" y="10" width="10" height="10" fill="${b}" opacity=".55"/>`)
+    :pt===3?W(22,22,`<text x="2" y="10" font-size="9" fill="${a}">♥</text><text x="13" y="21" font-size="9" fill="${b}">♥</text>`)
+    :pt===4?W(24,24,`<text x="3" y="11" font-size="9" fill="${a}">★</text><text x="15" y="23" font-size="8" fill="${b}">★</text>`)
+    :pt===5?W(18,18,`<polygon points="9,2 15,9 9,16 3,9" fill="${a}" opacity=".6"/>`)
+    :pt===6?W(24,12,`<path d="M0 8 Q6 2 12 8 T24 8" fill="none" stroke="${a}" stroke-width="2"/>`)
+    :W(24,24,`<text x="2" y="11" font-size="10" fill="${a}">✿</text><text x="14" y="23" font-size="9" fill="${b}">✿</text>`);
+  const fl=P([['#E8C696','#D6AE7A'],['#D9B48A','#B88A5A'],['#F1E0C0','#D8C19A'],['#CFE3EA','#A9C6D2'],['#E9D3E8','#CDAFCB'],['#D7E6C4','#B4CC98'],['#F3D9C6','#D9B49A']]), ft=R(3);
+  let floor=[230,244,260].map(y=>`<line x1="${(52-(y-218)*19/58).toFixed(0)}" y1="${y}" x2="${(308+(y-218)*19/58).toFixed(0)}" y2="${y}" stroke="${fl[1]}" stroke-width="1"/>`).join('');
+  if(ft===1) floor+=[1,2,3,4,5,6,7].map(i=>`<line x1="${52+i*32}" y1="218" x2="${(33+i*36.75).toFixed(0)}" y2="276" stroke="${fl[1]}" stroke-width="1"/>`).join('');
+  if(ft===2) floor=`<polygon points="70,224 290,224 304,270 56,270" fill="${fl[1]}" opacity=".35"/>`;
+  const rg=P(['#FFD3E0','#CDE7FF','#D7F2C8','#FFE6B3','#E6DAFF','#FFD0C2']), rt=R(3);
+  const rug=rt===0?`<ellipse cx="180" cy="256" rx="78" ry="13" fill="${rg}" opacity=".9"/>`:rt===1?`<rect x="104" y="244" width="152" height="24" rx="8" fill="${rg}" opacity=".9"/><rect x="112" y="248" width="136" height="16" rx="6" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="4 3"/>`:`<ellipse cx="180" cy="256" rx="82" ry="14" fill="${rg}" opacity=".9"/><ellipse cx="180" cy="256" rx="56" ry="9" fill="#fff" opacity=".45"/>`;
+  return { pid, roof, wall, pat, fl:fl[0], floor, rug, wrx:P([4,12,26]), wf:P(['#fff','#FFE7A8','#D8F0FF','#FFD6E4']), cur:P(['#FF9FB9','#9FD0FF','#B9E6A0','#FFC98A','#CDB6FF','#FFB3B3']) }; }
 function pgHouseSVG(p){ const T=(x,y,z,e,t)=>`<text x="${x}" y="${y}" font-size="${z}" text-anchor="middle">${t?`<title>${esc(t)}</title>`:''}${esc(e)}</text>`;
   const I=pgHouseItems(p), fx=pgFxMine(p), hr=new Date().getHours(), night=hr<6||hr>=19, eve=hr>=17&&hr<19;
-  const sky=night?['#1E2A55','#3B4A80']:eve?['#FFB38A','#FFD9B8']:['#8FD3FF','#DDF3FF'];
-  let o=`<svg class="pg-hs" viewBox="0 0 360 300" role="img" aria-label="${esc(p.name)}の家"><defs><linearGradient id="pgSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient><pattern id="pgDot" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="1.6" fill="#FFD3E0"/><circle cx="12" cy="12" r="1.6" fill="#E3D7FF"/></pattern></defs>
+  const sky=night?['#1E2A55','#3B4A80']:eve?['#FFB38A','#FFD9B8']:['#8FD3FF','#DDF3FF']; const V=pgHouseV(p);
+  let o=`<svg class="pg-hs" viewBox="0 0 360 300" role="img" aria-label="${esc(p.name)}の家"><defs><linearGradient id="pgSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient>${V.pat}</defs>
   <rect width="360" height="300" rx="18" fill="${night?'#2A3566':'#EAF6FF'}"/><rect y="272" width="360" height="28" fill="${night?'#3E6A4A':'#BFE3A6'}"/>
-  <rect x="262" y="20" width="22" height="40" fill="#C98B6B"/><polygon points="12,94 180,14 348,94" fill="#FF8FAB"/><polygon points="34,94 180,28 326,94" fill="#FFB8CB"/>
+  ${V.roof}
   <text x="180" y="78" font-size="15" font-weight="700" text-anchor="middle" fill="#B23A64">🏠 ${esc(p.name)}の家</text>
-  <rect x="30" y="92" width="300" height="186" fill="#FFF1E2" stroke="#E8C4A0" stroke-width="3"/>
-  <rect x="52" y="106" width="256" height="112" fill="#FFF9F3"/><rect x="52" y="106" width="256" height="112" fill="url(#pgDot)"/>
-  <polygon points="33,94 52,106 52,218 33,276" fill="#F6DFC8"/><polygon points="327,94 308,106 308,218 327,276" fill="#F6DFC8"/>
-  <polygon points="52,218 308,218 327,276 33,276" fill="#E8C696"/>${[230,244,260].map(y=>`<line x1="${(52-(y-218)*19/58).toFixed(0)}" y1="${y}" x2="${(308+(y-218)*19/58).toFixed(0)}" y2="${y}" stroke="#D6AE7A" stroke-width="1"/>`).join('')}
-  <ellipse cx="180" cy="256" rx="78" ry="13" fill="#FFD3E0" opacity=".9"/>
-  <rect x="214" y="114" width="78" height="52" rx="4" fill="url(#pgSky)" stroke="#fff" stroke-width="4"/>${night?'<circle cx="270" cy="130" r="7" fill="#FFF3B0"/><circle cx="236" cy="126" r="1.4" fill="#fff"/><circle cx="252" cy="148" r="1.2" fill="#fff"/>':'<circle cx="272" cy="128" r="8" fill="#FFE680"/>'}<line x1="253" y1="114" x2="253" y2="166" stroke="#fff" stroke-width="3"/><path d="M212 112 q10 30 -2 56 h12 q-6 -28 0 -56z" fill="#FF9FB9"/><path d="M294 112 q-10 30 2 56 h-12 q6 -28 0 -56z" fill="#FF9FB9"/>
+  <rect x="30" y="92" width="300" height="186" fill="${V.wall[0]}" stroke="${V.wall[1]}" stroke-width="3"/>
+  <rect x="52" y="106" width="256" height="112" fill="${V.wall[2]}"/><rect x="52" y="106" width="256" height="112" fill="url(#${V.pid})"/>
+  <polygon points="33,94 52,106 52,218 33,276" fill="${V.wall[3]}"/><polygon points="327,94 308,106 308,218 327,276" fill="${V.wall[3]}"/>
+  <polygon points="52,218 308,218 327,276 33,276" fill="${V.fl}"/>${V.floor}
+  ${V.rug}
+  <rect x="214" y="114" width="78" height="52" rx="${V.wrx}" fill="url(#pgSky)" stroke="${V.wf}" stroke-width="4"/>${night?'<circle cx="270" cy="130" r="7" fill="#FFF3B0"/><circle cx="236" cy="126" r="1.4" fill="#fff"/><circle cx="252" cy="148" r="1.2" fill="#fff"/>':'<circle cx="272" cy="128" r="8" fill="#FFE680"/>'}<line x1="253" y1="114" x2="253" y2="166" stroke="#fff" stroke-width="3"/><path d="M212 112 q10 30 -2 56 h12 q-6 -28 0 -56z" fill="${V.cur}"/><path d="M294 112 q-10 30 2 56 h-12 q6 -28 0 -56z" fill="${V.cur}"/>
   <rect x="58" y="178" width="96" height="5" rx="2" fill="#C98B6B"/><rect x="164" y="178" width="40" height="5" rx="2" fill="#C98B6B"/>`;
   // おしゃれ：かべのフック
   (I.wear||[]).slice(0,5).forEach((x,i)=>{ const X=68+i*20; o+=`<circle cx="${X}" cy="118" r="2.4" fill="#C98B6B"/>`+T(X,138,15,x.e,`${x.n}（${x.by}さんから）`); });
