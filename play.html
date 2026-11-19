@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.85">
+<meta name="lifebook-version" content="v178.86">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -747,7 +747,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.85';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.86';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -19900,6 +19900,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // v166: Life Home の上のほうに「✨ LIFE BOOKのニュース」。新しい機能・更新のお知らせ。
 // ゲームに入っているお知らせ（LBN_BUILTIN）＋ 管理者が Firebase の os/news に書いたお知らせ（{ n:[{ i, d:ミリ秒, t:題, b:説明 }] }）。新しい順に3つ、のこりは「これまでのお知らせ」。
 const LBN_BUILTIN=[
+  { i:'v178-petgifts', d:Date.UTC(2026,10,19,2,40), t:'🎁 ペットに贈れるプレゼントが、9種類になりました', b:'友だちのペットに、💗可愛い！・🎁ごはんのほかに、🧸おもちゃ・🍪おやつ・🎀おしゃれ・🛏️ベッド・💐お花・🪮おていれが贈れるようになりました。そのペットのお誕生日には、🎂ケーキも贈れます。中身は動物ごとにちがいます。もらったペットは、リボンをつけて公園を走ったり、ベッドで眠ったり、おもちゃで遊んだりします。' },
   { i:'v178-movie', d:Date.UTC(2026,10,18,18,32), t:'🎬 動く写真の撮影ができるようになりました', b:'Gateway の海辺の街で「🎬 動く写真」を押すと、その場面が動く写真としてアルバムに残ります。アルバムを開くと、そのまま動いて見られます。SNS のシェアも、携帯への保存も可能になります。「📤 シェア・保存」から、LINE・Instagram・X・TikTok・YouTube・note に進めます。' },
   { i:'v178-land', d:Date.UTC(2026,10,18,18,30), t:'📱 携帯を横にしても、広い画面で見られるようになりました', b:'ペットや、友だちと交差する街が、携帯画面を横にしても広い画面で見られるようになりました。横にすると、上のピンクのボタンがかくれて、街の風景を広く楽しめます。ボタンは、ロゴの右の「☰ ボタンを出す」で、いつでも出せます。' },
   { i:'v178-gwphoto', d:Date.UTC(2026,10,17,10,50), t:'Gateway の海辺の街で撮った写真を、友だちに送れるようになりました📷', b:'Gateway の海辺の街で 📷 を押すと、その場面がアルバムに残ります。アルバムの「💌 Higher Self に送る」から、友だちの Higher Self に送れます。届いた写真は「💐 お花」の写真のところで見られます。' },
