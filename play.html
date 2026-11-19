@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.108">
+<meta name="lifebook-version" content="v178.109">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -840,7 +840,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.108';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.109';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -2528,7 +2528,8 @@ function sceneYear(X, howMany){
   return out;
 }
 // ===== 生まれた街と学校 =====
-// 街は実在。学校名は実在の学校に迷惑がかからないよう、実在しそうな架空の名前（試作版の方針）。
+// 街は実在。学校名は すべて架空（実在しない名前）。MITSUさん 2026-11-19「通う学校は全て実在しない学校に」。地図の中に実在の学校が出るのはOK。
+// ※ 名前の数（15・10・6/7/6・3・5）は変えないこと（乱数の進み方が変わり、今ある人生の中身が変わってしまうため）。
 const CITIES={
   jp:['大阪府堺市','愛知県豊橋市','北海道旭川市','福岡県久留米市','神奈川県相模原市','宮城県石巻市','広島県福山市','新潟県長岡市','静岡県浜松市','熊本県熊本市'],
   cn:['四川省成都','河南省鄭州','湖南省長沙','広東省東莞','山東省青島','安徽省合肥'],
@@ -2544,10 +2545,10 @@ const CITIES={
   de:['ノルトライン＝ヴェストファーレン州ドルトムント','バイエルン州ニュルンベルク','ザクセン州ライプツィヒ','ニーダーザクセン州ハノーファー','ヘッセン州カッセル'],
 };
 function cityShort(c){ return c.split(/州|省|府|県|道|首都圏|特別州/).pop().replace(/市$/,''); }
-const JP_TOWN=['桜台','緑ヶ丘','東浜','若葉','白鷺','川原','北野','旭町','青葉','中央','南台','西山','梅園','汐見','柳町'];
-const JP_UNI=['東都学院大学','北陵大学','西海大学','中部国際大学','明星学院大学','青嶺大学','南洋大学','関西学芸大学','湘南工科学院大学','九州文理大学'];
-const NAME_WORDS={ m:['アル・ヌール','イクラ','アル・ファラ','中央','東','第一'], c:['聖マリア','聖ヨハネ','グリーンヒル','リバーサイド','中央','ニューホープ','第三'], o:['中央','東','第一','第三','新星','光明'] };
-const UNI_SUFFIX=['学院大学','技術大学','記念大学','国際大学','総合大学'];
+const JP_TOWN=['鈴風台','琥珀ヶ丘','星砂台','陽向坂','藍野原','風見野','白詰ヶ丘','月詠台','花暦台','蛍川原','虹架台','夕凪台','水晶ヶ丘','翠風台','桜霞台'];
+const JP_UNI=['鈴風学院大学','翠嶺大学','光環大学','蒼穹学院大学','碧洋大学','晴藍大学','朱鷺野大学','雲海文理大学','白詰学院大学','暁望工科大学'];
+const NAME_WORDS={ m:['月の泉','星のオアシス','緑の灯','白い三日月','光の庭','風の書院'], c:['銀の小川','鈴の丘','若木','星の灯台','白い帆','虹の門','麦の穂'], o:['翠風','琥珀','星砂','晴藍','蒼穹','光環'] };
+const UNI_SUFFIX=['ルミナリア学院大学','カリオネ技術大学','ミレアス記念大学','セレスタ国際大学','アルヴェン総合大学']; // 海外の大学（架空）
 // 実在する学部・学科（どの国にもある一般的な組み合わせ）
 const FACULTIES=[
   ['経済学部','経済学科','会社員',.13],['法学部','法律学科','公務員',.1],['文学部','英米文学科','会社員',.07],['工学部','機械工学科','技術者',.1],
@@ -2555,19 +2556,20 @@ const FACULTIES=[
   ['農学部','農学科','会社員',.04],['社会学部','社会学科','会社員',.06],['看護学部','看護学科','看護師',.07],['商学部','商学科','会計士',.07],
   ['外国語学部','英語学科','会社員',.05],['情報学部','情報科学科','技術者',.06],['薬学部','薬学科','薬剤師',.03],['芸術学部','デザイン学科','会社員',.03],
 ];
-function schoolShort(n,cs){ return n.replace(cs+'市立','').replace('県立'+cs,'').replace(cs,''); }
+function schoolShort(n,cs){ return n.replace(cs+'市立','').replace(/^[都道府県]立/,'').replace(cs,''); }
+function prefRitsu(city){ return /^東京都/.test(city)?'都立':/^北海道/.test(city)?'道立':/^(大阪府|京都府)/.test(city)?'府立':'県立'; }
 function makeSchools(P, r){
   const city=P.city, cs=cityShort(city);
   const tag=P.religion==='muslim'?'m':(['hindu','cn_folk','secular','jp_buddhist','buddhist','jewish'].includes(P.religion)?'o':'c');
   if(P.countryId==='jp'){
-    if(city==='東京都新宿区神楽坂') return { elem:'新宿区立津久戸小学校', mid:'新宿区立牛込第三中学校', high:r.pick(['都立戸山高校','都立新宿高校','都立九段高校']), uni:r.pick(JP_UNI), city, cs:'神楽坂' };
-    if(city==='東京都新宿区西新宿') return { elem:'新宿区立西新宿小学校', mid:'新宿区立西新宿中学校', high:r.pick(['都立新宿高校','都立戸山高校','都立西高校']), uni:r.pick(JP_UNI), city, cs:'西新宿' };
+    if(city==='東京都新宿区神楽坂') return { elem:'新宿区立月詠小学校', mid:'新宿区立鈴風中学校', high:r.pick(['都立翠風高校','都立星砂高校','都立陽向高校']), uni:r.pick(JP_UNI), city, cs:'神楽坂' };
+    if(city==='東京都新宿区西新宿') return { elem:'新宿区立虹架小学校', mid:'新宿区立白詰中学校', high:r.pick(['都立星砂高校','都立翠風高校','都立夕凪高校']), uni:r.pick(JP_UNI), city, cs:'西新宿' };
     if(city==='沖縄県宮古島市'){ const t=JP_TOWN.slice(); const pick=()=>t.splice(r.int(0,t.length-1),1)[0]; const pre=(yy)=>yy<2005?'平良市立':'宮古島市立'; return { elem:`${pre(P.year+6)}${pick()}小学校`, mid:`${pre(P.year+12)}${pick()}中学校`, high:`県立宮古${pick()}高校`, uni:r.pick(JP_UNI), city, cs:'宮古島' }; }
     const t=JP_TOWN.slice(); const pick=()=>t.splice(r.int(0,t.length-1),1)[0];
-    return { elem:`${cs}市立${pick()}小学校`, mid:`${cs}市立${pick()}中学校`, high: r.chance(.7)?`県立${cs}${pick()}高校`:`私立${pick()}学園高校`, uni:r.pick(JP_UNI), city, cs };
+    return { elem:`${cs}市立${pick()}小学校`, mid:`${cs}市立${pick()}中学校`, high: r.chance(.7)?`${prefRitsu(city)}${cs}${pick()}高校`:`私立${pick()}学園高校`, uni:r.pick(JP_UNI), city, cs };
   }
   const w=NAME_WORDS[tag];
-  return { elem:`${cs}${r.pick(w)}小学校`, mid:`${cs}${r.pick(w)}中学校`, high:`${cs}${r.pick(w)}高校`, uni:`${cs}${r.pick(UNI_SUFFIX)}`, city, cs };
+  return { elem:`${cs}${r.pick(w)}小学校`, mid:`${cs}${r.pick(w)}中学校`, high:`${cs}${r.pick(w)}高校`, uni:r.pick(UNI_SUFFIX), city, cs };
 }
 // ===== 体の成長と老い =====
 // 目安の出典：厚生労働省「乳幼児身体発育調査」（運動・言葉ができるようになる月齢）、
