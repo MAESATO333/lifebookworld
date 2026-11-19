@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.107">
+<meta name="lifebook-version" content="v178.108">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -139,6 +139,9 @@ html.hk-open,html.hk-open body{ overflow:hidden; }
 @keyframes hkfa{ from{ transform:translateY(-3px) rotate(-2.5deg); } to{ transform:translateY(3px) rotate(2.5deg); } }
 .hkfl-off .hkfg,.hkfl-still .hkfg{ animation-play-state:paused; animation:none; }
 @media (prefers-reduced-motion:reduce){ .hkfg{ animation:none; } }
+/* v178.108 友だちのペットにも */
+.hk-tg{ margin:4px 0 6px; } .hk-tg .hk-h3{ margin:4px 0 6px; }
+.hk-tg .hk-chip small{ font-size:11px; font-weight:700; opacity:.75; }
 </style>
 <style id="v178105">
 .hsr{ margin:4px 0 18px; padding:18px 16px; border-radius:18px; background:#FFF4F7; border:2px solid #FF8FAB; text-align:center; }
@@ -837,7 +840,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.107';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.108';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -26435,9 +26438,9 @@ try{ if(typeof hsAlbCap==='function'){ const AC=hsAlbCap; hsAlbCap=function(it){
 try{ if(typeof pgClHTML==='function'){ const CH=pgClHTML; pgClHTML=function(){ let h=CH.apply(this,arguments); try{ h=h.replace(/<button[^>]*data-pgcl="c\|(\d+)"[^>]*><\/button>/g,(m,i)=>+i>=HK_CC0?'':m).replace(/<button[^>]*data-pgcl="m\|(\d+)"[^>]*>[^<]*<\/button>/g,(m,i)=>+i>=HK_CM0?'':m);
   h=h.replace('<div class="pg-clbt">','<p class="pg-clh"><button type="button" class="hk-clgo" data-hk="clothes">✨ キラキラの服 510種類は、LIFEBOOK 宇宙銀行の「服を創る部屋」へ</button></p><div class="pg-clbt">'); }catch(e){} return h; }; } }catch(e){}
 document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('.hk-clgo'); if(!t) return; e.stopPropagation(); try{ if(typeof gsZoomClose==='function') gsZoomClose(); }catch(_){} hkOpen('clothes'); },true);
-function hkUseHTML(s){ const p=hkPet(), b=hkBal(s);
+function hkUseMine(s){ const p=hkPet(), b=hkBal(s);
   const noPet=`<div class="hk-card hk-c"><p>うちのペットが いません。</p><p class="hk-note">Life Home の「🐾 ペット」から ペットを迎えると、光で 夢プレゼント・キラキラの服・花束を 贈れます。</p></div>`;
-  if(hkView==='use') return `<h2 class="hk-h">🌙 光を使う<small>うちのペット${p?' '+hkEsc(p.name):''}に 贈れます</small></h2>${p?'':noPet}
+  if(hkView==='use') return `<h2 class="hk-h">🌙 光を使う<small>うちのペットにも、友だちのペットにも 贈れます</small></h2>${p?'':noPet}
     <button type="button" class="hk-btn hk-room" data-hk="dream"><b>🌙 夢を創る部屋</b><small>ペットの夢をかなえる 100〜300光</small></button>
     <button type="button" class="hk-btn hk-room" data-hk="clothes"><b>✨ 服を創る部屋</b><small>キラキラの服 510種類 1着 50光</small></button>
     <button type="button" class="hk-btn hk-room" data-hk="flower"><b>💐 花の部屋</b><small>花束 30本・60本・100本</small></button>`;
@@ -26462,7 +26465,7 @@ function hkUseHTML(s){ const p=hkPet(), b=hkBal(s);
     <p class="hk-note">${n?`🌸 いま ${n}本の お花が 家のまわりに うかんでいます`:'贈った本数の お花が、7日間 家のまわりに ふわふわ うかびます。お部屋には 小さな花びん。'}</p></div>
     ${HK_BQ.map(([k,c])=>`<button type="button" class="hk-btn hk-room" data-hk="buy" data-hkb="f:${k}"${c>b?' disabled':''}><b>💐 花束 ${k}本</b><small>${c}光</small></button>`).join('')}
     <button type="button" class="hk-btn hk-sub hk-mt" data-hk="house">🏠 ${hkEsc(p.name)}の家を見る（📒 保存で写真に）</button>`; }
-function hkBuy(c){ const s=hkState(), p=hkPet(); if(!p) return; let cost=0, done='';
+function hkBuy(c){ if(hkTgt){ hkUBuy(c); return; } const s=hkState(), p=hkPet(); if(!p) return; let cost=0, done='';
   if(c.startsWith('d:')){ const D=HK_DREAMS.find(x=>x[0]===c.slice(2)); if(!D||(p.hkd||[]).some(x=>x.k===D[0])) return; cost=D[3]; if(cost>hkBal(s)){ hkToast('光が たりません'); return; }
     hkSpend(s,cost); hkPut(s); p.hkd=(p.hkd||[]).concat([{ k:D[0], t:Date.now(), cl:p.cl?hkClKey(p.cl):'' }]); try{ mpLog(p,`🌙 夢がかなった：${D[2]}。${D[4]}`,'dream'); }catch(e){} mpSet(p); done=`🌙 ${p.name}の夢「${D[2]}」が かないました`; }
   else if(c==='c'||c==='cw'){ const k=hkClKey(hkCl), own=hkOwn(s); if(c==='c'&&!own.includes(k)){ cost=HK_CLP; if(cost>hkBal(s)){ hkToast('光が たりません'); return; } hkSpend(s,cost); s.own=own.concat([k]); hkPut(s); }
@@ -26475,6 +26478,58 @@ function hkBuy(c){ const s=hkState(), p=hkPet(); if(!p) return; let cost=0, done
 document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-hkcl]'); if(!t) return; const [k,i]=t.dataset.hkcl.split('|'); hkCl[k]=+i; hkRender(); });
 // 見えていない時は、お花を止める（固まらないように）
 setInterval(()=>{ if(document.hidden) return; document.querySelectorAll('.hkfl:not(.hkfl-still)').forEach(g=>{ const r=g.getBoundingClientRect(); const on=r.width>0&&r.bottom>0&&r.top<innerHeight; g.classList.toggle('hkfl-off',!on); }); },1500);
+
+// ---- v178.108 友だちのペットにも贈る（Firebase：ids/{相手}/hku/{自分_日付_1〜5}、k=d夢/c服/f花束）----
+let hkTgt='', hkUBusy=false;
+function hkFrPets(){ let L=[]; try{ const fr=new Set(hkFrList().map(f=>f.id)); const seen=new Set(); L=(typeof prPets==='function'?prPets():[]).filter(x=>x&&x.oid&&!x.mine&&fr.has(String(x.oid))&&!seen.has(String(x.oid))&&seen.add(String(x.oid))).map(x=>({ oid:String(x.oid), n:String(x.n||'ペット').slice(0,20), id:x.id, hs:String(x.hs||'友だち').slice(0,20), kind:(typeof PB_ALL!=='undefined'&&PB_ALL[x.id]||{}).kind||'' })); }catch(e){} return L; }
+function hkTgtPet(){ return hkTgt?hkFrPets().find(x=>x.oid===hkTgt)||null:null; }
+function hkUSentN(s,oid){ return ((s.usent||{})[oid+'|'+hkYmd()])|0; }
+function hkTgtHTML(){ const p=hkPet(), L=hkFrPets(); if(hkTgt&&!L.some(x=>x.oid===hkTgt)) hkTgt='';
+  return `<div class="hk-tg"><p class="hk-h3">だれに贈りますか？</p><div class="hk-chips"><button type="button" class="hk-chip${!hkTgt?' on':''}" data-hktg="">🐾 うちの${p?hkEsc(p.name):'ペット'}</button>${L.map(x=>`<button type="button" class="hk-chip${hkTgt===x.oid?' on':''}" data-hktg="${hkEsc(x.oid)}">${hkEsc(x.n)} <small>${hkEsc(x.hs)}さん</small></button>`).join('')}</div>${L.length?'':'<p class="hk-note">友だちがペットを迎えると、友だちのペットにも贈れます。</p>'}</div>`; }
+function hkUseHTML(s){ const t=hkTgtHTML(); return t+(hkTgt?hkUseFriend(s):hkUseMine(s)); }
+function hkFrArt(x,cl){ try{ const f=()=>petPortraitSVG(x.id,x.n); return typeof pgWithCl==='function'?pgWithCl(cl||null,f):f(); }catch(e){ return ''; } }
+function hkUseFriend(s){ const x=hkTgtPet(), b=hkBal(s), n=hkUSentN(s,x.oid), left=Math.max(0,5-n), sent=(s.ulog||{});
+  const lim=`<p class="hk-note hk-c">${hkEsc(x.hs)}さんの ${hkEsc(x.n)} へ：同じ人へは 1日5回まで（今日 あと${left}回）</p>`, dis=c=>c>b||!left?' disabled':'';
+  if(hkView==='use') return `<h2 class="hk-h">🌙 光を使う<small>${hkEsc(x.hs)}さんの ${hkEsc(x.n)} に 贈ります</small></h2>
+    <button type="button" class="hk-btn hk-room" data-hk="dream"><b>🌙 夢を創る部屋</b><small>夢をプレゼント 100〜300光</small></button>
+    <button type="button" class="hk-btn hk-room" data-hk="clothes"><b>✨ 服を創る部屋</b><small>キラキラの服を プレゼント 50光</small></button>
+    <button type="button" class="hk-btn hk-room" data-hk="flower"><b>💐 花の部屋</b><small>花束 30本・60本・100本</small></button>${lim}`;
+  if(hkView==='dream') return `<h2 class="hk-h">🌙 夢を創る部屋<small>${hkEsc(x.n)}の夢を、光でかなえて あげます</small></h2>${lim}
+    ${HK_DREAMS.map(D=>{ const ok=sent[x.oid+'|d'+D[0]]; return `<div class="hk-card hk-dc"><div class="hk-dt"><b>${D[1]} ${hkEsc(D[2])}</b><span>${D[3]}光</span></div>${ok?'<p class="hk-note">💌 贈りました</p>':`<button type="button" class="hk-btn" data-hk="buy" data-hkb="d:${D[0]}"${dis(D[3])}>💌 ${D[3]}光で 贈る</button>`}</div>`; }).join('')}`;
+  if(hkView==='clothes'){ if(typeof pgClOk==='function'&&!pgClOk(x.kind)) return `<h2 class="hk-h">✨ 服を創る部屋</h2><div class="hk-card hk-c"><p>${hkEsc(x.n)}は 水の中で くらすので、服は着られません。</p></div>`;
+    const row=(key,L,off)=>`<div class="pg-clr" role="group">${L.map((y,i)=>{ const v=i+off, on=hkCl[key]===v; return key==='c'?`<button type="button" class="pg-clc${on?' on':''}" data-hkcl="c|${v}" style="background:${y[1]}" aria-label="${y[0]}" title="${y[0]}"></button>`:`<button type="button" class="pg-clk${on?' on':''}" data-hkcl="${key}|${v}">${key==='m'?y[1]+' ':''}${key==='s'?y[1]:y[0]}</button>`; }).join('')}</div>`;
+    return `<h2 class="hk-h">✨ 服を創る部屋<small>${hkEsc(x.n)}に キラキラの服を プレゼント・1着 ${HK_CLP}光</small></h2>
+    <div class="hk-card hk-c"><div class="hk-clpv">${hkFrArt(x,hkCl)}</div><p><b>${hkEsc(pgClName(hkCl))}</b></p><button type="button" class="hk-btn" data-hk="buy" data-hkb="c"${dis(HK_CLP)}>💌 ${HK_CLP}光で 創って 贈る</button></div>${lim}
+    <p class="pg-cll">形</p>${row('s',PG_CLS,0)}<p class="pg-cll">キラキラの色</p>${row('c',HK_CC,HK_CC0)}<p class="pg-cll">キラキラの模様</p>${row('m',HK_CMS,HK_CM0)}`; }
+  return `<h2 class="hk-h">💐 花の部屋<small>${hkEsc(x.n)}の家に 花束を贈ります</small></h2>
+    <div class="hk-card hk-c"><div class="hk-clpv">${hkFrArt(x,null)}</div><p class="hk-note">贈った本数の お花が、7日間 ${hkEsc(x.n)}の家のまわりに ふわふわ うかびます。</p></div>
+    ${HK_BQ.map(([k,c])=>`<button type="button" class="hk-btn hk-room" data-hk="buy" data-hkb="f:${k}"${dis(c)}><b>💐 花束 ${k}本</b><small>${c}光</small></button>`).join('')}${lim}`; }
+async function hkUBuy(c){ if(hkUBusy) return; const x=hkTgtPet(); if(!x) return; const s=hkState(); let k='', v='', cost=0, what='';
+  if(c.startsWith('d:')){ const D=HK_DREAMS.find(y=>y[0]===c.slice(2)); if(!D) return; k='d'; v=D[0]; cost=D[3]; what=`夢「${D[2]}」`; }
+  else if(c==='c'){ k='c'; v=hkClKey(hkCl); cost=HK_CLP; what=pgClName(hkCl); }
+  else if(c.startsWith('f:')){ const B=HK_BQ.find(y=>y[0]===+c.slice(2)); if(!B) return; k='f'; v=String(B[0]); cost=B[1]; what=`花束${B[0]}本`; }
+  if(!k) return; if(cost>hkBal(s)){ hkToast('光が たりません'); return; } const n=hkUSentN(s,x.oid); if(n>=5){ hkToast('同じ人へは 1日5回までです'); return; }
+  if(!hkOn()){ hkToast('いまは つながっていません。少しあとで もう一度'); return; }
+  hkUBusy=true; const me=String(myId()), by=String((typeof store!=='undefined'&&store.get(KEY_ME,''))||'').slice(0,20)||'友だち', id=me+'_'+hkYmd()+'_'+(n+1);
+  try{ await Promise.race([FB.D.setDoc(FB.D.doc(FB.db,'ids',x.oid,'hku',id),{ from:me, by, k, v, pn:x.n, t:Date.now() }), new Promise((_,rj)=>setTimeout(()=>rj({ code:'timeout' }),15000))]);
+    const s2=hkState(); hkSpend(s2,cost); s2.given+=cost; s2.spent=(s2.spent|0)+cost; const dk=hkYmd(), u={}; Object.keys(s2.usent||{}).filter(q=>q.endsWith(dk)).forEach(q=>u[q]=s2.usent[q]); u[x.oid+'|'+dk]=(u[x.oid+'|'+dk]|0)+1; s2.usent=u;
+    if(k==='d'){ s2.ulog=s2.ulog||{}; s2.ulog[x.oid+'|d'+v]=1; } hkPut(s2); hkToast(`💌 ${x.hs}さんの ${x.n}に ${what}を 贈りました`);
+  }catch(err){ const e=String(err&&(err.code||err.message)||err||''); try{ console.warn('[hikari]',e); }catch(_){} hkToast(e.includes('permission')?'まだ贈れません（サーバーの準備中です）':'うまく送れませんでした。少しあとで もう一度'); }
+  hkUBusy=false; hkBarSync(true); hkRender(); }
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-hktg]'); if(!t) return; hkTgt=t.dataset.hktg||''; hkRender(); });
+// とどいたプレゼントを、うちのペットに
+let hkUL=false;
+function hkUListen(){ if(hkUL||!hkOn()) return; hkUL=true; const { collection, onSnapshot, deleteDoc }=FB.D;
+  onSnapshot(collection(FB.db,'ids',String(myId()),'hku'),snap=>{ const L=[]; snap.forEach(d=>{ const x=d.data()||{}; L.push({ id:d.id, k:String(x.k||''), v:String(x.v||''), by:String(x.by||'友だち').slice(0,20), t:+x.t||Date.now() }); });
+    if(!L.length) return; const p=hkPet(); if(!p) return; const s=hkState(); s.useen=Array.isArray(s.useen)?s.useen:[]; let msg='', cnt=0, sch=false;
+    L.forEach(g=>{ if(s.useen.includes(g.id)) return; s.useen.push(g.id); cnt++;
+      if(g.k==='d'){ const D=HK_DREAMS.find(y=>y[0]===g.v); if(!D) return; p.hkd=Array.isArray(p.hkd)?p.hkd:[]; if(!p.hkd.some(y=>y.k===D[0])) p.hkd.push({ k:D[0], t:Date.now(), cl:p.cl?hkClKey(p.cl):'', by:g.by }); try{ mpLog(p,`🌙 ${g.by}さんから 夢のプレゼント：${D[2]}。${D[4]}`,'dream'); }catch(e){} msg=`🌙 ${g.by}さんから ${p.name}に 夢「${D[2]}」が とどきました`; }
+      else if(g.k==='c'){ const cl=typeof pgClParse==='function'?pgClParse(g.v):null; if(!cl||cl.c<HK_CC0||cl.m<HK_CM0) return; const own=hkOwn(s); if(!own.includes(g.v)){ s.own=own.concat([g.v]); sch=true; } try{ mpLog(p,`✨ ${g.by}さんから ${pgClName(cl)}が とどいた。`,'cl'); }catch(e){} msg=`✨ ${g.by}さんから ${pgClName(cl)}が とどきました（服を創る部屋で 着せられます）`; }
+      else if(g.k==='f'){ const n=+g.v; if(![30,60,100].includes(n)) return; p.hkf=(Array.isArray(p.hkf)?p.hkf:[]).concat([{ n, t:Date.now(), by:g.by }]).slice(-30); try{ mpLog(p,`💐 ${g.by}さんから 花束${n}本が とどいた。`,'flower'); }catch(e){} msg=`💐 ${g.by}さんから 花束${n}本が とどきました`; } });
+    s.useen=s.useen.slice(-300); hkPut(s); if(cnt){ mpSet(p); hkToast(cnt>1?`💌 ${cnt}つの プレゼントが とどきました`:msg); try{ if(typeof fbPush==='function') setTimeout(()=>fbPush(),300); }catch(e){} const M=document.getElementById('hkM'); if(M&&!M.hidden) hkRender(); }
+    L.forEach(g=>{ try{ deleteDoc(FB.D.doc(FB.db,'ids',String(myId()),'hku',g.id)); }catch(_){} });
+  },e=>{ hkUL=false; try{ console.warn('[hikari] とどいたプレゼントを読めませんでした',e&&e.code||e); }catch(_){} }); }
+setInterval(()=>{ try{ hkUListen(); }catch(_){} },4000);
 
 let hkRV='';
 function hkRender(){ const m=document.getElementById('hkM'); if(!m) return; const y=m.scrollTop; m.querySelector('.hk-in').innerHTML=hkViewHTML(); m.scrollTop=hkRV===hkView?y:0; hkRV=hkView; m.classList.toggle('hk-dark',hkView==='purpose'); }
