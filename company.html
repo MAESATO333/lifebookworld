@@ -298,13 +298,22 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
   .btn,.toc li a,.hero-meet{transition:none}
 }
 </style>
+<style>/* 規約ページ（2026-11-19） */
+.doc{max-width:720px; margin:0 auto; background:var(--surface); border-radius:22px; box-shadow:0 5px 0 var(--edge); padding:8px 20px 18px; font-size:15px; line-height:1.95}
+.doc h3{font-family:var(--round); font-size:17px; margin:22px 0 4px; padding-top:14px; border-top:1px solid var(--line)}
+.doc h3:first-child{border-top:0; padding-top:4px}
+.doc p{margin:6px 0} .doc ul{margin:6px 0; padding-left:1.3em} .doc li{margin:3px 0}
+.doc .date{color:var(--muted); font-size:13px; text-align:right; margin-top:18px}
+.legal-nav{max-width:720px; margin:22px auto 0; display:flex; flex-wrap:wrap; gap:8px 14px; justify-content:center; font-size:13px}
+.legal-nav a{color:var(--muted)} .legal-nav a[aria-current]{color:var(--ink); font-weight:700; text-decoration:none}
+.contact-box{text-align:center; padding:18px 0 8px}
+</style>
 <style>.back{display:inline-block; margin:18px 0 0; font-size:13px; color:var(--muted)} .company-main{padding-bottom:40px}</style>
 </head>
 <body>
 <main class="company-main">
   <div class="wrap"><a class="back" href="./">← LIFE BOOK のページにもどる</a></div>
-  <!-- 運営者情報 -->
-  <section class="chapter" id="company">
+  <section class="chapter">
     <div class="wrap">
       <header class="ch-head">
         <span class="ch-no">LIFE BOOK</span>
@@ -313,12 +322,16 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
       </header>
       <dl class="info">
         <div><dt>サービス名</dt><dd>LIFE BOOK（ライフブック）</dd></div>
-        <div><dt>運営者</dt><dd>（準備中）<span class="tbd">確認中</span></dd></div>
-        <div><dt>所在地</dt><dd>（準備中）<span class="tbd">確認中</span></dd></div>
-        <div><dt>お問い合わせ</dt><dd>（準備中）<span class="tbd">確認中</span></dd></div>
+        <div><dt>URL</dt><dd>https://lifebookworld.com/</dd></div>
+        <div><dt>運営者</dt><dd>LIFE BOOK 運営事務局（個人で運営しています）</dd></div>
+        <div><dt>代表者・所在地</dt><dd>ご請求があれば、遅滞なくお知らせします。<a href="contact.html">お問い合わせ</a>からご連絡ください。</dd></div>
+        <div><dt>お問い合わせ</dt><dd><a href="contact.html">お問い合わせ</a>のページから受け付けています。</dd></div>
+        <div><dt>料金</dt><dd>試作版は無料です。一部有料のオプションがあります。</dd></div>
+        <div><dt>対象年齢</dt><dd>15歳以上の方を対象にしています。15歳未満の方は、保護者の方といっしょに遊んでください。</dd></div>
         <div><dt>主な統計の出典</dt><dd>Gapminder（世界の人口・寿命・所得など）、文部科学省、厚生労働省ほか。ゲームの中の振り返りに、出典の一覧があります。</dd></div>
-        <div><dt>プライバシー</dt><dd>遊んだ記録は、遊ぶ人のブラウザの中に保存されます。マイページでログインした人は、どの端末でも同じ人生を見守れるように、遊んだ記録とログイン用のメールアドレスを Google Firebase に保存します（本人だけが読めます）。訪問者数を知るために Cloudflare Web Analytics を使っています。Cookieは使わず、お名前など個人を特定する情報は集めません。友だち紹介でつながるために、呼び名とランダムな記号を Google Firebase に保存します。本名・位置情報は保存しません。メールアドレスは、ログインした人のものだけを、ログインのためだけに使います。<span class="tbd">確認中</span></dd></div>
+        <div><dt>規約など</dt><dd><a href="terms.html">利用規約</a>・<a href="privacy.html">プライバシーポリシー</a></dd></div>
       </dl>
+      <nav class="legal-nav"><a href="company.html" aria-current="page">運営者情報</a><a href="terms.html">利用規約</a><a href="privacy.html">プライバシーポリシー</a><a href="contact.html">お問い合わせ</a></nav>
     </div>
   </section>
 </main>
