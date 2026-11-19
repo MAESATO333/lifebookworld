@@ -321,18 +321,60 @@ footer .wrap{padding-block:20px 28px; display:flex; flex-wrap:wrap; gap:8px 18px
         <div class="ch-rule"></div>
       </header>
       <div class="doc">
-<div class="contact-box">
-<p>LIFE BOOK へのご質問・ご意見・不具合のご連絡は、こちらのフォームから受け付けています。</p>
-<p><a class="btn" id="cform" href="#" aria-disabled="true"><span class="bt">お問い合わせフォーム</span></a></p>
-<p style="color:var(--muted);font-size:13px">（フォームは準備中です）</p>
-</div>
+<p style="margin-top:14px">LIFE BOOK へのご質問・ご意見・不具合のご連絡は、こちらのフォームから受け付けています。</p>
+<form id="cf" class="cf" novalidate>
+  <label><span class="lb">お名前 <span class="req">必須</span></span><input id="cfName" maxlength="60" autocomplete="name" required></label>
+  <label><span class="lb">メールアドレス <span class="req">必須</span></span><small>お返事をお送りします</small><input id="cfMail" type="email" maxlength="120" autocomplete="email" inputmode="email" required></label>
+  <label><span class="lb">お問い合わせの種類</span><select id="cfKind"><option>ご質問</option><option>ご意見・ご感想</option><option>不具合のご連絡</option><option>その他</option></select></label>
+  <label><span class="lb">お問い合わせ内容 <span class="req">必須</span></span><textarea id="cfBody" rows="7" maxlength="2000" required></textarea></label>
+  <label class="hp" aria-hidden="true">空欄のまま<input id="cfHp" tabindex="-1" autocomplete="off"></label>
+  <p class="cf-agree"><a href="privacy.html">プライバシーポリシー</a>に同意のうえ、お送りください。</p>
+  <p id="cfMsg" class="cf-msg" role="status"></p>
+  <p style="text-align:center"><button class="btn" id="cfSend" type="submit"><span class="bt">送信する</span></button></p>
+</form>
+<div id="cfDone" class="cf-done" hidden><p><b>お問い合わせを受け付けました。</b></p><p>ありがとうございます。お返事まで、数日いただくことがあります。</p></div>
 <h3>お送りいただく前に</h3>
 <ul>
 <li>お返事には、数日いただくことがあります。</li>
-<li>お名前（本名）は書いてください。住所など、必要のない個人情報は書かないでください。</li>
+<li>住所など、必要のない個人情報は書かないでください。</li>
 <li>心や体の辛さについては、お返事でお手伝いできないことがあります。専門の窓口にご相談ください。</li>
 </ul>
       </div>
+<style>
+.cf{display:grid; gap:14px; margin:14px 0 6px}
+.cf label{display:grid; gap:6px; font-weight:700; font-size:14px}
+.cf small{font-weight:400; color:var(--muted); font-size:12px; margin-top:-4px}
+.cf input,.cf select,.cf textarea{font:inherit; font-size:16px; font-weight:400; color:var(--ink); background:var(--bg); border:1.5px solid var(--line); border-radius:12px; padding:11px 12px; width:100%}
+.cf input:focus,.cf select:focus,.cf textarea:focus{outline:none; border-color:var(--pink)}
+.cf .req{display:inline-block; font-size:11px; color:#fff; background:var(--pink-edge); border-radius:999px; padding:0 7px; margin-left:4px; font-weight:700; line-height:1.7; vertical-align:1px}
+.cf .hp{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden}
+.cf-agree{font-size:13px; color:var(--muted); text-align:center; margin:0}
+.cf-msg{font-size:14px; color:var(--ember); text-align:center; margin:0; min-height:1em}
+.cf .btn{min-width:220px}
+.cf-done{text-align:center; background:var(--ember-soft); border-radius:16px; padding:16px; margin:14px 0}
+</style>
+<script type="module">
+const FB={ apiKey:'AIzaSyAIRsa8yqxJAQymZYMShzFxGCjOhidhMTs', authDomain:'lifebook-dcae9.firebaseapp.com', projectId:'lifebook-dcae9', appId:'1:707474989249:web:d44ee7d10b4a658fd73440' };
+const $=s=>document.querySelector(s);
+const msg=t=>{ $('#cfMsg').textContent=t; };
+$('#cf').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const nm=$('#cfName').value.trim(), em=$('#cfMail').value.trim(), body=$('#cfBody').value.trim(), kind=$('#cfKind').value;
+  if($('#cfHp').value){ return; }
+  if(!nm){ msg('お名前を入れてください'); $('#cfName').focus(); return; }
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ msg('メールアドレスを確かめてください'); $('#cfMail').focus(); return; }
+  if(body.length<2){ msg('お問い合わせ内容を入れてください'); $('#cfBody').focus(); return; }
+  const btn=$('#cfSend'); btn.disabled=true; msg('送っています…');
+  try{
+    const base='https://www.gstatic.com/firebasejs/10.14.1/';
+    const [A,U,D]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);
+    const app=A.initializeApp(FB,'contact'); const auth=U.getAuth(app); const db=D.getFirestore(app);
+    if(!auth.currentUser) await U.signInAnonymously(auth);
+    await D.addDoc(D.collection(db,'contact'),{ nm:nm.slice(0,60), em:em.slice(0,120), kind:kind.slice(0,20), body:body.slice(0,2000), at:D.serverTimestamp() });
+    $('#cf').hidden=true; $('#cfDone').hidden=false; msg('');
+  }catch(err){ console.warn(err); msg('うまく送れませんでした。時間をおいて、もう一度お試しください。'); btn.disabled=false; }
+});
+</script>
       <nav class="legal-nav"><a href="company.html">運営者情報</a><a href="terms.html">利用規約</a><a href="privacy.html">プライバシーポリシー</a><a href="contact.html" aria-current="page">お問い合わせ</a></nav>
     </div>
   </section>
