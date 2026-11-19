@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.104">
+<meta name="lifebook-version" content="v178.105">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -113,6 +113,24 @@ html.hk-open,html.hk-open body{ overflow:hidden; }
 .hk-purpose .hk-card{ color:#3a3340; font-size:15px; line-height:2; }
 .hk-mincho{ font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif; }
 .hk-toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#3a3340; color:#fff; padding:10px 18px; border-radius:999px; z-index:9500; font-weight:800; font-size:14px; white-space:nowrap; }
+</style>
+<style id="v178105">
+.hsr{ margin:4px 0 18px; padding:18px 16px; border-radius:18px; background:#FFF4F7; border:2px solid #FF8FAB; text-align:center; }
+.hsr-step{ display:inline-block; margin:0 0 6px; padding:2px 12px; border-radius:999px; background:#FF8FAB; color:#fff; font-size:.8rem; font-weight:700; letter-spacing:.08em; }
+.hsr-h{ margin:0 0 6px; font-size:1.15rem; line-height:1.5; color:#5a3a46; }
+.hsr-s{ margin:0 0 12px; font-size:.85rem; color:#7a6670; }
+.hsr-row{ display:flex; gap:8px; max-width:420px; margin:0 auto; }
+.hsr-row input{ flex:1; min-width:0; font-size:16px; padding:12px 14px; border:2px solid #FFC2D2; border-radius:12px; background:#fff; color:#333; }
+.hsr-row input:focus{ outline:none; border-color:#FF8FAB; }
+.hsr-btn{ flex:none; min-height:48px; padding:0 18px; border:0; border-radius:999px; background:#FF8FAB; color:#fff; font-size:1rem; font-weight:700; cursor:pointer; }
+.hsr-msg{ margin:8px 0 0; font-size:.85rem; color:#d0587a; }
+.hsr-msg:empty{ display:none; }
+.hsr-done{ padding:12px 16px; border-width:1px; }
+.hsr-ok{ margin:0; font-size:1rem; color:#5a3a46; }
+.hsr-go{ margin:6px 0 0; font-size:.9rem; color:#d0587a; font-weight:700; }
+.hsr-ed{ margin-top:6px; font-size:.82rem; }
+.born-btn.hsr-lock .born-txt{ font-size:1em; }
+@media (max-width:640px){ .hsr-h{ font-size:1.05rem; } }
 </style>
 </head><body>
 <title>LIFE BOOK — 人生のヒントが、ここにある</title>
@@ -793,7 +811,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.104';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.105';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -16263,7 +16281,7 @@ function render1(){
 
 function introHTML(){
   const arc=store.get(KEY_ARC,[]);
-  return `<section class="intro fade">
+  return `<section class="intro fade">${hsRegHTML()}
     <div class="intro-hero"><div class="ih-text">
       <p class="lead">世界のどこかに、<br><em>ひとりの人間</em>として生まれる。</p>
       <div class="ih-cta"><button class="born-btn" id="bornBtn" type="button"><svg class="born-heart" viewBox="0 0 28 24" shape-rendering="crispEdges" aria-hidden="true">${typeof frHeart==='function'?frHeart(0,0,4,'#FFFFFF'):''}</svg><span class="born-txt">生まれる</span><span class="born-sub">あたらしい いのちが、はじまります</span></button></div>
@@ -16305,9 +16323,21 @@ function kannenMapHTML(){
 function introLock(){ ['#bornBtn','#bornBtn2'].forEach(sel=>{ const b=$(sel); if(!b) return; b.disabled=true; b.classList.add('born-off'); b.onclick=null; b.setAttribute('aria-disabled','true');
     const t=b.querySelector('.born-txt'); if(t) t.textContent='いまは、人生の途中'; const sb=b.querySelector('.born-sub'); if(sb) sb.textContent='生き終えたら、次の人生へ';
     if(sel==='#bornBtn'&&!document.getElementById('toLifeBtn')){ const a=document.createElement('p'); a.className='ih-go'; a.innerHTML='<button type="button" class="btn ghost" id="toLifeBtn">Life Record へ</button><a class="btn ghost" id="toSiteBtn" href="'+siteTopURL()+'">Gateway（はじめのページ）へ</a>'; b.parentElement.after(a); a.querySelector('button').onclick=goLife; const low=document.querySelector('.ih-site'); if(low) low.remove(); } }); }
+// v178.105 はじめに Higher Self の名前を登録。登録するまで「生まれる」は押せない
+let HSR_EDIT=false, HSR_JUST=false;
+function hsRegHTML(){ if(typeof st!=='undefined'&&st) return ''; const me=String(store.get(KEY_ME,'')||'').trim();
+  if(me&&!HSR_EDIT) return `<div class="hsr hsr-done"><p class="hsr-ok">🌟 Higher Self：<b>${esc(me)}</b> さん</p>${HSR_JUST?'<p class="hsr-go">登録しました！ 下の「生まれる」を押してください。</p>':''}<button type="button" class="linkish hsr-ed" id="hsrEdit">名前を変える</button></div>`;
+  return `<div class="hsr" id="hsReg"><p class="hsr-step">はじめに</p><h2 class="hsr-h">あなたの（ハイヤーセルフ）の<br>名前から、登録お願いします</h2><p class="hsr-s">見守るあなたの名前です。友だちには、この名前で届きます。</p><div class="hsr-row"><input id="hsrIn" type="text" maxlength="20" value="${esc(me)}" placeholder="例：ひかり" autocomplete="nickname" enterkeyhint="done" aria-label="Higher Self の名前"><button id="hsrOk" class="hsr-btn" type="button">登録する</button></div><p class="hsr-msg" id="hsrMsg" role="status"></p></div>`; }
+function hsRegBind(){ if(typeof st!=='undefined'&&st) return; const me=String(store.get(KEY_ME,'')||'').trim();
+  if(!me){ ['#bornBtn','#bornBtn2'].forEach(sel=>{ const b=$(sel); if(!b) return; b.disabled=true; b.classList.add('born-off','hsr-lock'); b.setAttribute('aria-disabled','true'); const sb=b.querySelector('.born-sub'); if(sb) sb.textContent='先に、上で名前を登録してください'; }); }
+  const ed=$('#hsrEdit'); if(ed) ed.onclick=()=>{ HSR_EDIT=true; HSR_JUST=false; render(); const i=$('#hsrIn'); if(i) i.focus(); };
+  const i=$('#hsrIn'), ok=$('#hsrOk'); if(!i||!ok) return;
+  const save=()=>{ const v=(i.value||'').trim().slice(0,20); const m=$('#hsrMsg'); if(!v){ if(m) m.textContent='名前を入れてから、「登録する」を押してください。'; i.focus(); return; } store.set(KEY_ME,v); HSR_EDIT=false; HSR_JUST=true; render(); try{ const bb=$('#bornBtn'); if(bb) setTimeout(()=>bb.scrollIntoView({block:'center',behavior:'smooth'}),60); }catch(e){} };
+  ok.onclick=save; i.onkeydown=e=>{ if(e.key==='Enter'&&!e.isComposing){ e.preventDefault(); save(); } }; }
 function bindIntro(){
   bindLoanShelf(); bindFriend();
   $('#bornBtn').onclick=()=>born(null); const b2=$('#bornBtn2'); if(b2) b2.onclick=()=>born(null);
+  hsRegBind();
   const km=$('#kmapBtn'); if(km) km.onclick=()=>{ km.disabled=true; km.textContent='読み解いています…'; setTimeout(()=>{ $('#kmapOut').innerHTML=kannenMapHTML(); km.textContent='観念の地図'; },30); };
   document.querySelectorAll('[data-arc]').forEach(b=>b.onclick=()=>{ const a=store.get(KEY_ARC,[])[+b.dataset.arc]; viewing={ seed:a.seed, country:a.country, force:a.force||null, choice:a.choice, bs:a.bs||null }; render(); window.scrollTo(0,0); });
 }
@@ -22260,7 +22290,7 @@ function acBtnSync(){ try{ const ia=document.querySelector('.inapp'); if(ia) ia.
 function acIntroNote(){ try{ if(acIn()||(typeof st!=='undefined'&&st)||(typeof viewing!=='undefined'&&viewing)) return; const app=document.getElementById('app'); if(!app||app.querySelector('.ac-note')) return;
   const n=document.createElement('div'); n.className='ac-note'; n.setAttribute('role','note');
   n.innerHTML='<p>ほかの端末で、もう人生を見守っていますか？<br><b>👤 マイページ</b>からログインすると、同じ人生の続きが見られます。</p><button class="frd-b frd-pink" type="button">マイページを開く</button>';
-  n.querySelector('button').onclick=acOpen; app.prepend(n); }catch(e){} }
+  n.querySelector('button').onclick=acOpen; const hr=app.querySelector('.hsr'); if(hr) hr.after(n); else app.prepend(n); }catch(e){} }
 // ログインしていない端末で、初めて「生まれる」を押したとき：ほかの端末で見守っていないか先にたずねる
 function acBornGuard(e){ const b=e.target&&e.target.closest&&e.target.closest('#bornBtn,#bornBtn2'); if(!b||b.disabled) return;
   if(acIn()||acHasLife(acLocal())||acGet('ac.bornOK',0)||!/^https?:$/.test(location.protocol)) return;
