@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.84">
+<meta name="lifebook-version" content="v178.85">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -747,7 +747,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.84';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.85';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20508,7 +20508,7 @@ async function fbMakeIv(){ try{ const k=fbKey(), want=store.get(KEY_FBIV+'.k',''
 function fbFriends(){ return store.get(KEY_FRIEND,[]).filter(f=>f&&f.id); }
 function fbFrList(except){ const out=fbFriends().filter(f=>f.id!==except).slice(0,19).map(f=>({ i:String(f.id), b:String(f.by||'').slice(0,20) }));
   // うちのペットも、友だちに知らせる（ペットのつながりの木に出る）。i が「~pet」の行は、人ではない
-  try{ const p=typeof mpGet==='function'&&mpGet(); if(p&&p.breed&&p.name) out.push({ i:'~pet', b:String(p.name).slice(0,20), p:String(p.breed).slice(0,40), k:String(p.kind||''), a:Math.floor(Math.min(mpAge(p),p.life||99)), g:mpGone(p)?1:0, l:typeof pmCounts==='function'?pmCounts(p).l:0, f:typeof pmCounts==='function'?pmCounts(p).f:0, o:typeof pmCounts==='function'?(pmCounts(p).o||0):0, bd:+p.at||0 }); }catch(e){}
+  try{ const p=typeof mpGet==='function'&&mpGet(); if(p&&p.breed&&p.name) out.push({ i:'~pet', b:String(p.name).slice(0,20), p:String(p.breed).slice(0,40), k:String(p.kind||''), a:Math.floor(Math.min(mpAge(p),p.life||99)), g:mpGone(p)?1:0, l:typeof pmCounts==='function'?pmCounts(p).l:0, f:typeof pmCounts==='function'?pmCounts(p).f:0, o:typeof pmCounts==='function'?(pmCounts(p).o||0):0, bd:+p.at||0, w:typeof pgFxStr==='function'?pgFxStr(p):'' }); }catch(e){}
   return out; }
 // つながり具合：FB_ST = 'off'（まだ）/'try'（つなぎ中）/'ok'/'ng'。FB_ERR = うまくいかなかった理由。失敗したら、時間をおいて自動でやり直す
 let FB_ST='off', FB_ERR='', _fbTry=0, _fbBusyStart=false, _fbHooks=false;
@@ -20564,7 +20564,7 @@ async function fbPush(){ if(!FB) return; if(_fbBusy){ _fbAgain=true; return; } _
 // ひとりの相手の受け箱に書く。書けたら true
 async function fbPushOne(f,h){ h=h||myHero(); if(!FB||!h||!f||!f.id) return false; const me=myId(), by=store.get(KEY_ME,'')||'';
   // t には「つながった日」（出会いの日の起点）を入れる。ルールを変えずに相手へ届けるため、g ではなく t を使う。
-  const g=f.a0||f.got||Date.now(), fr=fbFrList(f.id), sig=fbHeroSig(h,by)+'#'+fr.map(x=>x.i+':'+x.b+(x.p?':'+x.p+':'+x.a+':'+x.g+':'+(x.l||0)+':'+(x.f||0)+':'+(x.o||0)+':'+(x.bd||0):'')).join(',')+'#g'+g, done=store.get(KEY_FBPUSH,{});
+  const g=f.a0||f.got||Date.now(), fr=fbFrList(f.id), sig=fbHeroSig(h,by)+'#'+fr.map(x=>x.i+':'+x.b+(x.p?':'+x.p+':'+x.a+':'+x.g+':'+(x.l||0)+':'+(x.f||0)+':'+(x.o||0)+':'+(x.bd||0)+':'+(x.w||''):'')).join(',')+'#g'+g, done=store.get(KEY_FBPUSH,{});
   if(done[f.id]===sig) return true;
   const data={ from:me, by:String(by).slice(0,20), s:h.s, c:h.c||null, f:h.f||null, ch:h.ch||null, t:g, fr };
   if(f.iv) data.iv=String(f.iv);
@@ -20587,7 +20587,7 @@ function fbListen(){ const { collection, onSnapshot }=FB.D;
       if(typeof d.s!=='number'||!d.from) return;
       const o={ id:String(d.from), by:d.by||'', s:d.s, c:d.c||null, f:d.f||null, ch:d.ch||null, t:d.t||Date.now(), g:(typeof d.t==='number'?d.t:undefined) };
       if(Array.isArray(d.fr)){ const pt=d.fr.find(x=>x&&x.i==='~pet'); fof[o.id]={ by:o.by, fr:d.fr.filter(x=>x&&x.i&&String(x.i)[0]!=='~').slice(0,20).map(x=>({ i:String(x.i), b:String(x.b||'').slice(0,20) })) };
-        if(pt&&pt.p) fof[o.id].pet={ b:String(pt.b||'').slice(0,20), p:String(pt.p).slice(0,40), k:String(pt.k||''), a:+pt.a||0, g:pt.g?1:0, l:Math.max(0,Math.min(99999,+pt.l||0)), f:Math.max(0,Math.min(99999,+pt.f||0)), o:Math.max(0,Math.min(99999,+pt.o||0)), bd:Math.max(0,+pt.bd||0) }; fofCh=true; }
+        if(pt&&pt.p) fof[o.id].pet={ b:String(pt.b||'').slice(0,20), p:String(pt.p).slice(0,40), k:String(pt.k||''), a:+pt.a||0, g:pt.g?1:0, l:Math.max(0,Math.min(99999,+pt.l||0)), f:Math.max(0,Math.min(99999,+pt.f||0)), o:Math.max(0,Math.min(99999,+pt.o||0)), bd:Math.max(0,+pt.bd||0), w:String(pt.w||'').slice(0,120) }; fofCh=true; }
       const old=store.get(KEY_FRIEND,[]).find(x=>x.id===o.id);
       if(old&&old.s===o.s&&(old.c||null)===o.c&&(old.by||'')===o.by&&(o.g==null||old.g===o.g)) return; // 変わりなし
       const r=receiveFriend(o); if(r==='self') return; changed=true;
@@ -21222,6 +21222,7 @@ function pgListen(){ if(_pgL||!pgOn()) return; _pgL=true; const { collection, on
     if(!got.length) return; const p=typeof mpGet==='function'&&mpGet(); if(!p) return; /* v178.12：ペットがまだいない時は、受けとらずに置いておく */ const seen=store.get('pg.seen',[]);
     const nu=got.filter(g=>!seen.includes(g.id)); if(nu.length){ store.set('pg.seen',seen.concat(nu.map(g=>g.id)).slice(-300));
       if(p){ if(typeof pmCounts==='function'){ const c0=pmCounts(p); p.gotL=c0.l; p.gotF=c0.f; p.gotO=c0.o||0; } p.gifts=(Array.isArray(p.gifts)?p.gifts:[]).concat(nu).slice(-60); nu.forEach(g=>{ if(g.k==='food') p.gotF=(p.gotF||0)+1; else if(g.k==='love') p.gotL=(p.gotL||0)+1; else p.gotO=(p.gotO||0)+1; }); nu.forEach(g=>{ p.love=(p.love||0)+(g.k==='love'?1:g.k==='cake'?3:2); if(typeof mpLog==='function') mpLog(p,g.k!=='love'?`${g.by}さんから、${g.f||pgName(g.k)}のプレゼントが届いた。`:g.f?`${g.by}さんから「可愛い！」と「${g.f}」が届いた。`:`${g.by}さんから「可愛い！」が届いた。`,'gift'); }); mpSet(p); }
+      try{ pgFxPop(p,nu); }catch(_){}
       const g=nu[nu.length-1], nm=p?p.name:'うちのペット'; pgToast(nu.length>1?`${nm}に、${nu.length}つのプレゼントが届きました🎁`:g.k!=='love'?`${g.by}さんから、${nm}に${g.f||pgName(g.k)}が届きました${pgIco(g.k)}`:g.f?`${g.by}さんから、${nm}に「可愛い！」と「${g.f}」が届きました💗`:`${g.by}さんから、${nm}に「可愛い！」が届きました💗`);
       try{ const dl=document.getElementById('mpDlg'); if(dl&&!dl.hidden&&typeof mpOpen==='function') mpOpen(); else if(typeof render==='function'&&typeof page!=='undefined'&&page==='home') render(); }catch(_){} }
       try{ if(p&&typeof fbPush==='function') setTimeout(()=>fbPush(),300); }catch(_){} /* v178.12：ふえた数を、すぐ友だちに知らせる */
@@ -21246,6 +21247,86 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 .pg-note{ display:block; margin-top:4px; font-size:12px; color:#C2476B; line-height:1.4; white-space:normal!important; } .pg-note:empty{ display:none; } .pg-toast{ position:fixed; left:50%; bottom:24px; transform:translate(-50%,40px); opacity:0; z-index:120; background:#C2476B; color:#fff; padding:12px 18px; border-radius:14px; font-weight:700; box-shadow:0 6px 24px rgba(0,0,0,.2); transition:.3s; max-width:calc(100% - 32px); text-align:center; pointer-events:none; z-index:9800; } .pg-toast.on{ opacity:1; transform:translate(-50%,0); }
 </style>`); }catch(e){}
 
+// v178.85（MITSUさん「送った後の変化はすぐ作って！」）：プレゼントを贈った後の見た目の変化
+// 何日のあいだ見えるか（届いた日から）。おしゃれ＝身につける、おもちゃ＝いっしょに遊ぶ、ベッド・お花＝おうちに置く、おていれ＝キラキラ、ケーキ＝お誕生日のお祝い
+const PG_FXD={ wear:3, toy:3, bed:7, flower:5, bath:1, snack:1, cake:1 };
+function pgEmo(f){ return String(f||'').split(' ')[0]||''; }
+function pgYmd(t){ const d=new Date(t); return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); }
+function pgFxMine(p){ const o={}; if(!p||!Array.isArray(p.gifts)) return o; const now=Date.now();
+  p.gifts.forEach(g=>{ const D=PG_FXD[g&&g.k]; if(!D) return; const t=g.rt||g.t||0; const a=new Date(t); a.setHours(0,0,0,0); const until=a.getTime()+D*864e5; if(now>=until) return;
+    if(!o[g.k]||o[g.k].t<t) o[g.k]={ e:pgEmo(g.f)||pgIco(g.k), f:String(g.f||'').replace(/^\S+\s*/,'')||pgName(g.k), by:g.by, t, until }; }); return o; }
+// 友だちに知らせる形："wear=🎀@20261122|toy=🎾@20261121"（@ のあとは、見える最後の日）
+function pgFxStr(p){ const o=pgFxMine(p); return Object.keys(o).map(k=>`${k}=${o[k].e}@${pgYmd(o[k].until-1)}`).join('|').slice(0,120); }
+function pgFxParse(w){ const o={}, td=pgYmd(Date.now()); String(w||'').split('|').forEach(x=>{ const m=/^(\w+)=([^@|]{1,8})@(\d{8})$/.exec(x); if(m&&PG_FXD[m[1]]&&+m[3]>=td) o[m[1]]={ e:m[2] }; }); return o; }
+function pgFxOf(pp){ try{ if(pp.mine) return pgFxMine(mpGet()); if(pp.oid){ const e=pgPetOf(pp.oid); return e?pgFxParse(e.w):{}; } }catch(e){} return {}; }
+function pgFxNone(fx){ return !fx||!Object.keys(fx).length; }
+// 公園を走るペット：おしゃれは頭の上、おもちゃは前をころがる、おていれはキラキラ、お誕生日は名前に🎂
+function pgFxRun(fx){ let h=''; if(fx.wear) h+=`<i class="pgx pgx-w" aria-hidden="true">${esc(fx.wear.e)}</i>`; if(fx.toy) h+=`<i class="pgx pgx-t" aria-hidden="true">${esc(fx.toy.e)}</i>`; if(fx.bath) h+=`<i class="pgx pgx-b" aria-hidden="true">✨</i>`; return h; }
+if(typeof prOne==='function'){ const P1=prOne; prOne=function(pp){ let h=P1.apply(this,arguments); try{ const fx=pgFxOf(pp); if(pgFxNone(fx)) return h; const x=pgFxRun(fx); if(x) h=h.replace('<span class="pr-sh"',x+'<span class="pr-sh"'); if(fx.cake) h=h.replace('<span class="pr-n">','<span class="pr-n">🎂 '); }catch(e){} return h; }; }
+// 大きな絵（200×150）：ベッド・お花・おもちゃ・おやつ・おしゃれ・キラキラ・ケーキをのせる
+function pgFxSVG(svg,fx){ if(!svg||pgFxNone(fx)) return svg; const T=(x,y,z,e,c)=>`<text x="${x}" y="${y}" font-size="${z}" text-anchor="middle"${c?` class="${c}"`:''}>${esc(e)}</text>`; let o='';
+  if(fx.bed) o+=T(40,140,30,fx.bed.e); if(fx.flower) o+=T(178,44,24,fx.flower.e); if(fx.cake) o+=T(24,44,24,'🎂'); if(fx.toy) o+=T(160,140,22,fx.toy.e,'pgx-tb'); if(fx.snack) o+=T(132,146,16,fx.snack.e);
+  if(fx.wear) o+=T(100,30,22,fx.wear.e,'pgx-wb'); if(fx.bath) o+=T(64,58,16,'✨','pgx-tw')+T(140,48,13,'✨','pgx-tw pgx-tw2')+T(120,92,11,'✨','pgx-tw');
+  const j=svg.lastIndexOf('</svg>'); return j<0?svg:svg.slice(0,j)+`<g class="pgx-g">${o}</g>`+svg.slice(j); }
+if(typeof mpArt==='function'){ const MA2=mpArt; mpArt=function(pp,k,pose,t){ const r=MA2.apply(this,arguments); try{ if(t) return r; return pgFxSVG(r,pgFxMine(pp)); }catch(e){ return r; } }; }
+if(typeof prOpen==='function'){ const PO=prOpen; prOpen=function(pp){ const r=PO.apply(this,arguments); try{ const fx=pgFxOf(pp); if(!pgFxNone(fx)){ const sv=document.querySelector('#gsZoom svg.pr-big'); if(sv){ let src=sv.outerHTML; try{ const a=pp.mine?ppAct(pp.k,ppNow(mpGet())):pgPoseFx(pp.k,fx); if(a) src=petPortraitSVG(pp.id,'',a).replace(/<svg class="pet-art"/,'<svg class="pr-big"'); }catch(_){} sv.outerHTML=pgFxSVG(src,fx); pgWearLater(); } } }catch(e){} return r; }; }
+// v178.85つづき（MITSUさん「受け取った時に大きい画面で、リボンが見えたり、ベッドに寝ているのが見えたり」）：プレゼントに合わせた姿勢
+const PG_TOYPR=[['ボール','ball'],['フリスビー','frisbee'],['ロープ','rope'],['ひも','rope'],['ねこじゃらし','feather'],['ねずみ','mouse'],['毛糸','yarn'],['すず','bell'],['かがみ','mirror'],['はしご','swing'],['とまり木','swing'],['水草','plant'],['つぼ','shell'],['タイヤ','ball'],['たる','ball'],['丸太','stick'],['トンネル','']];
+function pgPoseFor(kind,k,f){ try{ const A=PP_ACTS[kind]||[]; if(!A.length) return null; const one=L=>L.length?L[Math.floor(Date.now()/(10*60e3))%L.length]:null;
+  if(k==='bed') return one(A.filter(a=>a.b==='sleep'&&(a.pr==='cushion'||a.pr==='blanket')))||one(A.filter(a=>a.b==='sleep'&&!a.pr));
+  if(k==='toy'){ const m=PG_TOYPR.find(x=>String(f||'').includes(x[0])); const pr=m&&m[1]; return (pr&&one(A.filter(a=>a.pr===pr&&a.b!=='eat')))||one(A.filter(a=>a.b==='play'&&a.pr==='ball'))||one(A.filter(a=>a.b==='play'&&!a.pr)); }
+  if(k==='snack') return one(A.filter(a=>a.b==='eat'&&a.pr==='treat'))||one(A.filter(a=>a.b==='eat'&&a.pr!=='water'));
+  if(k==='flower') return one(A.filter(a=>a.pr==='flower'&&a.b!=='eat'));
+  return one(A.filter(a=>['stand','sit','perch','swim','sing'].includes(a.b)&&!a.pr&&!a.mk)); }catch(e){ return null; } }
+// いまの姿勢（うちのペット）：ベッドがあれば、寝る時はベッドで。おもちゃ・おやつ・お花も、ときどき
+if(typeof ppNow==='function'){ const PN=ppNow; ppNow=function(p){ const r=PN.apply(this,arguments); try{ if(!p||(typeof mpGone==='function'&&mpGone(p))) return r; const fx=pgFxMine(p); if(pgFxNone(fx)) return r;
+  if(p.la&&Date.now()-p.la.t<8*60e3) return r; const cur=ppAct(p.kind,r), h=ppH(p.name+'|pg|'+Math.floor(Date.now()/(15*60e3)))%100;
+  if(fx.bed&&cur&&(cur.b==='sleep'||cur.b==='lie')){ const a=pgPoseFor(p.kind,'bed'); if(a) return a.id; }
+  if(fx.toy&&h<40){ const a=pgPoseFor(p.kind,'toy',fx.toy.f); if(a) return a.id; }
+  if(fx.snack&&h>=40&&h<55){ const a=pgPoseFor(p.kind,'snack'); if(a) return a.id; }
+  if(fx.flower&&h>=55&&h<65){ const a=pgPoseFor(p.kind,'flower'); if(a) return a.id; }
+  }catch(e){} return r; }; }
+// 友だちのペットの大きな絵：プレゼントに合わせた姿勢（10分ごとに入れかわる）
+function pgPoseFx(kind,fx){ const K=['bed','toy','snack','flower'].filter(k=>fx[k]); if(!K.length) return null; const k=K[Math.floor(Date.now()/(10*60e3))%K.length]; return pgPoseFor(kind,k,fx[k]&&(fx[k].f||'')); }
+// リボンなどを、ペットの頭（いちばん高いところ）にのせる。絵を出したあとに1回だけ測る
+function pgWearFix(root){ try{ (root||document).querySelectorAll('text.pgx-wb:not([data-fx])').forEach(t=>{ t.setAttribute('data-fx','1'); const sv=t.ownerSVGElement; if(!sv) return; const R=sv.getBoundingClientRect(); if(!R.width) return; const vb=sv.viewBox.baseVal, k=vb.width/R.width;
+    let top=1e9; const P=[...sv.querySelectorAll(':scope > g polygon')]; if(!P.length) return; const B=P.map(x=>x.getBoundingClientRect()); B.forEach(b=>{ if(b.width>0&&b.top<top) top=b.top; }); const H=B.filter(b=>b.width>0&&b.top<top+R.height*.12); if(!H.length) return;
+    const cx=Math.max(...H.map(b=>b.left+b.width/2))-R.width*.02; top=Math.min(...H.filter(b=>b.left+b.width/2>cx-R.width*.06).map(b=>b.top)); t.setAttribute('x',((cx-R.left)*k+vb.x).toFixed(1)); t.setAttribute('y',((top-R.top)*k+vb.y+8).toFixed(1)); }); }catch(e){} }
+function pgWearLater(){ setTimeout(()=>{ pgWearFix(document); },60); }
+// 届いた時：大きな画面で見せる
+const PG_FXLINE={ wear:'{f}をつけてみました', toy:'{f}で遊んでいます', bed:'{f}で、すやすや眠っています', flower:'{f}を、お部屋にかざりました', bath:'{f}で、ピカピカになりました', snack:'{f}を、もらいました', cake:'{f}で、お誕生日のお祝いです' };
+function pgFxPop(p,nu){ try{ if(!p||document.visibilityState!=='visible') return; const g=(nu||[]).filter(x=>PG_FXD[x.k]).slice(-1)[0]; if(!g) return;
+  const f=String(g.f||'').replace(/^\S+\s*/,'')||pgName(g.k), e=pgEmo(g.f)||pgIco(g.k), nm=esc(p.name||'うちのペット'); const a=pgPoseFor(p.kind,g.k,g.f);
+  let art=''; try{ art=mpArt(p,(typeof mpStage==='function'?mpStage(p)[1]:1),a?a.id:undefined); }catch(_){}
+  const D=PG_FXD[g.k], line=PG_FXLINE[g.k].replace('{f}',esc(f));
+  gsZoomOpen(`<h3 class="gsz-h">🎁 ${nm}に、${esc(e)} ${esc(f)}が届きました！</h3><div class="pg-pop">${art}</div><p class="pg-pop-t"><b>${esc(g.by||'友だち')}さん</b>から。${nm}は、${line}${D>1?`<br><small>（${D}日間、公園や絵でも見られます）</small>`:''}</p><button type="button" class="pg-pop-b" data-pgpop="1">${nm}のページを見る</button>`); pgWearLater(); }catch(e){} }
+document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-pgpop]'); if(!b) return; e.preventDefault(); try{ gsZoomClose(); mpOpen(); }catch(_){} });
+try{ document.head.insertAdjacentHTML('beforeend','<style>.pg-pop{ max-width:340px; margin:0 auto; } .pg-pop svg{ width:100%; height:auto; display:block; border-radius:16px; } .pg-pop-t{ text-align:center; font-size:15px; line-height:1.7; margin:10px 0; } .pg-pop-t small{ color:#8A7A84; } .pg-pop-b{ display:block; margin:6px auto 0; border:0; background:#FF8FAB; color:#fff; border-radius:999px; padding:10px 18px; font:inherit; font-weight:700; font-size:15px; cursor:pointer; min-height:44px; }</style>'); }catch(e){}
+// うちのペットのページ：いま、どんな様子か（文で）
+function pgFxNowHTML(p){ const o=pgFxMine(p); if(pgFxNone(o)) return ''; const nm=esc(p.name||'うちのペット'); const L=[];
+  const left=x=>{ const d=Math.ceil((x.until-Date.now())/864e5); return d>1?`（あと${d}日）`:'（きょうまで）'; };
+  if(o.cake) L.push(`${esc(o.cake.e)} ${esc(o.cake.by||'友だち')}さんの${esc(o.cake.f)}で、お誕生日のお祝い中`);
+  if(o.wear) L.push(`${esc(o.wear.e)} ${esc(o.wear.f)}をつけています${left(o.wear)}`);
+  if(o.toy) L.push(`${esc(o.toy.e)} ${esc(o.toy.f)}で遊んでいます${left(o.toy)}`);
+  if(o.bed) L.push(`${esc(o.bed.e)} ${esc(o.bed.f)}で、お昼寝しています${left(o.bed)}`);
+  if(o.flower) L.push(`${esc(o.flower.e)} ${esc(o.flower.f)}を、お部屋にかざっています${left(o.flower)}`);
+  if(o.bath) L.push(`✨ ${esc(o.bath.f)}で、ピカピカになりました${left(o.bath)}`);
+  if(o.snack) L.push(`${esc(o.snack.e)} ${esc(o.snack.f)}を、もらいました${left(o.snack)}`);
+  return `<div class="pg-now"><b>🎁 いまの${nm}</b><ul>${L.map(x=>`<li>${x}</li>`).join('')}</ul></div>`; }
+if(typeof mpOpen==='function'){ const MO2=mpOpen; mpOpen=function(){ const r=MO2.apply(this,arguments); pgWearLater(); return r; }; }
+if(typeof render1==='function'){ const R2=render1; render1=function(){ const r=R2.apply(this,arguments); try{ if(document.querySelector('text.pgx-wb:not([data-fx])')) pgWearLater(); }catch(e){} return r; }; }
+if(typeof mpPageHTML==='function'){ const MP2=mpPageHTML; mpPageHTML=function(){ let h=MP2.apply(this,arguments); try{ const p=mpGet(); const x=pgFxNowHTML(p); if(!x) return h; const i=h.indexOf('<h4 class="mp-h4">💌'); return i>=0?h.slice(0,i)+x+h.slice(i):h; }catch(e){ return h; } }; }
+try{ document.head.insertAdjacentHTML('beforeend',`<style>
+.pr-hop .pgx{ position:absolute; font-style:normal; line-height:1; pointer-events:none; z-index:2; }
+.pr-hop .pgx-w{ left:26%; top:10px; font-size:15px; }
+.pr-hop .pgx-t{ left:4%; bottom:0; font-size:15px; animation:pgxRoll .9s ease-in-out infinite; }
+.pr-hop .pgx-b{ right:14%; top:4px; font-size:13px; animation:pgxTw 1.4s ease-in-out infinite; }
+@keyframes pgxRoll{ 0%,100%{ transform:translateY(0) rotate(0) } 50%{ transform:translateY(-7px) rotate(-180deg) } }
+@keyframes pgxTw{ 0%,100%{ opacity:.25; transform:scale(.8) } 50%{ opacity:1; transform:scale(1.1) } }
+.pgx-tw{ animation:pgxTw 1.6s ease-in-out infinite; transform-box:fill-box; transform-origin:center; } .pgx-tw2{ animation-delay:.6s; }
+.pgx-tb{ animation:pgxRoll 1.4s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+.pg-now{ background:#F3ECFF; border-radius:12px; padding:8px 12px; margin:6px 0 10px; } .pg-now b{ color:#6B4FA0; font-size:14px; } .pg-now ul{ margin:4px 0 0; padding-left:1.1em; font-size:14px; line-height:1.7; }
+</style>`); }catch(e){}
 // v178.26（MITSUさん）：届いたプレゼントが、何件来たか すぐわかるように。Life Home の「うちのペット」の上と、ペットのページに数を出す
 // はじめての時は、この1日に届いた分を「新しい」に数える
 try{ if(store.get('pg.viewedT',null)==null) store.set('pg.viewedT',Date.now()-864e5); }catch(e){}
