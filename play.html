@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.91">
+<meta name="lifebook-version" content="v178.93">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -747,7 +747,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.91';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.93';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21470,6 +21470,24 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 .hsa-ba svg,.hsa-ba img{ display:block; width:100%; height:auto; } .hsa-bc{ font-size:13px; margin:6px 0; } .hsa-lnk{ display:block; margin:0 0 8px; font-size:13px; }
 .mp-ph .pg-hs{ width:100%; height:auto; display:block; }
 </style>`); }catch(e){}
+
+// v178.92（MITSUさん 2026-11-19）：うちのペットの家から「🎁 友だちにプレゼント」→ 友だちのペットをえらぶ → そのペットの画面（プレゼントのボタンがある）
+function pgFrPick(){ let L=[]; try{ const seen=new Set(); L=(prPets()||[]).filter(x=>x&&x.oid&&!x.mine&&!seen.has(x.oid+'|'+x.n)&&seen.add(x.oid+'|'+x.n)); }catch(e){} window._pgFrL=L;
+  gsZoomOpen(`<h3 class="gsz-h">🎁 友だちのペットにプレゼント</h3>${L.length?`<p class="tiny muted">どの子に贈りますか？</p><div class="pg-frl">${L.map((x,i)=>{ let a=''; try{ a=prPetSVG(x.id,prPose(x),'pg-frp'); }catch(e){} return `<button type="button" class="pg-frc" data-pgfri="${i}">${a}<b>${esc(x.n)}</b><small>${esc(x.hs||'友だち')}さんのペット</small></button>`; }).join('')}</div>`:'<p>まだ、ペットを飼っている友だちがいません。友だちがペットを迎えると、ここから贈れます。</p>'}`); }
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-pgfr],[data-pgfri]'); if(!t) return; e.preventDefault(); e.stopPropagation();
+  if(t.dataset.pgfr){ pgFrPick(); return; } const x=(window._pgFrL||[])[+t.dataset.pgfri]; if(x&&typeof prOpen==='function') prOpen(x); },true);
+try{ document.head.insertAdjacentHTML('beforeend',`<style>
+/* v178.92：家の下のボタンを、ぜんぶ同じ形・同じ大きさに（スマホ2列・パソコン3列） */
+.pg-hctl .mp-who,.pg-hctl .mp-acts{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; overflow:visible; flex-wrap:nowrap; margin:0; padding:0; }
+.pg-hctl .mp-who{ margin:0 0 6px; }
+@media (min-width:641px){ .pg-hctl .mp-who,.pg-hctl .mp-acts{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+.pg-hctl .mp-w,.pg-hctl .mp-a{ width:100%; height:38px; min-height:38px; margin:0; padding:0 8px; box-sizing:border-box; border-radius:19px; border-width:1.5px; font-size:13px; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; justify-content:center; flex:none; }
+.pg-hctl .pg-clb{ grid-column:auto; }
+.pg-house{ position:relative; } .pg-back{ position:absolute; top:8px; right:8px; z-index:3; height:34px; padding:0 14px; border-radius:17px; border:1.5px solid #E86A92; background:#fff; color:#B23A64; font:inherit; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.15); }
+.pg-frl{ display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; }
+.pg-frc{ display:flex; flex-direction:column; align-items:center; gap:2px; background:#fff; border:1.5px solid #F2B8C9; border-radius:14px; padding:6px 6px 8px; cursor:pointer; font:inherit; color:inherit; }
+.pg-frc .pg-frp{ width:100%; height:auto; } .pg-frc b{ font-size:13px; color:#B23A64; } .pg-frc small{ font-size:11px; color:#8A7A84; }
+</style>`); }catch(e){}
 // v178.86（MITSUさん）：ペットだけの家。中が見える大きな部屋に、もらったプレゼント・おもちゃを飾る。うちのペットのページの一番上に出す
 function pgHouseItems(p){ const by={}; (Array.isArray(p&&p.gifts)?p.gifts:[]).forEach(g=>{ if(!g||!g.k) return; (by[g.k]=by[g.k]||[]); const f=String(g.f||''); if(g.k==='love'||g.k==='food'){ by[g.k].push(g); return; } if(!by[g.k].some(x=>x.f===f)) by[g.k].push({ f, e:pgEmo(f)||pgIco(g.k), n:f.replace(/^\S+\s*/,''), by:g.by }); }); return by; }
 // v178.90（MITSUさん 2026-11-19「全員が違うように」）：ペットごとに、家の屋根・かべ紙・床・ラグ・窓・カーテンが少しずつちがう（迎えた時刻と種類から決まる。毎回同じ）
@@ -21539,8 +21557,8 @@ function pgHouseSVG(p,O){ const T=(x,y,z,e,t)=>`<text x="${x}" y="${y}" font-siz
 if(typeof mpPageHTML==='function'){ const MP3=mpPageHTML; mpPageHTML=function(){ let h=MP3.apply(this,arguments); try{ const p=mpGet(); if(!p||(typeof mpGone==='function'&&mpGone(p))) return h;
   const a=h.indexOf('<div class="mp-top">'); if(a<0) return h; const s0=h.indexOf('<svg',a); if(s0<0) return h; let dep=0, i=s0, e0=-1; const re=/<svg\b|<\/svg>/g; re.lastIndex=s0; let m; while((m=re.exec(h))){ dep+=m[0]==='</svg>'?-1:1; if(!dep){ e0=m.index+6; break; } } if(e0<0) return h;
   let rest=h.slice(e0); const ac=rest.indexOf('<div class="mp-acts">'); let ctl='';
-  if(ac>=0){ const ae=rest.indexOf('</div>',ac)+6; const w0=rest.indexOf('<p class="tiny muted">あなた（Higher Self）'); const st=w0>=0&&w0<ac?w0:ac; ctl=rest.slice(st,ae).replace('さんぽに行ってあげて','さんぽに行こう'); if(pgClOk(p.kind)) ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-hsv" data-hsasave="1">📒 アルバムに保存</button></div>`); if(pgClOk(p.kind)) ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-clb" data-pgclo="1">👕 服を着せる${p.cl?`（${esc(pgClName(p.cl))}）`:''}</button></div>`); rest=rest.slice(0,st)+rest.slice(ae); }
-  return h.slice(0,a)+`<div class="pg-house">${pgHouseSVG(p)}</div>${ctl?`<div class="pg-hctl">${ctl}</div>`:''}<div class="mp-top pg-ht">`+rest; }catch(e){ return h; } }; }
+  if(ac>=0){ const ae=rest.indexOf('</div>',ac)+6; const w0=rest.indexOf('<p class="tiny muted">あなた（Higher Self）'); const st=w0>=0&&w0<ac?w0:ac; ctl=rest.slice(st,ae).replace('さんぽに行ってあげて','さんぽに行こう'); ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-hsv" data-hsasave="1">📒 アルバムに保存</button><button type="button" class="mp-a pg-gfb" data-pgfr="1">🎁 友だちにプレゼント</button></div>`); if(pgClOk(p.kind)) ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-clb" data-pgclo="1">👕 服を着せる</button></div>`); rest=rest.slice(0,st)+rest.slice(ae); }
+  return h.slice(0,a)+`<div class="pg-house">${pgHouseSVG(p)}<button type="button" class="pg-back" data-mp="close">← もどる</button></div>${ctl?`<div class="pg-hctl">${ctl}</div>`:''}<div class="mp-top pg-ht">`+rest; }catch(e){ return h; } }; }
 // 公園で、うちのペットを押した時も、まず家へ
 if(typeof prOpen==='function'){ const PO3=prOpen; prOpen=function(pp){ if(pp&&pp.mine&&typeof mpOpen==='function'){ try{ mpOpen(); return; }catch(e){} } return PO3.apply(this,arguments); }; }
 try{ document.head.insertAdjacentHTML('beforeend',`<style>
