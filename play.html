@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.96">
+<meta name="lifebook-version" content="v178.97">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -753,7 +753,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.96';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.97';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -18278,40 +18278,27 @@ setTimeout(function(){ try{
 // ===== 友だちの木が、増えると森になる。木を押すと、アップで全員の名前が見える。友だちのペットのつながりの木も =====
 const GS_PER=30; // 1本の木に、30人まで
 const _gsTree1=gsTreeHTML;
-// v178.96（MITSUさん 2026-11-19）：大きな友だちの木は、全員が重ならずに見えるように。左右に枝を出して上へのびる木。名前は1人ずつ、下に「つながっている人」を全員ならべる
+// v178.97（MITSUさん 2026-11-19）：大きな友だちの木は、全員が重ならずに見えるように。ペットのつながりの木と同じ形に（MITSUさん）
 function gsTW(t,fs){ let w=0; for(const ch of String(t)) w+=(ch.charCodeAt(0)<0x2E80?.6:1); return w*fs; }
 function gsFit(t,fs,max){ t=String(t||''); if(gsTW(t,fs)<=max) return t; while(t.length>1&&gsTW(t+'…',fs)>max) t=t.slice(0,-1); return t+'…'; }
-function gsBigSVG(fr){ const fof=(typeof store!=='undefined'&&store.get('hitotsu.fof',{}))||{}; const n=fr.length;
-  const cols=(typeof innerWidth==='number'&&innerWidth>=700)?4:2, W=cols===4?720:360, cx=W/2, colW=(W-24)/cols;
-  const xs=cols===4?[cx-colW*1.5-6,cx-colW*.5-6,cx+colW*.5+6,cx+colW*1.5+6]:[cx-colW*.5-6,cx+colW*.5+6];
+function gsBigSVG(fr){ const n=fr.length, W=n>12?560:n>8?480:360, cx=W/2; let br='', lv='', ppl='', lab='';
+  // ペットのつながりの木と同じ形：幹の上から、段（列）にならんだ人へ枝がのびる。名札は名前だけ（つながっている人は、下の一覧に）
+  const pw=56, ph=46, rowH=ph+34, per=Math.max(1,Math.floor((W-16)/(pw+14))), rows=n?Math.ceil(n/per):0, Y0=n?20:40;
+  const top=Y0+rows*rowH+(n?4:30), base=top+44, H=base+40;
   const myName=(typeof cur!=='undefined'&&cur&&cur.P)?cur.P.given:'';
-  // 段（下の段から）。左右に半分ずつ：内側→外側の順に置く
-  const ord=cols===4?[1,2,0,3]:[0,1]; const rows=[]; for(let i=0;i<n;i+=cols) rows.push(fr.slice(i,i+cols));
-  const subs=f=>{ const e=fof[f.id]; return e&&Array.isArray(e.fr)?e.fr.filter(x=>x&&x.b):[]; };
-  const FS=12.5, SF=10.5, LH=15;
-  const rh=rows.map(r=>58+30+Math.max(0,...r.map(f=>subs(f).length))*LH+(r.some(f=>subs(f).length)?6:0)+10);
-  const top=26; let y=top; const rowY=[]; for(let r=rows.length-1;r>=0;r--){ rowY[r]=y; y+=rh[r]; }
-  const base=y+40, H=base+40; let br='', lv='', ppl='', lab='';
-  const tTop=n?rowY[rows.length-1]+46:base-60;
-  br+=`<path d="M${cx-14} ${base} L${cx-5} ${tTop} L${cx+5} ${tTop} L${cx+14} ${base} Z" fill="#9A6B47"/><rect x="${cx-6}" y="${tTop}" width="4" height="${base-tTop}" fill="#B08463" opacity=".55"/>`;
-  rows.forEach((r,ri)=>{ const by=rowY[ri]+46; const side=[[],[]];
-    r.forEach((f,j)=>{ const ci=ord[j], x=xs[ci]; (x<cx?side[0]:side[1]).push(x); });
-    side.forEach(s=>{ if(!s.length) return; const far=s.reduce((a,b)=>Math.abs(b-cx)>Math.abs(a-cx)?b:a); br+=`<path d="M${cx} ${(by+14).toFixed(1)} Q${((cx+far)/2).toFixed(1)} ${(by+8).toFixed(1)} ${far.toFixed(1)} ${by.toFixed(1)}" stroke="#9A6B47" stroke-width="6" fill="none" stroke-linecap="round"/>`; });
-    r.forEach((f,j)=>{ const x=xs[ord[j]], i=ri*cols+j;
-      lv+=gsLeaves(x+3,by+2,15,i%2?'#A6DC8E':'#86C878',i%2?'#86C878':'#B7E3A0');
-      ppl+=gsPerson(x,by-16,1.45,f.id||f.by||i);
-      const nm=gsFit((f.by||'友だち')+'さん',FS,colW-14), lw=Math.max(40,gsTW(nm,FS)+18);
-      lab+=`<g><rect x="${(x-lw/2).toFixed(1)}" y="${by+12}" width="${lw.toFixed(1)}" height="22" rx="11" fill="#fff" stroke="#F4C6D4" stroke-width="1.5"/><text x="${x.toFixed(1)}" y="${by+27.5}" text-anchor="middle" font-size="${FS}" font-weight="700" fill="#6A4A58">${esc(nm)}</text></g>`;
-      const ss=subs(f); if(ss.length){ const names=ss.map(s=>gsFit(s.b+'さん',SF,colW-34)); const bw=Math.max(...names.map(t=>gsTW(t,SF)))+16; const x0=x-bw/2, y0=by+40;
-        br+=`<path d="M${x.toFixed(1)} ${by+34} L${x.toFixed(1)} ${y0-2} L${x0.toFixed(1)} ${y0-2} L${x0.toFixed(1)} ${(y0+(names.length-1)*LH+6).toFixed(1)}" stroke="#B9967A" stroke-width="1.6" stroke-dasharray="3 2" fill="none"/>`;
-        names.forEach((t,k)=>{ const yy=y0+k*LH+6; br+=`<path d="M${x0.toFixed(1)} ${yy} h5" stroke="#B9967A" stroke-width="1.6" stroke-dasharray="2 1.5"/>`; lv+=`<rect x="${(x0+5).toFixed(1)}" y="${yy-3.5}" width="7" height="7" rx="2" fill="#A6DC8E"/>`; lab+=`<text x="${(x0+15).toFixed(1)}" y="${yy+3.8}" font-size="${SF}" fill="#7A6A74">${esc(t)}</text>`; }); } }); });
-  if(!n) lab+=`<text x="${cx}" y="${base-80}" text-anchor="middle" font-size="11" fill="#8A7A84">友だちを紹介すると、ここに枝がのびていきます</text>`;
-  const back=`<rect x="${cx-80}" y="${base}" width="160" height="10" rx="2" fill="#A6DC8E"/><rect x="${cx-70}" y="${base+8}" width="140" height="7" rx="2" fill="#B08463"/>`;
-  ppl+=gsPerson(cx,base-11,1.6,'me'+(myName||''));
-  const mn=myName?gsFit(myName,FS,150)+'（Channel）':'あなたの Channel', mw=gsTW(mn,FS)+24;
-  lab+=`<g><rect x="${(cx-mw/2).toFixed(1)}" y="${base+18}" width="${mw.toFixed(1)}" height="22" rx="11" fill="#fff" stroke="#F4C6D4" stroke-width="1.5"/><text x="${cx}" y="${base+33.5}" text-anchor="middle" font-size="${FS}" font-weight="700" fill="#6A4A58">${esc(mn)}</text></g>`;
-  const hearts=[[cx-18,6]].map(([x,y])=>`<g fill="#FF9FB2"><rect x="${x}" y="${y}" width="5" height="5"/><rect x="${x+7}" y="${y}" width="5" height="5"/><rect x="${x-1}" y="${y+4}" width="14" height="5"/><rect x="${x+1}" y="${y+8}" width="10" height="4"/><rect x="${x+4}" y="${y+11}" width="4" height="3"/></g>`).join('');
-  return `<svg class="gs-big" viewBox="0 0 ${W} ${H+4}" role="img" aria-label="友だちの木。あなたの Channel から、紹介でつながった${n}人へ枝がのびている">${hearts}${br}${lv}${ppl}${lab}</svg>`; }
+  const lb=(x,y,t,max,fs,cls)=>{ const tt=gsFit(t,fs,max-14), w=Math.max(34,gsTW(tt,fs)+14); return `<g class="${cls||''}"><rect x="${(x-w/2).toFixed(1)}" y="${(y-9).toFixed(1)}" width="${w.toFixed(1)}" height="18" rx="9" fill="#fff" stroke="#F4C6D4"/><text x="${x.toFixed(1)}" y="${(y+3.6).toFixed(1)}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="#6A4A58">${esc(tt)}</text></g>`; };
+  const back=`<rect x="${cx-70}" y="${base}" width="140" height="10" rx="2" fill="#A6DC8E"/><rect x="${cx-62}" y="${base+8}" width="124" height="7" rx="2" fill="#B08463"/>`;
+  br+=`<path d="M${cx-10} ${base} L${cx-6} ${top} L${cx+6} ${top} L${cx+10} ${base} Z" fill="#9A6B47"/>`;
+  const cnt=[]; for(let r=0;r<rows;r++) cnt.push(Math.floor(n/rows)); for(let r=rows-1,k=n-(rows?Math.floor(n/rows)*rows:0);k>0;r--,k--) cnt[r]++;
+  let i=0; cnt.forEach((k,r)=>{ const step=Math.min(pw+14,(W-16)/k), ey=Y0+r*rowH+ph/2; for(let j=0;j<k;j++,i++){ const f=fr[i]; const ex=cx+(j-(k-1)/2)*step;
+    br+=`<path d="M${cx} ${top+4} Q${(cx+(ex-cx)*.25).toFixed(1)} ${(top-14).toFixed(1)} ${ex.toFixed(1)} ${(ey+ph/2-2).toFixed(1)}" stroke="#9A6B47" stroke-width="${r===rows-1?4:3}" fill="none" stroke-linecap="round" opacity="${r===rows-1?1:.75}"/>`;
+    lv+=gsLeaves(ex+3,ey+12,12,i%2?'#A6DC8E':'#86C878',i%2?'#86C878':'#B7E3A0');
+    ppl+=gsPerson(ex,ey+2,1.5,f.id||f.by||i);
+    lab+=lb(ex,ey+ph/2+11,(f.by||'友だち')+'さん',step,9.5,'gs-name'); } });
+  ppl+=gsPerson(cx,base-12,1.6,'me'+(myName||''));
+  lab+=lb(cx,base+24,myName?myName+'（Channel）':'あなたの Channel',200,10.5,'gs-me');
+  if(!n) lab+=`<text x="${cx}" y="${top-14}" text-anchor="middle" font-size="10.5" fill="#8A7A84">友だちを紹介すると、ここに枝がのびていきます</text>`;
+  return `<svg class="gs-big" viewBox="0 0 ${W} ${H}" role="img" aria-label="友だちの木。あなたの Channel から、紹介でつながった${n}人へ枝がのびている">${back}${br}${lv}${ppl}${lab}</svg>`; }
 function gsSVG(fr,full){ if(full) return gsBigSVG(fr||[]); const s0=gsShort; if(full) gsShort=(s)=>String(s||''); let h=''; try{ h=_gsTree1(fr); }finally{ gsShort=s0; } const m=h.match(/<svg[\s\S]*<\/svg>/); return m?m[0]:''; }
 function gsChunks(a,n){ const out=[]; for(let i=0;i<a.length;i+=n) out.push(a.slice(i,i+n)); return out; }
 let _gsFr=[];
