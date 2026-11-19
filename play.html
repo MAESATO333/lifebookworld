@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.93">
+<meta name="lifebook-version" content="v178.95">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -747,7 +747,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.93';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.95';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -18299,7 +18299,7 @@ function gsPetSVG(list,full){ const n=list.length, W=n>12?560:n>8?480:360, cx=W/
   return `<svg viewBox="0 0 ${W} ${H+12}" role="img" aria-label="ペットのつながりの木。${n}匹">${back}${br}${art}${lab}</svg>`; }
 const GS_PPER=30;
 function gsPetTreeHTML(fr){ const list=gsFrPets(fr); const me=typeof mpGet==='function'?mpGet():null; if(!list.length&&!me) return ''; const ch=gsChunks(list,GS_PPER); if(!ch.length) ch.push([]);
-  return `<div class="gs-pet-w"><p class="gs-forest-h">🐾 ペットのつながりの木${list.length?`　${list.length}匹`:''}${ch.length>1?`・木${ch.length}本<span class="gs-zoom gs-zoom-h" aria-hidden="true">🔍 押すと大きく見られます</span>`:''}</p><div class="${ch.length>1?'gs-forest':''}">${ch.map((c,i)=>`<figure class="gs-tree gs-pet ${ch.length>1?'gs-mini':'gs-one'}"><button type="button" class="gs-zb" data-gspz="${i}" aria-label="ペットの木を、大きく見る">${gsPetSVG(c)}${ch.length>1?'':'<span class="gs-zoom" aria-hidden="true">🔍 押すと大きく見られます</span>'}</button>${ch.length>1?`<figcaption>${i+1}本目の木・${c.length}匹</figcaption>`:'<figcaption>うちのペットを幹に、友だちのペットが枝の先に。</figcaption>'}</figure>`).join('')}</div></div>`; }
+  return `<div class="gs-pet-w"><p class="gs-forest-h">🐾 ペットのつながりの木${list.length?`　${list.length}匹`:''}${list.length&&me?'<button type="button" class="pt-snapb" data-ptsnap="0">📷 集合写真</button>':''}${ch.length>1?`・木${ch.length}本<span class="gs-zoom gs-zoom-h" aria-hidden="true">🔍 押すと大きく見られます</span>`:''}</p><div class="${ch.length>1?'gs-forest':''}">${ch.map((c,i)=>`<figure class="gs-tree gs-pet ${ch.length>1?'gs-mini':'gs-one'}"><button type="button" class="gs-zb" data-gspz="${i}" aria-label="ペットの木を、大きく見る">${gsPetSVG(c)}${ch.length>1?'':'<span class="gs-zoom" aria-hidden="true">🔍 押すと大きく見られます</span>'}</button>${ch.length>1?`<figcaption>${i+1}本目の木・${c.length}匹</figcaption>`:'<figcaption>うちのペットを幹に、友だちのペットが枝の先に。</figcaption>'}</figure>`).join('')}</div></div>`; }
 // ---- アップで見る ----
 function gsZoomOpen(html){ let d=document.getElementById('gsZoom'); if(!d){ d=document.createElement('div'); d.id='gsZoom'; d.className='gsz'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); document.body.appendChild(d); }
   d.innerHTML=`<div class="gsz-in"><button type="button" class="gsz-x" aria-label="閉じる">×</button>${html}<button type="button" class="gsz-x gsz-back">← もどる</button></div>`; d.hidden=false; document.body.classList.add('gsz-open'); try{ d.querySelector('.gsz-x').focus(); }catch(e){} }
@@ -18308,7 +18308,7 @@ document.addEventListener('click',e=>{ const t=e.target; if(t.closest&&t.closest
   const z=t.closest&&t.closest('[data-gsz]'); if(z){ const i=+z.dataset.gsz; const c=gsChunks(_gsFr,GS_PER)[i]||_gsFr; const fof=store.get('hitotsu.fof',{}); const many=_gsFr.length>GS_PER;
     gsZoomOpen(`<h3 class="gsz-h">🌳 ${many?`${i+1}本目の木（${c.length}人）`:`友だちの木（${c.length}人）`}</h3><div class="gsz-art">${gsSVG(c,true)}</div>${c.length>6?`<p class="gsz-sc">↕ スクロールして、${c.length}人を見られます</p>`:''}<ul class="gsz-l">${c.map(f=>{ const e=fof[f.id]||{}; const sub=(e.fr||[]).map(x=>x.b).filter(Boolean); return `<li><b>${esc(f.by||'友だち')}さん</b>${sub.length?`<small>つながっている人：${sub.map(x=>esc(x)+'さん').join('、')}</small>`:''}${e.pet?`<small>🐾 ${esc(e.pet.b)}（${esc((PB_ALL[e.pet.p]||{}).name||'')}）</small>`:''}</li>`; }).join('')||'<li>まだ、つながった人はいません。</li>'}</ul>`); return; }
   const pz=t.closest&&t.closest('[data-gspz]'); if(pz){ const i=+pz.dataset.gspz; const list=gsFrPets(_gsFr); const c=gsChunks(list,GS_PPER)[i]||[];
-    gsZoomOpen(`<h3 class="gsz-h">🐾 ペットのつながりの木（${c.length}匹）</h3><div class="gsz-art">${gsPetSVG(c,true)}</div><ul class="gsz-l">${c.map(p=>`<li><b>${p.g?'🌈 ':''}${esc(p.b)}</b><small title="Higher Self：${esc(p.owner)}さん・${esc((PB_ALL[p.p]||{}).name||'')}・${p.a}歳">🌟 ${esc(p.owner)}さん・${esc((PB_ALL[p.p]||{}).name||'')}・${p.a}歳</small>${typeof pgBtns==='function'?pgBtns(p):''}</li>`).join('')||'<li>友だちがペットを迎えると、ここに出ます。</li>'}</ul>${typeof pcZoomHTML==='function'?pcZoomHTML():''}`); } });
+    gsZoomOpen(`<h3 class="gsz-h">🐾 ペットのつながりの木（${c.length}匹）</h3><div class="gsz-art">${gsPetSVG(c,true)}</div><ul class="gsz-l">${c.map(p=>`<li><b>${p.g?'🌈 ':''}${esc(p.b)}</b><small title="Higher Self：${esc(p.owner)}さん・${esc((PB_ALL[p.p]||{}).name||'')}・${p.a}歳">🌟 ${esc(p.owner)}さん・${esc((PB_ALL[p.p]||{}).name||'')}・${p.a}歳</small>${typeof pgBtns==='function'?pgBtns(p):''}</li>`).join('')||'<li>友だちがペットを迎えると、ここに出ます。</li>'}</ul>${typeof pcZoomHTML==='function'?pcZoomHTML():''}`); try{ const zi=document.querySelector('#gsZoom .gsz-art'); if(zi&&c.length&&typeof mpGet==='function'&&mpGet()) zi.insertAdjacentHTML('beforebegin',`<div class="np-row pt-row"><button type="button" class="mp-btn" data-ptsnap="${i}">📷 この木の集合写真をとる</button></div>`); }catch(_){} } });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ const d=document.getElementById('gsZoom'); if(d&&!d.hidden) gsZoomClose(); } });
 document.head.insertAdjacentHTML('beforeend',`<style>
 .gs-zb{ display:block; width:100%; padding:0; border:0; background:none; cursor:zoom-in; position:relative; font:inherit; }
@@ -19900,6 +19900,8 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // v166: Life Home の上のほうに「✨ LIFE BOOKのニュース」。新しい機能・更新のお知らせ。
 // ゲームに入っているお知らせ（LBN_BUILTIN）＋ 管理者が Firebase の os/news に書いたお知らせ（{ n:[{ i, d:ミリ秒, t:題, b:説明 }] }）。新しい順に3つ、のこりは「これまでのお知らせ」。
 const LBN_BUILTIN=[
+  { i:'v178-petrealestate', d:Date.UTC(2026,10,19,3,41), t:'🏢 ペットの家が大きくなり、不動産も始められます', b:'ペットのつながりの木の友だちのペットがふえると、ペットの家が2階建て・3階建て・4階建てに。101匹をこえると5階建てのビルになり、最上階で「（ペットの名前）不動産」を始めます。友だちの Higher Self から「部屋をかりたい」と申しこまれたら、一戸建てのペットハウスを1匹に1軒 貸せます。' },
+  { i:'v178-treephoto', d:Date.UTC(2026,10,19,3,40), t:'📷 ペットのつながりの木で、集合写真が撮れます', b:'ペットのつながりの木の「📷 集合写真」で、うちのペットと友だちのペットの集合写真が撮れます。📒 Higher Self のアルバムに保存され、友だちの Higher Self にも送れます。' },
   { i:'v178-hsalbum', d:Date.UTC(2026,10,19,3,0), t:'📒 Higher Self のアルバムができました', b:'ペット・ペットの家・街ブラ・乗り物・Gateway の写真や動く写真・お花の部屋の写真が、ぜんぶ1つのアルバムに新しい順で並びます。マイページのアルバム欄や、ペットのアルバムから開けます。ペットの家の「📒 アルバムに保存」で、お部屋の様子も写真に残せます。' },
   { i:'v178-petclothes', d:Date.UTC(2026,10,19,2,51), t:'👕 うちのペットに、服を着せられるようになりました', b:'うちのペットのページの「👕 服を着せる」から、形・色・模様を組み合わせて、100種類以上の服を着せられます。着せたまま写真をとって、アルバムに残したり、画像として保存したりもできます。服を着せられるのは、飼い主だけです。' },
   { i:'v178-pethouse', d:Date.UTC(2026,10,19,2,50), t:'🏠 ペットの家ができました', b:'うちのペットを押すと、ペットの家の大きな部屋が見られます。友だちからもらったプレゼントやおもちゃが、お部屋にかざられます。帽子やリボンは、ペットが動いてもいっしょに動き、「はずす」で外すこともできます。' },
@@ -21404,7 +21406,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 
 // v178.90（MITSUさん 2026-11-19）：Higher Self が撮った写真を、ぜんぶ1つのアルバムで見る（ペット・ペットの家・街ブラ・乗り物・Gateway の写真と動く写真・お花の部屋）
 // 写真はそれぞれ今までの場所に保存したまま（消えない・動かない）。ここでは集めて、新しい順にならべるだけ。絵は画面に見えた時だけ描く（固まらないように）。
-function pgHousePhoto(p,x){ try{ const q=Object.assign({},p,{ gifts:(p.gifts||[]).slice(0,x.g==null?999:x.g), cl:x.cl&&typeof pgClParse==='function'?pgClParse(x.cl):null }); return pgHouseSVG(q,{ hr:x.hr, fx:x.fx||{} }); }catch(e){ return ''; } }
+function pgHousePhoto(p,x){ try{ const q=Object.assign({},p,{ gifts:(p.gifts||[]).slice(0,x.g==null?999:x.g), cl:x.cl&&typeof pgClParse==='function'?pgClParse(x.cl):null }); return pgHouseSVG(q,{ hr:x.hr, fx:x.fx||{}, fl:x.fl||1 }); }catch(e){ return ''; } }
 function hsAlbDay(d){ const m=/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/.exec(String(d||'')); return m?new Date(+m[1],m[2]-1,+m[3],12).getTime():0; }
 function hsAlbDate(t){ if(!t) return ''; const d=new Date(t); return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`; }
 function hsAlbItems(){ const L=[];
@@ -21433,7 +21435,7 @@ function hsAlbCap(it){ const x=it.x; let c='';
   return `<b>${HSA_TY[it.ty]}</b>${it.t?` <small>${hsAlbDate(it.t)}</small>`:''}${c?`<br>${esc(String(c).slice(0,60))}`:''}`; }
 function hsAlbList(){ return _hsaF==='all'?_hsaL:_hsaL.filter(it=>it.ty===_hsaF||(_hsaF==='pet'&&it.ty==='house')); }
 function hsAlbHTML(){ const A=hsAlbList(), show=A.slice(0,_hsaN);
-  const cnt={}; _hsaL.forEach(it=>{ const k=it.ty==='house'?'pet':it.ty; cnt[k]=(cnt[k]||0)+1; });
+  const cnt={}; _hsaL.forEach(it=>{ const k=it.ty==='house'?'pet':it.ty==='treeg'?'tree':it.ty; cnt[k]=(cnt[k]||0)+1; });
   const chips=HSA_F.filter(f=>f[0]==='all'||cnt[f[0]]).map(f=>`<button type="button" class="mp-w${_hsaF===f[0]?' on':''}" data-hsaf="${f[0]}">${f[1]} ${f[0]==='all'?_hsaL.length:cnt[f[0]]}</button>`).join('');
   return `<h3 class="gsz-h">📒 Higher Self のアルバム</h3><p class="tiny muted">あなた（Higher Self）が撮った写真が、ぜんぶここに集まります。新しい順です。写真を押すと大きく見られます。</p>
   <div class="hsa-f">${chips}</div>${A.length?`<div class="hsa-g">${show.map((it,i)=>`<button type="button" class="hsa-c" data-hsai="${_hsaL.indexOf(it)}"><span class="hsa-a"></span><span class="hsa-t">${hsAlbCap(it)}</span></button>`).join('')}</div>${A.length>_hsaN?`<div class="np-row"><button type="button" class="mp-btn" data-hsamore="1">もっと見る（あと${A.length-_hsaN}枚）</button></div>`:''}`
@@ -21451,7 +21453,7 @@ function hsAlbBig(i){ const it=_hsaL[i]; if(!it) return; const L=hsAlbList(), k=
 // ペットの家を、そのまま写真に（いまの時刻・プレゼント・おしゃれ・服で）
 function hsAlbSaveHouse(){ const p=mpGet(); if(!p||(typeof mpGone==='function'&&mpGone(p))) return; const t=new Date(); const fx={}; try{ const f=pgFxMine(p); Object.keys(f).forEach(k=>{ fx[k]={ e:f[k].e, f:f[k].f, by:f[k].by, t:f[k].t, until:f[k].until }; }); }catch(e){}
   const st=typeof mpStage==='function'?mpStage(p):['',1]; p.photos=p.photos||[];
-  p.photos.push({ t:Date.now(), k:st[1], h:1, g:(p.gifts||[]).length, hr:t.getHours(), fx, cl:p.cl?`${p.cl.s}.${p.cl.c}.${p.cl.m}`:'', c:`${t.getFullYear()}年${t.getMonth()+1}月${t.getDate()}日・${p.name}の家で` });
+  p.photos.push({ t:Date.now(), k:st[1], h:1, g:(p.gifts||[]).length, fl:typeof pgFloors==='function'?pgFloors():1, hr:t.getHours(), fx, cl:p.cl?`${p.cl.s}.${p.cl.c}.${p.cl.m}`:'', c:`${t.getFullYear()}年${t.getMonth()+1}月${t.getDate()}日・${p.name}の家で` });
   if(p.photos.length>60) p.photos=p.photos.slice(-60); try{ mpLog(p,'家の写真をとって、アルバムに保存した。','photo'); }catch(e){} mpSet(p); try{ pgToast('📒 アルバムに保存しました'); }catch(e){} mpOpen(); }
 document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-hsaf],[data-hsai],[data-hsamore],[data-hsab],[data-hsaback],[data-hsaopen],[data-hsasave]'); if(!t) return; e.preventDefault(); e.stopPropagation();
   if(t.dataset.hsasave){ hsAlbSaveHouse(); return; }
@@ -21488,10 +21490,88 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 .pg-frc{ display:flex; flex-direction:column; align-items:center; gap:2px; background:#fff; border:1.5px solid #F2B8C9; border-radius:14px; padding:6px 6px 8px; cursor:pointer; font:inherit; color:inherit; }
 .pg-frc .pg-frp{ width:100%; height:auto; } .pg-frc b{ font-size:13px; color:#B23A64; } .pg-frc small{ font-size:11px; color:#8A7A84; }
 </style>`); }catch(e){}
+
+// v178.94（MITSUさん 2026-11-19）：ペットのつながりの木の「集合写真」。とると 📒 Higher Self のアルバムに入り、友だちの Higher Self にも送れる
+// 写真は小さなメモ（うちのペットと、友だちのペットの種類・名前）。送る時は お花・Gateway の写真と同じ場所（photo）に 'PT1:' をつけて送る（1000文字まで・ルールの変更なし）
+const PT_ALB='pt.album', PT_GOT='pt.got', PT_SEEN='pt.seen';
+function ptClean(v,n){ return String(v||'').replace(/[~^]/g,'').slice(0,n); }
+function ptEncode(me,list,t){ const head=[t,ptClean(me.breed,40),ptClean(me.name,10),me.g?1:0].join('^'); const L=list.map(p=>[ptClean(p.p,40),ptClean(p.b,8),p.g?1:0].join('^'));
+  let d=head+'~'+L.join('~'); while(d.length>990&&L.length){ L.pop(); d=head+'~'+L.join('~'); } return d; }
+function ptDecode(d){ try{ const a=String(d||'').split('~'); const h=a[0].split('^'); const me={ breed:h[1], name:h[2], g:h[3]==='1' }; if(!PB_ALL[me.breed]) return null;
+  const list=a.slice(1).map((x,i)=>{ const q=x.split('^'); return PB_ALL[q[0]]?{ p:q[0], k:PB_ALL[q[0]].kind, b:q[1]||'', g:q[2]==='1', oid:'pt'+i }:null; }).filter(Boolean); return { t:+h[0]||0, me, list }; }catch(e){ return null; } }
+// 写真の絵：その時のうちのペットを幹に。ポーズは撮った時刻で決まる（あとで見ても同じ）
+function ptSVG(d){ const D=typeof d==='string'?ptDecode(d):d; if(!D) return ''; const MG=mpGet, GN=typeof mpGone==='function'?mpGone:null, DN=Date.now, GL=typeof _gpList!=='undefined'?_gpList:null;
+  try{ mpGet=()=>({ name:D.me.name, breed:D.me.breed, kind:(PB_ALL[D.me.breed]||{}).kind, gifts:[], photos:[] }); if(GN) mpGone=()=>!!D.me.g; if(D.t) Date.now=()=>D.t; let v=gsPetSVG(D.list,false); v=v.replace('<svg ','<svg class="pt-svg" '); return v; }
+  catch(e){ return ''; } finally{ mpGet=MG; if(GN) mpGone=GN; Date.now=DN; try{ if(GL) _gpList=GL; }catch(_){} } }
+function ptAlbum(){ const a=store.get(PT_ALB,[]); return Array.isArray(a)?a:[]; }
+function ptSnap(i){ const me=typeof mpGet==='function'?mpGet():null; if(!me||!PB_ALL[me.breed]) return; const list=(gsChunks(gsFrPets(typeof _gsFr!=='undefined'?_gsFr:store.get(KEY_FRIEND,[])),GS_PPER)[+i||0])||[]; if(!list.length) return;
+  const t=Date.now(), d=ptEncode({ breed:me.breed, name:me.name, g:typeof mpGone==='function'&&mpGone(me) },list,t); const A=ptAlbum(); A.unshift({ t, d, n:list.length }); store.set(PT_ALB,A.slice(0,30));
+  try{ let f=document.querySelector('.mbx-flash'); if(!f){ f=document.createElement('div'); f.className='mbx-flash'; document.body.appendChild(f); } f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); setTimeout(()=>f.classList.remove('on'),600); }catch(_){}
+  ptSendOpen(t,'📒 Higher Self のアルバムに保存しました'); }
+let _ptTo=null;
+function ptSendOpen(t,msg){ const r=ptAlbum().find(x=>x.t===+t); if(!r) return; const fr=typeof flFriends==='function'?flFriends():[];
+  gsZoomOpen(`<h3 class="gsz-h">📷 ペットの木の集合写真</h3>${msg?`<p class="pt-msg">${esc(msg)}</p>`:''}<div class="gsz-art pt-art">${ptSVG(r.d)}</div>
+  <h4 class="pt-h">💌 友だちの Higher Self に送る</h4>${fr.length?`<div class="gw-tos pt-tos">${fr.map(f=>`<button type="button" class="mp-w${f.id===_ptTo?' on':''}" data-ptto="${esc(f.id)}">${esc(f.by||'友だち')}さん</button>`).join('')}</div><div class="np-row"><button type="button" class="mp-btn" data-ptgo="${r.t}">💌 この写真を送る</button></div><p class="tiny muted">1人の友だちに送れる写真は、1日${typeof FL_PH_DAYMAX!=='undefined'?FL_PH_DAYMAX:10}枚までです（お花・Gateway の写真とあわせて）。</p>`:'<p class="tiny muted">友だちとつながると、送れるようになります。</p>'}
+  <div class="np-row">${typeof hsAlbOpen==='function'?'<button type="button" class="linkish" data-hsaopen="1">📒 Higher Self のアルバムを見る</button>':''}</div>`); }
+async function ptSend(t){ const r=ptAlbum().find(x=>x.t===+t); if(!r) return; const fr=(typeof flFriends==='function'?flFriends():[]).find(f=>f.id===_ptTo); if(!fr) return ptSendOpen(t,'だれに送るか、選んでください。');
+  const p='PT1:'+r.d; if(p.length>1000) return ptSendOpen(t,'この写真は大きすぎて、送れませんでした。');
+  const b=document.querySelector('[data-ptgo]'); if(b){ b.disabled=true; b.textContent='おくっています…'; }
+  if(!(typeof flOn==='function'&&flOn())&&!(typeof fbWaitOn==='function'&&await fbWaitOn(15000))) return ptSendOpen(t,'いまサーバーにつながるのを待っています。少しあとで、もう一度押してください。');
+  const sent=store.get('fl.phSent',{}), key=fr.id+'|'+flDay(), n=(sent[key]||0)+1; if(n>FL_PH_DAYMAX) return ptSendOpen(t,`${fr.by||'友だち'}さんには、きょうはもう${FL_PH_DAYMAX}枚送りました。また明日ね。`);
+  const me=myId(), by=String(store.get(KEY_ME,'')||'').slice(0,20), id=me+'_'+flDay()+'_'+n;
+  try{ await Promise.race([FB.D.setDoc(FB.D.doc(FB.db,'ids',String(fr.id),'photo',id),{ from:me, by, p, m:'', t:Date.now() }),new Promise((_,ng)=>setTimeout(()=>ng(new Error('timeout')),15000))]);
+    const keep={}; Object.keys(sent).filter(x=>x.endsWith(flDay())).forEach(x=>keep[x]=sent[x]); keep[key]=n; store.set('fl.phSent',keep);
+    ptSendOpen(t,`${fr.by||'友だち'}さんに、集合写真を送りました💌`); }
+  catch(err){ ptSendOpen(t,String(err&&err.code||'').includes('permission')?'まだ写真は送れません（サーバーの準備中です）。':'うまく送れませんでした。少しあとで、もう一度ためしてね。'); } }
+function ptRecv(docId,x){ try{ const seen=store.get(PT_SEEN,[]); if(!seen.includes(docId)){ const d=String(x.p).slice(4); if(ptDecode(d)){ store.set(PT_SEEN,seen.concat([docId]).slice(-300)); store.set(PT_GOT,(store.get(PT_GOT,[])||[]).concat([{ id:docId, d, fromBy:String(x.by||'友だち').slice(0,20), t:+x.t||Date.now() }]).slice(-40));
+      try{ if(typeof pgToast==='function') pgToast(`${String(x.by||'友だち').slice(0,20)}さんから、ペットの木の集合写真が届きました💌（📒 Higher Self のアルバムで見られます）`); }catch(_){} } } }catch(e){}
+  try{ FB.D.deleteDoc(FB.D.doc(FB.db,'ids',myId(),'photo',docId)); }catch(_){} }
+document.addEventListener('click',e=>{ const a=e.target.closest&&e.target.closest('[data-ptsnap],[data-ptto],[data-ptgo],[data-ptsend]'); if(!a) return; e.preventDefault(); e.stopPropagation();
+  if(a.dataset.ptsnap!=null) ptSnap(a.dataset.ptsnap);
+  else if(a.dataset.ptto){ _ptTo=a.dataset.ptto; document.querySelectorAll('[data-ptto]').forEach(x=>x.classList.toggle('on',x===a)); }
+  else if(a.dataset.ptgo) ptSend(a.dataset.ptgo); else if(a.dataset.ptsend) ptSendOpen(a.dataset.ptsend); },true);
+// 📒 Higher Self のアルバムにも入れる（自分の集合写真・届いた集合写真）
+if(typeof hsAlbItems==='function'){ const HI=hsAlbItems; hsAlbItems=function(){ const L=HI.apply(this,arguments); try{ ptAlbum().forEach(r=>L.push({ ty:'tree', t:r.t, x:r })); (store.get(PT_GOT,[])||[]).forEach(r=>L.push({ ty:'treeg', t:r.t, x:r })); }catch(e){} return L.sort((a,b)=>b.t-a.t); }; }
+if(typeof hsAlbArt==='function'){ const HA=hsAlbArt; hsAlbArt=function(it){ if(it&&(it.ty==='tree'||it.ty==='treeg')) return ptSVG(it.x.d)||'<p class="tiny muted">写真を描けませんでした</p>'; return HA.apply(this,arguments); }; }
+if(typeof hsAlbCap==='function'){ const HC=hsAlbCap; hsAlbCap=function(it){ if(it&&(it.ty==='tree'||it.ty==='treeg')){ const D=ptDecode(it.x.d); return `<b>🌳 ペットの木</b> <small>${hsAlbDate(it.t)}</small><br>${it.ty==='treeg'?`💌 ${esc(it.x.fromBy)}さんから・`:''}${D?`${esc(D.me.name)}と ${D.list.length}匹`:''}${it.ty==='tree'?'<br>💌 押すと、友だちに送れます':''}`; } return HC.apply(this,arguments); }; }
+if(typeof hsAlbBig==='function'){ const HB=hsAlbBig; hsAlbBig=function(i){ const it=_hsaL[i]; if(it&&it.ty==='tree') return ptSendOpen(it.x.t,''); return HB.apply(this,arguments); }; }
+try{ HSA_TY.tree='🌳 ペットの木'; HSA_TY.treeg='🌳 ペットの木'; HSA_F.splice(2,0,['tree','🌳 ペットの木']); }catch(e){}
+if(typeof hsAlbList==='function'){ const HL=hsAlbList; hsAlbList=function(){ if(_hsaF==='tree') return _hsaL.filter(it=>it.ty==='tree'||it.ty==='treeg'); return HL.apply(this,arguments); }; }
+try{ document.head.insertAdjacentHTML('beforeend',`<style>
+.pt-snapb{ margin-left:8px; height:28px; padding:0 10px; border-radius:14px; border:1.5px solid #E86A92; background:#fff; color:#B23A64; font:inherit; font-size:12px; font-weight:700; cursor:pointer; vertical-align:middle; }
+.pt-row{ margin:4px 0 8px; } .pt-art svg,.hsa-a .pt-svg,.hsa-ba .pt-svg{ display:block; width:100%; height:auto; background:linear-gradient(#EAF6FF,#FFF6F9); border-radius:10px; }
+.pt-msg{ background:#FFF0F5; border-radius:10px; padding:6px 10px; color:#B23A64; font-weight:700; font-size:14px; } .pt-h{ margin:12px 0 6px; font-size:15px; color:#B23A64; }
+.pt-tos{ display:flex; flex-wrap:wrap; gap:6px; } .pt-sl{ font-size:11px; }
+</style>`); }catch(e){}
+
+// v178.95（MITSUさん 2026-11-19）：ペットのつながりの木の友だちのペットがふえると、家が大きくなる
+// 31匹以上→2階建て、60匹→3階、90匹→4階、101匹以上→5階建てのビル。最上階は「○○不動産」のオフィス
+function pgFrPetN(){ try{ return gsFrPets(typeof flFriends==='function'?flFriends():store.get(KEY_FRIEND,[])).length; }catch(e){ return 0; } }
+function pgFloorsOf(n){ return n>100?5:n>=90?4:n>=60?3:n>30?2:1; }
+function pgFloors(){ return pgFloorsOf(pgFrPetN()); }
+function pgAgencyName(p){ return `${String(p&&p.name||'うちのペット')}不動産`; }
+const PG_FLW=[['#EEF6FF','#BFE3FF'],['#F2FBEF','#C9EBC0'],['#FFF6E6','#FFD8B0'],['#F6F0FF','#E3D7FF'],['#FFF0F5','#FFD3E0']];
+function pgFloorRoom(y,f,V,p,office,nTen){ const H=70, c=PG_FLW[(f+(V.pid||'').length)%PG_FLW.length]; let g=`<rect x="30" y="${y}" width="300" height="${H}" fill="${V.wall[0]}" stroke="${V.wall[1]}" stroke-width="3"/><rect x="44" y="${y+8}" width="272" height="${H-16}" fill="${c[0]}"/><rect x="44" y="${y+H-14}" width="272" height="6" fill="${c[1]}"/>`;
+  if(office){ g+=`<rect x="56" y="${y+12}" width="150" height="22" rx="5" fill="#B23A64"/><text x="131" y="${y+28}" font-size="12.5" font-weight="700" text-anchor="middle" fill="#fff">🏢 ${esc(pgAgencyName(p))}</text>`
+      +`<rect x="70" y="${y+42}" width="70" height="12" rx="2" fill="#C98B6B"/><text x="92" y="${y+42}" font-size="13" text-anchor="middle">💻</text><text x="124" y="${y+42}" font-size="12" text-anchor="middle">📒</text>`
+      +`<rect x="222" y="${y+12}" width="80" height="40" rx="4" fill="#fff" stroke="#E8A0B8" stroke-width="2"/><text x="262" y="${y+28}" font-size="10" text-anchor="middle" fill="#B23A64">🏠 かしている家</text><text x="262" y="${y+45}" font-size="13" font-weight="700" text-anchor="middle" fill="#6A4A58">${nTen||0}軒</text>`
+      +`<text x="176" y="${y+54}" font-size="16" text-anchor="middle">🪴</text>`; return g; }
+  [70,130,190,250].forEach((x,i)=>{ const lit=(f*7+i*3)%4!==0; g+=`<rect x="${x}" y="${y+14}" width="38" height="30" rx="3" fill="${lit?'#FFF3B0':'#BFE3FF'}" stroke="#fff" stroke-width="3"/><line x1="${x+19}" y1="${y+14}" x2="${x+19}" y2="${y+44}" stroke="#fff" stroke-width="2"/>`; });
+  const deco=['🪴','🧸','📚','🛋️','🎨','🌙','⭐','🪀']; g+=`<text x="${56+((f*53)%240)}" y="${y+H-16}" font-size="13">${deco[f%deco.length]}</text>`;
+  return g+`<text x="300" y="${y+12}" font-size="9" fill="#8A7A84" text-anchor="end">${f+1}F</text>`; }
+function pgFloorWrap(svg,p,O){ try{ if(p&&p._rt!=null) return svg; const F=O&&O.fl?O.fl:(O?1:pgFloors()); if(F<=1) return svg; const D=70*(F-1), V=pgHouseV(p);
+  const a=svg.indexOf('>')+1, i=svg.indexOf('<rect x="30" y="92"'), z=svg.lastIndexOf('</svg>'); if(a<=0||i<0||z<0) return svg;
+  let pre=svg.slice(a,i), room=svg.slice(i,z); const open=svg.slice(0,a).replace('viewBox="0 0 360 300"',`viewBox="0 0 360 ${300+D}"`);
+  pre=pre.replace('<rect width="360" height="300" rx="18"',`<rect width="360" height="${300+D}" rx="18"`).replace(/<rect y="272" width="360" height="28"/,`<rect y="${272+D}" width="360" height="28"`);
+  let badge=''; room=room.replace(/<rect x="10" y="10" width="\d+" height="22" rx="11"[^>]*\/><text x="18" y="25"[^>]*>[^<]*<\/text>/,m=>{ badge=m; return ''; });
+  const office=F>=5, nTen=office&&typeof rtTenants==='function'?rtTenants().length:0; let fl='';
+  for(let k=F-1;k>=1;k--){ const y=92+(F-1-k)*70; fl+=pgFloorRoom(y,k,V,p,office&&k===F-1,nTen); }
+  if(F>=5) pre=pre.replace(/🏠 ([^<]*)の家<\/text>/,(m,n)=>`🏢 ${n}ビル</text>`);
+  return open+pre+fl+`<g transform="translate(0 ${D})">${room}</g>`+badge+`<text x="300" y="${92+D+12}" font-size="9" fill="#8A7A84" text-anchor="end">1F</text></svg>`; }catch(e){ return svg; } }
 // v178.86（MITSUさん）：ペットだけの家。中が見える大きな部屋に、もらったプレゼント・おもちゃを飾る。うちのペットのページの一番上に出す
 function pgHouseItems(p){ const by={}; (Array.isArray(p&&p.gifts)?p.gifts:[]).forEach(g=>{ if(!g||!g.k) return; (by[g.k]=by[g.k]||[]); const f=String(g.f||''); if(g.k==='love'||g.k==='food'){ by[g.k].push(g); return; } if(!by[g.k].some(x=>x.f===f)) by[g.k].push({ f, e:pgEmo(f)||pgIco(g.k), n:f.replace(/^\S+\s*/,''), by:g.by }); }); return by; }
 // v178.90（MITSUさん 2026-11-19「全員が違うように」）：ペットごとに、家の屋根・かべ紙・床・ラグ・窓・カーテンが少しずつちがう（迎えた時刻と種類から決まる。毎回同じ）
-function pgHouseV(p){ let h=2166136261; const key=String(p&&p.at||'')+'|'+String(p&&p.breed||'')+'|'+String(p&&(p.at?'':p.name)||''); for(let i=0;i<key.length;i++){ h^=key.charCodeAt(i); h=Math.imul(h,16777619); }
+function pgHouseV(p){ if(p&&p._rt!=null&&typeof rtV==='function'){ const v=rtV(p._rt); if(v) return v; } let h=2166136261; const key=String(p&&p.at||'')+'|'+String(p&&p.breed||'')+'|'+String(p&&(p.at?'':p.name)||''); for(let i=0;i<key.length;i++){ h^=key.charCodeAt(i); h=Math.imul(h,16777619); }
   let r=h>>>0; const R=n=>{ r=Math.imul(r^(r>>>15),2246822507)>>>0; r=(r+0x9E3779B9)>>>0; return (r>>>8)%n; }, P=a=>a[R(a.length)];
   const rc=P([['#FF8FAB','#FFB8CB'],['#7FB6FF','#B5D6FF'],['#8ED1A0','#BDE8C8'],['#FFB86B','#FFD6A6'],['#B79CFF','#D7C8FF'],['#FF7F7F','#FFB3B3'],['#6FCFCB','#A9E7E4'],['#E3A86B','#F2CFA3']]);
   const rs=R(4), ch=R(3);
@@ -21552,7 +21632,7 @@ function pgHouseSVG(p,O){ const T=(x,y,z,e,t)=>`<text x="${x}" y="${y}" font-siz
   if(fx.cake) o+=T(250,250,22,'🎂','きょうはお誕生日');
   const C=typeof pmCounts==='function'?pmCounts(p):{l:0,f:0,o:0}; o+=`<rect x="10" y="10" width="${C.o?132:96}" height="22" rx="11" fill="#fff" opacity=".9"/><text x="18" y="25" font-size="12" fill="#B23A64">💗${C.l} ${PM_FOODI&&PM_FOODI[k]||'🍎'}${C.f}${C.o?` 🎁${C.o}`:''}</text>`;
   if(!Object.keys(I).length) o+=`<text x="180" y="208" font-size="11" text-anchor="middle" fill="#8A7A84">プレゼントが届くと、ここに飾られます</text>`;
-  return o+'</svg>'; }
+  return typeof pgFloorWrap==='function'?pgFloorWrap(o+'</svg>',p,O):o+'</svg>'; }
 // うちのペットのページ：一番上を大きな家に。その下に、だれがお世話するか・お世話のボタンを小さくまとめる
 if(typeof mpPageHTML==='function'){ const MP3=mpPageHTML; mpPageHTML=function(){ let h=MP3.apply(this,arguments); try{ const p=mpGet(); if(!p||(typeof mpGone==='function'&&mpGone(p))) return h;
   const a=h.indexOf('<div class="mp-top">'); if(a<0) return h; const s0=h.indexOf('<svg',a); if(s0<0) return h; let dep=0, i=s0, e0=-1; const re=/<svg\b|<\/svg>/g; re.lastIndex=s0; let m; while((m=re.exec(h))){ dep+=m[0]==='</svg>'?-1:1; if(!dep){ e0=m.index+6; break; } } if(e0<0) return h;
@@ -21560,6 +21640,93 @@ if(typeof mpPageHTML==='function'){ const MP3=mpPageHTML; mpPageHTML=function(){
   if(ac>=0){ const ae=rest.indexOf('</div>',ac)+6; const w0=rest.indexOf('<p class="tiny muted">あなた（Higher Self）'); const st=w0>=0&&w0<ac?w0:ac; ctl=rest.slice(st,ae).replace('さんぽに行ってあげて','さんぽに行こう'); ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-hsv" data-hsasave="1">📒 アルバムに保存</button><button type="button" class="mp-a pg-gfb" data-pgfr="1">🎁 友だちにプレゼント</button></div>`); if(pgClOk(p.kind)) ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-clb" data-pgclo="1">👕 服を着せる</button></div>`); rest=rest.slice(0,st)+rest.slice(ae); }
   return h.slice(0,a)+`<div class="pg-house">${pgHouseSVG(p)}<button type="button" class="pg-back" data-mp="close">← もどる</button></div>${ctl?`<div class="pg-hctl">${ctl}</div>`:''}<div class="mp-top pg-ht">`+rest; }catch(e){ return h; } }; }
 // 公園で、うちのペットを押した時も、まず家へ
+
+// v178.95（MITSUさん 2026-11-19）：101匹をこえると「○○不動産」。友だちの Higher Self が「部屋をかりたい」→ 飼い主が「貸す」で成立。1匹に一戸建て1軒
+// 申しこみ・返事は、写真と同じ通り道（photo）に 'RT1:'＋JSON で送る（ルールの変更なし）。名簿などは、それぞれの端末に保存
+const RT_REQ='rt.req', RT_TEN='rt.ten', RT_HOME='rt.home', RT_SENT='rt.sent', RT_SEEN='rt.seen';
+// 貸す家の種類（今までの家と、ガラッとちがう雰囲気）
+const RT_HT=[
+ { n:'ログハウス', e:'🪵', bg:['#DFF2D8','#7FB069'], roof:['#7A4A2A','#A0673F'], rs:0, wall:['#E7C9A0','#8A5A3A','#F2DDBC','#D9B48A'], pat:['l','#C99A68'], fl:['#B98352','#8A5A3A'], ft:0, rug:'#D7F2C8', cur:'#9FD08A', out:['🌲','🌲'] },
+ { n:'海辺のコテージ', e:'🌊', bg:['#CFEFFF','#F3DFA8'], roof:['#3A8FD6','#7FC0F0'], rs:1, wall:['#FFFFFF','#9CC9E8','#F7FBFF','#DCEBF7'], pat:['s','#BFE3FF'], fl:['#F1E0C0','#D8C19A'], ft:0, rug:'#BFE3FF', cur:'#9FD0FF', out:['🌊','🐚'] },
+ { n:'森のツリーハウス', e:'🌳', bg:['#CFEFC6','#6FA85A'], roof:['#3E8E41','#7CC36E'], rs:2, wall:['#D9B48A','#8A5A3A','#EBD2AE','#C99A68'], pat:['f','#9FD08A'], fl:['#A9784A','#7A4A2A'], ft:0, rug:'#FFE6B3', cur:'#B9E6A0', out:['🍃','🐿️'] },
+ { n:'雪のかまくら', e:'⛄', bg:['#E6F2FF','#FFFFFF'], roof:['#F4F8FF','#DDEBFA'], rs:2, wall:['#F4F8FF','#B8CDE6','#FFFFFF','#E3EDF8'], pat:['d','#CFE3FA'], fl:['#DDEBFA','#B8CDE6'], ft:1, rug:'#FFD0C2', cur:'#CDE7FF', out:['⛄','❄️'] },
+ { n:'和風の家', e:'🎋', bg:['#E9F3E1','#9CC27E'], roof:['#4A4A55','#6E6E7A'], rs:1, wall:['#FFF8EA','#8A6A4A','#FFFDF5','#EADCC4'], pat:['g','#D8C8A8'], fl:['#C9D79A','#9FB06A'], ft:1, rug:'#E9D3A8', cur:'#E8D8B8', out:['🎋','🏮'] },
+ { n:'お城', e:'🏰', bg:['#E8E4FF','#A6C98A'], roof:['#7B5CC9','#A88BE8'], rs:3, wall:['#E4E4EC','#9A9AAE','#F2F2F7','#CFCFDB'], pat:['c','#D3D3E0'], fl:['#B9B0D6','#8F86B3'], ft:1, rug:'#C9302C', cur:'#B79CFF', out:['🚩','🌹'] },
+ { n:'南国の家', e:'🌴', bg:['#BFF0FF','#F7E2A6'], roof:['#E6B85C','#F2D58F'], rs:1, wall:['#FFF3C4','#E0A84A','#FFF9E0','#F7E1A0'], pat:['h','#FFC98A'], fl:['#E8C696','#C9A06A'], ft:0, rug:'#FF9FB9', cur:'#FFB86B', out:['🌴','🌺'] },
+ { n:'星空のドーム', e:'🌌', bg:['#1E2A55','#3B4A80'], roof:['#3B2E7A','#5B4AA8'], rs:2, wall:['#2E3A6E','#7B8BD0','#25305E','#3A4785'], pat:['t','#FFE680'], fl:['#46508A','#2E3A6E'], ft:1, rug:'#7B5CC9', cur:'#5B4AA8', out:['🌙','✨'] },
+ { n:'お菓子の家', e:'🍭', bg:['#FFE9F2','#FFD3E0'], roof:['#7A4A2A','#A0673F'], rs:3, wall:['#FFD3E0','#C96A8A','#FFE9F2','#F7BFD2'], pat:['h','#FF8FAB'], fl:['#C98B6B','#A0673F'], ft:1, rug:'#FFF0A8', cur:'#FF9FB9', out:['🍭','🍬'] },
+ { n:'灯台の家', e:'🗼', bg:['#CFEFFF','#7FC0F0'], roof:['#D93A3A','#F07070'], rs:0, wall:['#FFFFFF','#D93A3A','#FFF6F6','#F7DADA'], pat:['s','#F7C4C4'], fl:['#E3D7C4','#C9B79A'], ft:0, rug:'#BFE3FF', cur:'#FF7F7F', out:['⚓','🐬'] } ];
+function rtV(ht){ const T=RT_HT[ht]; if(!T) return null; const pid='pgRt'+ht, a=T.pat[1], W=(w,h,x)=>`<pattern id="${pid}" width="${w}" height="${h}" patternUnits="userSpaceOnUse">${x}</pattern>`;
+  const pat=T.pat[0]==='l'?W(20,12,`<rect width="20" height="2" y="10" fill="${a}"/>`):T.pat[0]==='s'?W(14,14,`<rect width="6" height="14" fill="${a}" opacity=".8"/>`):T.pat[0]==='f'?W(24,24,`<text x="2" y="12" font-size="10" fill="${a}">✿</text>`)
+    :T.pat[0]==='d'?W(16,16,`<circle cx="5" cy="5" r="2" fill="${a}"/>`):T.pat[0]==='g'?W(22,22,`<rect x="0" y="0" width="22" height="22" fill="none" stroke="${a}" stroke-width="1.6"/>`):T.pat[0]==='c'?W(24,14,`<rect width="24" height="14" fill="none" stroke="${a}" stroke-width="1.5"/><line x1="12" y1="0" x2="12" y2="7" stroke="${a}" stroke-width="1.5"/>`)
+    :T.pat[0]==='h'?W(22,22,`<text x="2" y="11" font-size="9" fill="${a}">♥</text><text x="13" y="21" font-size="8" fill="${a}">♥</text>`):W(24,24,`<text x="3" y="11" font-size="9" fill="${a}">★</text><text x="15" y="22" font-size="7" fill="${a}">✦</text>`);
+  const rc=T.roof, rs=T.rs; let roof=rs===0?`<polygon points="12,94 180,14 348,94" fill="${rc[0]}"/><polygon points="34,94 180,28 326,94" fill="${rc[1]}"/>`:rs===1?`<polygon points="8,94 180,40 352,94" fill="${rc[0]}"/><polygon points="30,94 180,52 330,94" fill="${rc[1]}"/>`:rs===2?`<path d="M12 94 Q180 -12 348 94Z" fill="${rc[0]}"/><path d="M34 94 Q180 10 326 94Z" fill="${rc[1]}"/>`:`<rect x="14" y="46" width="332" height="50" rx="4" fill="${rc[0]}"/>${[20,64,108,152,196,240,284].map(x=>`<rect x="${x}" y="34" width="22" height="14" fill="${rc[0]}"/>`).join('')}<rect x="30" y="56" width="300" height="38" rx="4" fill="${rc[1]}"/>`;
+  roof=`<text x="40" y="92" font-size="26">${T.out[0]}</text><text x="300" y="92" font-size="22">${T.out[1]}</text>`+roof;
+  const fl=T.fl; let floor=[230,244,260].map(y=>`<line x1="${(52-(y-218)*19/58).toFixed(0)}" y1="${y}" x2="${(308+(y-218)*19/58).toFixed(0)}" y2="${y}" stroke="${fl[1]}" stroke-width="1"/>`).join(''); if(T.ft===1) floor+=[1,2,3,4,5,6,7].map(i=>`<line x1="${52+i*32}" y1="218" x2="${(33+i*36.75).toFixed(0)}" y2="276" stroke="${fl[1]}" stroke-width="1"/>`).join('');
+  return { pid, roof, wall:T.wall, pat, fl:fl[0], floor, rug:`<ellipse cx="180" cy="256" rx="80" ry="14" fill="${T.rug}" opacity=".9"/>`, wrx:rs===2?26:6, wf:'#fff', cur:T.cur, bg:T.bg }; }
+function rtGet(k,d){ try{ const v=store.get(k,d); return v==null?d:v; }catch(e){ return d; } }
+function rtTenants(){ const a=rtGet(RT_TEN,[]); return Array.isArray(a)?a:[]; }
+function rtReqs(){ const a=rtGet(RT_REQ,[]); return Array.isArray(a)?a:[]; }
+function rtHome(){ const h=rtGet(RT_HOME,null); return h&&RT_HT[h.ht]?h:null; }
+function rtIsAgency(){ try{ return pgFloors()>=5; }catch(e){ return false; } }
+function rtFrAgency(oid){ try{ const e=pgPetOf(oid); const m=/(?:^|\|)re=(\d)@/.exec(String(e&&e.w||'')); return m&&+m[1]>=5; }catch(e){ return false; } }
+function rtFrName(oid){ const f=(typeof flFriends==='function'?flFriends():[]).find(x=>x.id===oid); return f&&f.by||'友だち'; }
+// 友だちに、うちが不動産かどうか知らせる（~pet 行の w の先頭に re=階数）
+if(typeof pgFxStr==='function'){ const PF=pgFxStr; pgFxStr=function(p){ let r=PF.apply(this,arguments); try{ const f=pgFloors(); if(f>1) r=(`re=${f}@99991231`+(r?'|'+r:'')).slice(0,120); }catch(e){} return r; }; }
+async function rtSend(toId,obj){ const fr=(typeof flFriends==='function'?flFriends():[]).find(f=>f.id===toId); if(!fr) return 'nofr';
+  const p='RT1:'+JSON.stringify(obj); if(p.length>1000) return 'big';
+  if(!(typeof flOn==='function'&&flOn())&&!(typeof fbWaitOn==='function'&&await fbWaitOn(15000))) return 'off';
+  const sent=store.get('fl.phSent',{}), key=fr.id+'|'+flDay(), n=(sent[key]||0)+1; if(n>FL_PH_DAYMAX) return 'max';
+  const me=myId(), by=String(store.get(KEY_ME,'')||'').slice(0,20), id=me+'_'+flDay()+'_'+n;
+  try{ await Promise.race([FB.D.setDoc(FB.D.doc(FB.db,'ids',String(fr.id),'photo',id),{ from:me, by, p, m:'', t:Date.now() }),new Promise((_,ng)=>setTimeout(()=>ng(new Error('timeout')),15000))]);
+    const keep={}; Object.keys(sent).filter(x=>x.endsWith(flDay())).forEach(x=>keep[x]=sent[x]); keep[key]=n; store.set('fl.phSent',keep); return 'ok'; }
+  catch(err){ return String(err&&err.code||'').includes('permission')?'perm':'err'; } }
+function rtErr(r,who){ return r==='max'?`${who}さんには、きょうはもう${FL_PH_DAYMAX}回送りました。また明日ね。`:r==='off'?'いまサーバーにつながるのを待っています。少しあとで、もう一度押してください。':r==='nofr'?'友だちとして、つながっていません。':'うまく送れませんでした。少しあとで、もう一度ためしてね。'; }
+function rtToast(t){ try{ pgToast(t); }catch(e){} }
+// 受けとる
+function rtRecv(docId,x){ try{ const seen=rtGet(RT_SEEN,[]); if(!seen.includes(docId)){ store.set(RT_SEEN,seen.concat([docId]).slice(-300)); const o=JSON.parse(String(x.p).slice(4))||{}; const from=String(x.from||''), by=String(x.by||'友だち').slice(0,20);
+    if(o.k==='req'&&from){ const R=rtReqs().filter(r=>r.from!==from); R.push({ from, by, b:String(o.b||'').slice(0,12), p:String(o.p||''), t:+x.t||Date.now() }); store.set(RT_REQ,R.slice(-50)); rtToast(`🏠 ${by}さんのペット「${String(o.b||'').slice(0,12)}」から、部屋をかりたい申しこみが届きました`); }
+    else if(o.k==='ok'&&from&&RT_HT[o.ht]){ store.set(RT_HOME,{ from, by, ag:String(o.ag||'').slice(0,20), ht:+o.ht, t:Date.now() }); const S=rtGet(RT_SENT,{}); delete S[from]; store.set(RT_SENT,S); rtToast(`🎉 ${String(o.ag||'')}で、${RT_HT[o.ht].n}をかりられました！`); }
+    else if(o.k==='no'&&from){ const S=rtGet(RT_SENT,{}); delete S[from]; store.set(RT_SENT,S); rtToast(`${String(o.ag||by+'さんの不動産')}は、いま部屋がいっぱいでした。またね。`); }
+    else if(o.k==='bye'&&from){ const T=rtTenants().filter(t=>t.from!==from); store.set(RT_TEN,T); rtToast(`🏠 ${by}さんのペットが、元の家にもどりました`); }
+    try{ const d=document.getElementById('mpDlg'); if(typeof mpOpen==='function'&&document.querySelector('.pg-house')) mpOpen(); }catch(_){} } }catch(e){}
+  try{ FB.D.deleteDoc(FB.D.doc(FB.db,'ids',myId(),'photo',docId)); }catch(_){} }
+// 自分の家：借りているなら、その家を見せる
+if(typeof pgHouseSVG==='function'){ const HS=pgHouseSVG; pgHouseSVG=function(p,O){ const h=rtHome(); if(!O&&h&&p&&!p._rt&&p===p){ try{ let v=HS.call(this,Object.assign({},p,{ _rt:h.ht }),O); const T=RT_HT[h.ht];
+    v=v.replace(/fill="#(EAF6FF|2A3566)"\/>/,`fill="${T.bg[0]}"/>`).replace(/<rect y="272" width="360" height="28" fill="#[0-9A-Fa-f]{6}"\/>/,`<rect y="272" width="360" height="28" fill="${T.bg[1]}"/>`).replace(/🏠 ([^<]*)の家<\/text>/,(m,n)=>`${T.e} ${n}の${T.n}</text>`).replace('y="78" font-size="15" font-weight="700" text-anchor="middle" fill="#B23A64"','y="78" font-size="15" font-weight="700" text-anchor="middle" fill="#B23A64" stroke="#fff" stroke-width="3.5" paint-order="stroke"'); return v; }catch(e){} } return HS.apply(this,arguments); }; }
+// 貸す家の種類を自動でえらぶ（ほかの借りているペットと、なるべくちがう家）
+function rtPickHT(from){ const used=new Set(rtTenants().map(t=>t.ht)); let h=0; for(const c of String(from)) h=(h*31+c.charCodeAt(0))>>>0; for(let i=0;i<RT_HT.length;i++){ const k=(h+i)%RT_HT.length; if(!used.has(k)) return k; } return h%RT_HT.length; }
+async function rtAccept(from,yes){ const R=rtReqs(), r=R.find(x=>x.from===from); if(!r) return; const p=mpGet(); const ag=pgAgencyName(p);
+  if(yes){ const ht=rtPickHT(from); const res=await rtSend(from,{ k:'ok', ht, ag }); if(res!=='ok'){ rtToast(rtErr(res,r.by)); return; } const T=rtTenants().filter(t=>t.from!==from); T.push({ from, by:r.by, b:r.b, p:r.p, ht, t:Date.now() }); store.set(RT_TEN,T.slice(-100)); rtToast(`🏠 ${r.b}に、${RT_HT[ht].n}を貸しました`); }
+  else { const res=await rtSend(from,{ k:'no', ag }); if(res!=='ok'&&res!=='nofr'){ rtToast(rtErr(res,r.by)); return; } rtToast('おことわりしました'); }
+  store.set(RT_REQ,rtReqs().filter(x=>x.from!==from)); mpOpen(); }
+async function rtAsk(oid){ const me=mpGet(); if(!me||!me.name) return rtToast('うちのペットを迎えると、申しこめます'); if(rtHome()) return rtToast('もう家をかりています。元の家にもどってから申しこんでね');
+  const res=await rtSend(oid,{ k:'req', b:String(me.name).slice(0,12), p:me.breed }); if(res!=='ok') return rtToast(rtErr(res,rtFrName(oid))); const S=rtGet(RT_SENT,{}); S[oid]=Date.now(); store.set(RT_SENT,S);
+  rtToast(`🏠 申しこみました。${rtFrName(oid)}さんが「貸す」を押すと、引っこせます`); const b=document.querySelector('[data-rtask]'); if(b){ b.disabled=true; b.textContent='🏠 申しこみ中です'; } }
+async function rtLeave(){ const h=rtHome(); if(!h) return; store.set(RT_HOME,null); try{ await rtSend(h.from,{ k:'bye' }); }catch(e){} rtToast('🏠 元の家にもどりました'); mpOpen(); }
+// 友だちのペットの画面：不動産なら「部屋をかりたい」
+if(typeof prOpen==='function'){ const POR=prOpen; prOpen=function(pp){ const r=POR.apply(this,arguments); try{ if(pp&&pp.oid&&!pp.mine&&rtFrAgency(pp.oid)){ const z=document.querySelector('#gsZoom .gsz-in'); const ag=`${pp.n}不動産`, h=rtHome(), sent=rtGet(RT_SENT,{})[pp.oid];
+    if(z) (z.querySelector('.gsz-back')||z.lastElementChild).insertAdjacentHTML('beforebegin',`<div class="rt-box"><b>🏢 ${esc(ag)}</b><p class="tiny muted">${esc(pp.n)}は、ペット専門の不動産をしています。一戸建てのペットハウスを、1匹に1軒 貸してくれます。</p>${h&&h.from===pp.oid?`<p>🏠 いま、ここで「${esc(RT_HT[h.ht].n)}」をかりています</p>`:`<button type="button" class="mp-btn" data-rtask="${esc(pp.oid)}" ${sent||h?'disabled':''}>${sent?'🏠 申しこみ中です':h?'🏠 ほかで家をかりています':'🏠 部屋をかりたい'}</button>`}</div>`); } }catch(e){} return r; }; }
+// うちのペットの家のページ：不動産のオフィス（申しこみ・名簿）／借りている家
+function rtPageHTML(p){ let h=''; const home=rtHome();
+  if(home) h+=`<div class="rt-box"><b>${RT_HT[home.ht].e} ${esc(home.ag||'')}から、「${esc(RT_HT[home.ht].n)}」をかりています</b><p class="tiny muted">${esc(home.by)}さんのペットの不動産です。${new Date(home.t).getMonth()+1}月${new Date(home.t).getDate()}日から。</p><button type="button" class="linkish" data-rtleave="1">🏠 元の家にもどる</button></div>`;
+  const n=pgFrPetN(), F=pgFloorsOf(n);
+  if(F>=5){ const R=rtReqs(), T=rtTenants();
+    h+=`<div class="rt-box"><b>🏢 ${esc(pgAgencyName(p))}</b><p class="tiny muted">5階建てのビルの最上階で、ペット専門の不動産をしています。友だちの Higher Self から申しこみが届くと、ここに出ます。</p>`
+     +(R.length?`<p class="rt-h">📮 部屋をかりたい申しこみ（${R.length}件）</p><ul class="rt-l">${R.map(r=>`<li><b>${esc(r.b)}</b>（${esc(r.by)}さんのペット${PB_ALL[r.p]?'・'+esc(PB_ALL[r.p].name):''}）<span class="rt-bs"><button type="button" class="mp-btn" data-rtyes="${esc(r.from)}">🏠 貸す</button><button type="button" class="linkish" data-rtno="${esc(r.from)}">ことわる</button></span></li>`).join('')}</ul>`:'')
+     +`<p class="rt-h">🏠 貸している名簿（${T.length}軒）</p>${T.length?`<table class="rt-t"><tr><th>ペット</th><th>飼い主</th><th>家</th><th>貸した日</th></tr>${T.slice().reverse().map(t=>{ const d=new Date(t.t); return `<tr><td>${esc(t.b)}</td><td>${esc(t.by)}さん</td><td>${RT_HT[t.ht]?RT_HT[t.ht].e+' '+esc(RT_HT[t.ht].n):''}</td><td>${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}</td></tr>`; }).join('')}</table>`:'<p class="tiny muted">まだ貸している家はありません。</p>'}</div>`; }
+  else if(n>0&&!home) h+=`<p class="rt-hint">🏠 ${F}階建て（友だちのペット ${n}匹）。${F===1?'31匹をこえると2階建てに。':''}101匹をこえると、${esc(pgAgencyName(p))}を始めます。</p>`;
+  return h; }
+if(typeof mpPageHTML==='function'){ const MPR=mpPageHTML; mpPageHTML=function(){ let h=MPR.apply(this,arguments); try{ const p=mpGet(); if(!p||!p.name||(typeof mpGone==='function'&&mpGone(p))) return h; const x=rtPageHTML(p); if(!x) return h; const i=h.indexOf('<div class="pg-hctl">'); if(i>=0){ const j=h.indexOf('<div class="mp-top pg-ht">',i); if(j>0) return h.slice(0,j)+x+h.slice(j); } }catch(e){} return h; }; }
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-rtask],[data-rtyes],[data-rtno],[data-rtleave]'); if(!t) return; e.preventDefault(); e.stopPropagation(); if(t.disabled) return;
+  if(t.dataset.rtask){ t.disabled=true; rtAsk(t.dataset.rtask); } else if(t.dataset.rtyes){ t.disabled=true; rtAccept(t.dataset.rtyes,true); } else if(t.dataset.rtno){ rtAccept(t.dataset.rtno,false); } else if(t.dataset.rtleave) rtLeave(); },true);
+try{ document.head.insertAdjacentHTML('beforeend',`<style>
+.rt-box{ background:#FFF6F9; border:1.5px solid #F2B8C9; border-radius:14px; padding:10px 12px; margin:8px 0 10px; } .rt-box>b{ color:#B23A64; font-size:15px; }
+.rt-h{ margin:10px 0 4px; font-weight:700; color:#6A4A58; font-size:14px; } .rt-l{ list-style:none; margin:0; padding:0; } .rt-l li{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding:6px 0; border-bottom:1px dashed #F2B8C9; font-size:13px; }
+.rt-bs{ margin-left:auto; display:flex; gap:8px; align-items:center; } .rt-bs .mp-btn{ min-height:34px; padding:4px 14px; font-size:13px; }
+.rt-t{ width:100%; border-collapse:collapse; font-size:12px; } .rt-t th,.rt-t td{ border-bottom:1px solid #F2D3DE; padding:5px 4px; text-align:left; } .rt-t th{ color:#B23A64; font-size:11px; }
+.rt-hint{ font-size:12px; color:#8A7A84; margin:4px 2px 8px; }
+</style>`); }catch(e){}
 if(typeof prOpen==='function'){ const PO3=prOpen; prOpen=function(pp){ if(pp&&pp.mine&&typeof mpOpen==='function'){ try{ mpOpen(); return; }catch(e){} } return PO3.apply(this,arguments); }; }
 try{ document.head.insertAdjacentHTML('beforeend',`<style>
 .pg-house{ margin:-4px 0 0; } .pg-house svg{ width:100%; height:auto; display:block; border-radius:18px; }
@@ -21665,7 +21832,7 @@ async function flPhSend(to,ph,msg,many){ const fr=flFriends().find(f=>f.id===to)
   flOpen(); }
 let _flPL=false;
 function flPhListen(){ if(_flPL||!flOn()) return; _flPL=true; const { collection, onSnapshot, deleteDoc }=FB.D;
-  onSnapshot(collection(FB.db,'ids',myId(),'photo'),snap=>{ const got=[]; snap.forEach(d=>{ const x=d.data()||{}; if(typeof x.p!=='string') return; if(x.p.startsWith('GW1:')){ if(typeof gwRecv==='function') gwRecv(d.id,x); return; } got.push(Object.assign(flPhDecode(x.p),{ id:d.id, fromBy:String(x.by||'友だち').slice(0,20), m:String(x.m||'').slice(0,30), t:+x.t||Date.now(), rt:Date.now() })); });
+  onSnapshot(collection(FB.db,'ids',myId(),'photo'),snap=>{ const got=[]; snap.forEach(d=>{ const x=d.data()||{}; if(typeof x.p!=='string') return; if(x.p.startsWith('RT1:')){ if(typeof rtRecv==='function') rtRecv(d.id,x); return; } if(x.p.startsWith('PT1:')){ if(typeof ptRecv==='function') ptRecv(d.id,x); return; } if(x.p.startsWith('GW1:')){ if(typeof gwRecv==='function') gwRecv(d.id,x); return; } got.push(Object.assign(flPhDecode(x.p),{ id:d.id, fromBy:String(x.by||'友だち').slice(0,20), m:String(x.m||'').slice(0,30), t:+x.t||Date.now(), rt:Date.now() })); });
     if(!got.length) return; const seen=store.get('fl.phSeen',[]); const nu=got.filter(g=>!seen.includes(g.id)&&(g.items.length||g.sh.length||g.bg.length));
     if(nu.length){ store.set('fl.phSeen',seen.concat(nu.map(g=>g.id)).slice(-300)); store.set(KEY_FLPHGOT,store.get(KEY_FLPHGOT,[]).concat(nu).slice(-60));
       try{ if(typeof pgToast==='function') pgToast(`${nu[0].fromBy}さんから、お花の写真が届きました💌`); }catch(_){}
