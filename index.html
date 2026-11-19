@@ -1185,13 +1185,17 @@ document.querySelectorAll('[data-go]').forEach(a => { a.href = GAME_URL + a.data
 </script>
 <script>
 /* 2026-11-19（MITSUさん）：新しい版がアップされたら、開きっぱなしの画面・古い保存（キャッシュ）のままの画面でも、自動で新しい版に読み直す。version.json の v と、このページの CUR がちがえば読み直す（アップのたびに、version.json・play.html・index.html の3つを同じ番号にする） */
-(function(){ try{ var CUR='v178.83'; if(!/^https?:$/.test(location.protocol)) return; var busy=false;
-  function go(nv){ var k='lb.upd', tried=''; try{ tried=sessionStorage.getItem(k)||''; }catch(e){} if(tried===nv+'|2') return;
-    if(tried===nv+'|1'){ try{ sessionStorage.setItem(k,nv+'|2'); }catch(e){} try{ var u=new URL(location.href); u.searchParams.set('v',nv); location.replace(u.toString()); }catch(e){ location.reload(); } return; }
-    try{ sessionStorage.setItem(k,nv+'|1'); }catch(e){} var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }
-  function chk(){ try{ var a=document.activeElement; if(busy||document.hidden||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return; busy=true; fetch('version.json?_='+Date.now(),{cache:'no-store'}).then(function(r){ return r.ok?r.json():null; }).then(function(j){ busy=false; if(j&&j.v&&j.v!==CUR) go(j.v); }).catch(function(){ busy=false; }); }catch(e){ busy=false; } }
-  setTimeout(chk,1200); document.addEventListener('visibilitychange',function(){ if(!document.hidden) chk(); }); window.addEventListener('pageshow',chk); window.addEventListener('focus',chk); }catch(e){} })();
+(function(){ try{ /* 2026-11-19 固まり直し：Gateway には自分の版の番号がないので、新しい版を見たら、その端末で1回だけ読み直す（毎回2回読み直して固まって見えていた） */ if(!/^https?:$/.test(location.protocol)) return; var busy=false, K='lb.gwVer';
+  function chk(){ try{ var a=document.activeElement; if(busy||document.hidden||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return; busy=true; fetch('version.json?_='+Date.now(),{cache:'no-store'}).then(function(r){ return r.ok?r.json():null; }).then(function(j){ busy=false; if(!j||!j.v) return; var old=null; try{ old=localStorage.getItem(K); localStorage.setItem(K,j.v); }catch(e){ return; } if(!old||old===j.v) return; var done=function(){ location.reload(); }; try{ fetch(location.href,{cache:'reload'}).then(done,done); }catch(e){ done(); } }).catch(function(){ busy=false; }); }catch(e){ busy=false; } }
+  setTimeout(chk,1200); document.addEventListener('visibilitychange',function(){ if(!document.hidden) chk(); }); window.addEventListener('pageshow',chk); }catch(e){} })();
 </script>
 <script src="parade/gwmovie.js?v=v178.83" defer></script>
+<script>
+/* 2026-11-19 固まり直し：画面に見えていない所のくり返しの動き（雲・島・人の歩き など）は止めておき、見えたら動かす（「固まらない」がいちばん大事） */
+(function(){ try{ if(!('IntersectionObserver' in window)) return; var st=document.createElement('style'); st.textContent='.lb-off,.lb-off *{animation-play-state:paused!important}'; document.head.appendChild(st);
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.classList.toggle('lb-off',!e.isIntersecting); }); },{rootMargin:'200px 0px'});
+  var go=function(){ var els=document.querySelectorAll('body > section, body > main > section, main > section, body > div > section'); for(var i=0;i<els.length;i++) io.observe(els[i]); };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go(); }catch(e){} })();
+</script>
 </body>
 </html>
