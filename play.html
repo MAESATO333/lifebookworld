@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.99">
+<meta name="lifebook-version" content="v178.100">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -745,7 +745,7 @@ a.nav-b{ text-decoration:none; }
 <div class="wrap">
   <header class="masthead">
     <a class="name lb-logo" href="#" aria-label="LIFE BOOK"><span class="lb-isle" id="lbIsle" aria-hidden="true"></span><span class="lb-col" aria-hidden="true"><span class="lb-word"><span class="lb-t" style="--c:#E8667E">L</span><span class="lb-t" style="--c:#F2B630">I</span><span class="lb-t" style="--c:#6DB84A">F</span><span class="lb-t" style="--c:#5BA7DD">E</span><span class="lb-gap"></span><span class="lb-t" style="--c:#9B7FD9">B</span><span class="lb-t" style="--c:#EE7A92">O</span><span class="lb-t" style="--c:#F2B630">O</span><span class="lb-t" style="--c:#5DAE44">K</span></span><span class="lb-sub">人生のヒントが、ここにある</span></span></a>
-    <div class="mast-r"><nav class="mastnav" id="mastnav" aria-label="ページ"></nav><div class="meta" id="mastmeta"></div><button class="fr-top mb-top" type="button" data-machitop="1"><span aria-hidden="true">🟡</span><span class="mb-l">街ブラ</span></button><button class="fr-top fr-open" type="button"><span class="mb-l">友だちに<wbr>紹介</span></button></div>
+    <div class="mast-r"><nav class="mastnav" id="mastnav" aria-label="ページ"></nav><div class="meta" id="mastmeta"></div><button class="fr-top mb-top" type="button" data-machitop="1"><span aria-hidden="true">🏙️</span><span class="mb-l">街ブラ</span></button><button class="fr-top fr-open" type="button"><span class="mb-l">友だちに<wbr>紹介</span></button></div>
     <div class="mast-q" id="mastQ" hidden><button class="fr-top mb-top" type="button" data-mq="channel"><span aria-hidden="true">📷</span><span class="mb-l">Channel</span></button><button class="fr-top mb-top" type="button" data-mq="pet"><span aria-hidden="true">🐾</span><span class="mb-l">ペット</span></button><button class="fr-top mb-top" type="button" data-mq="flower"><span aria-hidden="true">💐</span><span class="mb-l" style="white-space:nowrap;letter-spacing:-.08em;margin-right:-.08em">お花と写真</span></button><button class="fr-top mb-top" type="button" data-mq="ride"><span aria-hidden="true">🔑</span><span class="mb-l">乗り物</span></button><button class="fr-top mb-top" type="button" data-mq="earth"><span aria-hidden="true">🌏</span><span class="mb-l">名所</span></button><button class="fr-top mb-top" type="button" data-mq="tree"><span aria-hidden="true">🌲</span><span class="mb-l" style="white-space:nowrap;letter-spacing:-.08em;margin-right:-.08em">友だちの木</span></button></div>
   </header>
   <main id="app"></main>
@@ -753,7 +753,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.99';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.100';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -19947,7 +19947,7 @@ const LBN_BUILTIN=[
   { i:'v174-pastchat', d:Date.UTC(2026,10,16,13,30), t:'ペットたちの、これまでのおしゃべりを読めるようになりました📖', b:'「📖 これまでのおしゃべりを読む」から、過去のおしゃべりをまとめて読めます。ペットが本当にごはんやプレゼントをもらった日は、そのことも話してくれます。' },
   { i:'v173-vase', d:Date.UTC(2026,10,16,11,46), t:'もらった花束を、大きな花瓶に生けられるようになりました💐', b:'もらったお花は「💐 大きな花瓶に生ける」で、ひとつの大きな花束になります。もらうほど、まあるく大きくなります。自分でえらんだお花も足せます。たくさんの人からお花をもらうと、花瓶の形をえらべます。写真を送るときは、お礼を俳句で書いて、何人かにまとめて送れます。' },
   { i:'v173-petchat', d:Date.UTC(2026,10,16,11,45), t:'ペットたちが、おしゃべりするようになりました💬', b:'ペットのつながりの木の下で、うちのペットや友だちのペットのコメントが、上から流れてきます。Higher Self への気持ち、天気、ごはん、町のうわさ話など、いろんなお話をします。「⏸ 止める」で止められます。' },
-  { i:'v171-machi', d:Date.UTC(2026,10,16,7,5), t:'世界の街を、空からお散歩できる「🟡街ブラ」ができました🏙', b:'Life Home の「🟡 街ブラへ行く」から、地図で街をえらぶと、空に浮かぶ街の動く写真が見られます。乗り物が走り、その街の今の時間で、朝・昼・夕方・夜が変わります。気に入った景色は📸で撮って、観光アルバムに残せます。' },
+  { i:'v171-machi', d:Date.UTC(2026,10,16,7,5), t:'世界の街を、空からお散歩できる「🏙️街ブラ」ができました🏙', b:'Life Home の「🏙️ 街ブラへ行く」から、地図で街をえらぶと、空に浮かぶ街の動く写真が見られます。乗り物が走り、その街の今の時間で、朝・昼・夕方・夜が変わります。気に入った景色は📸で撮って、観光アルバムに残せます。' },
   { i:'v170-flower', d:Date.UTC(2026,10,16,7), t:'お花を、部屋に飾ったり、友だちに贈ったりできるようになりました💐', b:'Life Home の「💐 お花」から、好きなお花と色をえらんで、花びん・一輪ざし・生け花・花束にできます。部屋に飾ると、部屋の絵に出ます。友だちには、5・7・5の俳句をそえて贈れます。' },
   { i:'v169-veh', d:Date.UTC(2026,10,16,5), t:'街や空の乗り物が、動くようになりました🚗✈️', b:'車・バイク・自転車・電車・新幹線・飛行機・気球・船・ロケット・人工衛星・UFOが、街や空を走ったり飛んだりします。その時代や国に合った乗り物が出てきます。' },
   { i:'v162-gift', d:Date.UTC(2026,10,16,3), t:'友だちのペットに「可愛い！」とごはんを贈れるようになりました🎁', b:'うちのペットの「ペットのつながりの木」の下にある「🎁 友だちのペットに贈る」から、友だちのペットに「💗 可愛い！」と「🎁 ごはん」を、1日1回ずつ贈れます。届いたプレゼントは、ペットのページの「💌 届いたプレゼント」に出て、ペットの愛情もふえます。' },
@@ -24268,7 +24268,7 @@ function mbxClose(){ if(!mbxEl) return; mbxEl.remove(); mbxEl=null; document.doc
 function machiBuraOpen(cityId){ try{ mbxCss(); const goId=typeof cityId==='string'?cityId:null; if(mbxEl){ if(goId) mbxGo(goId); return; } mbxLv={ reg:null, cty:null }; mbxCur=-1;
   const el=document.createElement('div'); el.className='mbx'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','街ブラ');
   el.innerHTML=`<div class="mbx-wrap">
-  <div class="mbx-top"><b>🟡 街ブラ</b><button class="mbx-pbtn mbx-sub2 mbx-close" type="button">← 戻る</button></div>
+  <div class="mbx-top"><b>🏙️ 街ブラ</b><button class="mbx-pbtn mbx-sub2 mbx-close" type="button">← 戻る</button></div>
   <section class="mbx-panel"><div><h1>どこへ行く？</h1><p class="mbx-sub">地図をタップして、行きたい街をえらんでね</p></div><nav class="mbx-crumbs" aria-label="いまの場所"></nav><div class="mbx-map"></div><p class="mbx-legend">ピンのほかに、下のボタンからもえらべます</p></section>
   <section class="mbx-panel mbx-city" hidden><div class="mbx-row"><div><h1 class="mbx-cname"></h1><p class="mbx-sub"><span class="mbx-carea"></span><span class="mbx-ltime mbx-ctime"></span></p></div><button class="mbx-pbtn mbx-sub2 mbx-back" type="button">◀ 地図にもどる</button></div><p class="mbx-sub">この街の写真は3枚。押すと大きくなります。</p><div class="mbx-photos"></div><p class="mbx-credit mbx-ccred"></p></section>
   <section class="mbx-panel"><div><h1>📔 観光アルバム</h1><p class="mbx-sub">📸でとった写真が、ここにたまっていきます。</p></div><div class="mbx-album"></div></section>
@@ -24298,7 +24298,7 @@ function mbxStripKeys(){ const keys=MB_STRIP.filter(k=>MB_THUMB2[k]); let last=[
 // 流れている街を押した時：帯と同じ「本物の地図から描いた絵」を大きく見せる（MITSUさん 11-17）。大きい絵は mb-big/〇〇.webp（押した時だけ読む）、無い時は帯の絵
 function mbxStripModal(c,v){ const C=MB_CITIES[c], vv=mbxV(c,v); if(!C||!vv) return; mbxCss(); const key=C.id+'-'+(v+1), th=MB_THUMB2[key]||'';
   const m=document.createElement('div'); m.className='mbx-modal';
-  m.innerHTML=`<div class="mbx-mbox" role="dialog" aria-modal="true" aria-label="${C.name}"><button class="mbx-x" type="button" aria-label="戻る">← 戻る</button><div class="mbx-stage" style="background:#BFE6F7"><img src="mb-big/${C.id}.webp" alt="${C.name}の街の絵" style="display:block;width:100%;height:auto;aspect-ratio:900/630;object-fit:contain"></div><div class="mbx-row"><div><h2>${C.name}</h2><p class="mbx-sub">📍 ${vv.addr}</p><p class="mbx-credit">${mbxCred(c)}</p></div><div class="mbx-btns"><button class="mbx-pbtn" type="button" data-a="go">🟡 街ブラへ行く</button></div></div></div>`;
+  m.innerHTML=`<div class="mbx-mbox" role="dialog" aria-modal="true" aria-label="${C.name}"><button class="mbx-x" type="button" aria-label="戻る">← 戻る</button><div class="mbx-stage" style="background:#BFE6F7"><img src="mb-big/${C.id}.webp" alt="${C.name}の街の絵" style="display:block;width:100%;height:auto;aspect-ratio:900/630;object-fit:contain"></div><div class="mbx-row"><div><h2>${C.name}</h2><p class="mbx-sub">📍 ${vv.addr}</p><p class="mbx-credit">${mbxCred(c)}</p></div><div class="mbx-btns"><button class="mbx-pbtn" type="button" data-a="go">🏙️ 街ブラへ行く</button></div></div></div>`;
   const im=m.querySelector('.mbx-stage img'); im.addEventListener('error',()=>{ if(th&&im.src!==th) im.src=th; },{ once:true });
   document.body.appendChild(m); m.querySelector('.mbx-x').focus();
   m.addEventListener('click',e=>{ if(e.target===m||e.target.closest('.mbx-x')){ m.remove(); return; } const b=e.target.closest('[data-a="go"]'); if(b){ m.remove(); machiBuraOpen(C.id); } }); }
@@ -24328,7 +24328,7 @@ function mbxPick(){ const d=new Date(); const n=d.getFullYear()*400+d.getMonth()
 function mbxTileBuild(){ const P=mbxPick(), al=mbxGet(); const C=MB_CITIES[P.ci], v=mbxV(P.ci,P.vi);
   const list=al.map((a,i)=>({ a, i, ci:mbxCI(a.c) })).filter(x=>x.ci>=0&&mbxV(x.ci,x.a.v)).slice(0,3);
   const s=document.createElement('section'); s.className='hm-tile mbx-tile';
-  s.innerHTML=`<h3>🟡 街ブラ<span class="hm-n">📔 観光アルバム ${al.length}枚</span></h3>
+  s.innerHTML=`<h3>🏙️ 街ブラ<span class="hm-n">📔 観光アルバム ${al.length}枚</span></h3>
   <div class="mbx-tg"><button type="button" class="mbx-today" data-c="${P.ci}" data-v="${P.vi}" aria-label="${C.name}の写真をひらく"><small>きょうのおすすめの街</small><img src="${MB_THUMB2[P.key]}" alt="" width="320" height="220" decoding="async"><b>${C.name}</b><span>${C.area}・${v.t}</span><span class="mbx-ltime" data-mbxlt="${P.ci}">${mbxLtxt(P.ci)}</span></button>
   <div class="mbx-recent"><small>最近の観光アルバム</small>${list.length?`<div class="mbx-rg">${list.map(x=>`<button type="button" class="mbx-ra" data-i="${x.i}" aria-label="${mbxV(x.ci,x.a.v).pl}の写真"><span class="${x.a.f?'mbx-flip':''}" style="display:block">${mbxDraw(x.ci,x.a.v,x.a.tod||'day',x.a.s)}</span><b>${MB_CITIES[x.ci].name.replace(/^.*・/,'')}</b></button>`).join('')}</div>`:'<p class="mbx-empty">まだ写真がありません。街の写真を開いて「📸 写真をとる」を押すと、ここにたまります。</p>'}</div></div>
   <div class="hm-foot mbx-tf"><button type="button" class="mbx-pbtn mbx-goc" data-id="${C.id}">${C.name.replace(/^.*・/,'')}へ行く</button><button type="button" class="mbx-pbtn mbx-sub2 mbx-gow">🌏 地図から街をえらぶ</button></div>`;
@@ -25919,7 +25919,7 @@ function rvFly(r){ const me=rvMe(); const T=rvType(r.cat,r.type); const from=rvW
   const list=()=>{ const L=dests.filter(d=>!area||d.area===area).sort((a,b)=>a.km-b.km); return L.map(d=>{ const ok=d.km<=T.range; return `<button class="rvx-d" type="button" data-d="${d.id}" ${ok?'':'disabled'}><span><b>${esc2(RV_CITYN[d.id]||d.id)}</b><small>${esc2(d.name)}（${d.code}）</small></span><span class="rvx-km">${d.km.toLocaleString()}km<br>${ok?rvHM(d.km/T.kmh+.4):'とどかない'}</span></button>`; }).join(''); };
   const step1=()=>`<h2>✈️ ${esc2(T.n)}で飛ぶ</h2><div class="rvx-from">🛫 出発：<b>${esc2(from.name)}</b>（${from.code}）<br><small>${from.away?`いま Channel がいる${esc2(from.cityName||'')}の空港`:`Channel が住む${esc2(rvPlaceName(me))}から近い空港`}</small></div>
     ${from.away&&home?`<button class="rv-btn rv-sub" type="button" data-home="1">🏠 家の近くの空港（${esc2(home.name)}）へ帰る</button>`:''}
-    <p class="rvx-p">行きたい街をえらんでね。着いたら、その街を🟡街ブラできます。この飛行機で飛べるのは約${T.range.toLocaleString()}kmまで。</p>
+    <p class="rvx-p">行きたい街をえらんでね。着いたら、その街を🏙️街ブラできます。この飛行機で飛べるのは約${T.range.toLocaleString()}kmまで。</p>
     <div class="rvx-tabs">${[['','ぜんぶ']].concat(RV_AREA).map(([k,n])=>`<button class="rvx-tab" type="button" data-area="${k}" aria-selected="${(area||'')===k}">${n}</button>`).join('')}</div><div class="rvx-dests">${list()}</div>`;
   const go=(to,toName,id,tz)=>{ const km=rvDist(from,to);
     const box=m.querySelector('.rvx-mbox');
@@ -25928,7 +25928,7 @@ function rvFly(r){ const me=rvMe(); const T=rvType(r.cat,r.type); const from=rvW
     const t=rvGet(K_TRIP,[]); t.unshift({ d:rvToday(), from:from.code, fromN:from.name, to:to.code, toN:to.name, km, type:T.id }); rvSet(K_TRIP,t.slice(0,30)); rvRender();
     rvInFlight(box,{ r, T, C:rvCat(r.cat), from, to, km, me:me||{}, fromTz:leg.fromTz, tz, onArrive:()=>{ if(!document.body.contains(m)) return;
       const sk=m.querySelector('[data-skip]'); if(sk) sk.remove();
-      const arr=m.querySelector('.rvx-arr'); if(!arr) return; arr.innerHTML=`<div class="rvx-from" style="text-align:center">🛬 <b>${esc2(to.name)}</b>に着きました！${to.kw?`<br><small>空港から${esc2(toName)}までは、${esc2(to.kw)}。</small>`:''}</div><div class="rvh-btns"><button class="rv-btn" type="button" data-shot="landing">📸 着陸の写真をとる</button><button class="rv-btn" type="button" data-trav="1">🧳 ${esc2(toName)}の旅を楽しむ</button>${id?`<button class="rv-btn rv-sub" type="button" data-mb="${id}">🟡 ${esc2(toName)}を街ブラする</button>`:''}</div>`; } }); };
+      const arr=m.querySelector('.rvx-arr'); if(!arr) return; arr.innerHTML=`<div class="rvx-from" style="text-align:center">🛬 <b>${esc2(to.name)}</b>に着きました！${to.kw?`<br><small>空港から${esc2(toName)}までは、${esc2(to.kw)}。</small>`:''}</div><div class="rvh-btns"><button class="rv-btn" type="button" data-shot="landing">📸 着陸の写真をとる</button><button class="rv-btn" type="button" data-trav="1">🧳 ${esc2(toName)}の旅を楽しむ</button>${id?`<button class="rv-btn rv-sub" type="button" data-mb="${id}">🏙️ ${esc2(toName)}を街ブラする</button>`:''}</div>`; } }); };
   const m=rvModal(step1(),(e,mm)=>{ const t=e.target;
     const ab=t.closest('[data-area]'); if(ab){ area=ab.dataset.area||null; mm.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="戻る">← 戻る</button>`+step1(); return; }
     const db=t.closest('[data-d]'); if(db&&!db.disabled){ const d=RV_DEST.find(x=>x.id===db.dataset.d); let tz=null; const mbc=RV_MBC(); if(mbc){ const c=mbc.find(x=>x.id===d.id); if(c) tz=c.tz; } go(d,RV_CITYN[d.id]||d.id,d.id,tz||RV_TZI[d.id]||null); return; }
@@ -26060,7 +26060,7 @@ function hsTripOpen(){ try{ rvCss(); }catch(e){} let home=rvGet(K_HSHOME,null), 
     const t=rvGet(K_HSTRIP,[]); t.unshift({ d:rvToday(), from:from.code, fromN:from.name, to:to.code, toN:to.name, km, city:cityName }); rvSet(K_HSTRIP,t.slice(0,30));
     rvSet(K_HSLOC,id?{ code:to.code, name:to.name, la:to.la, lo:to.lo, city:id, cityName, at:Date.now() }:null);
     rvInFlight(box,{ r:Object.assign({},HS_PLANE), T, C, from, to, km, me:{}, hs:1, pet:hsPet(), fromTz:null, tz:'Asia/Tokyo', onArrive:()=>{ if(!document.body.contains(m)) return; const sk=m.querySelector('[data-skip]'); if(sk) sk.remove();
-      const arr=m.querySelector('.rvx-arr'); if(!arr) return; arr.innerHTML=`<div class="rvx-from" style="text-align:center">🛬 <b>${esc2(to.name)}</b>に着きました！${id&&to.kw?`<br><small>空港から${esc2(cityName)}までは、${esc2(to.kw)}。</small>`:''}</div><div class="rvh-btns"><button class="rv-btn" type="button" data-shot="landing">📸 着陸の写真をとる</button>${id?`<button class="rv-btn" type="button" data-mb="${id}">🟡 ${esc2(cityName)}を観光する</button>`:''}<button class="rv-btn rv-sub" type="button" data-back="1">← 旅のページへ</button></div>`; } }); };
+      const arr=m.querySelector('.rvx-arr'); if(!arr) return; arr.innerHTML=`<div class="rvx-from" style="text-align:center">🛬 <b>${esc2(to.name)}</b>に着きました！${id&&to.kw?`<br><small>空港から${esc2(cityName)}までは、${esc2(to.kw)}。</small>`:''}</div><div class="rvh-btns"><button class="rv-btn" type="button" data-shot="landing">📸 着陸の写真をとる</button>${id?`<button class="rv-btn" type="button" data-mb="${id}">🏙️ ${esc2(cityName)}を観光する</button>`:''}<button class="rv-btn rv-sub" type="button" data-back="1">← 旅のページへ</button></div>`; } }); };
   const shot=(k)=>{ if(!leg) return; const ap=k==='takeoff'?leg.from:leg.to; const pet=hsPet(); let pm=pet?'side':'none'; const p=Object.assign({},HS_PLANE,{ scene:k, code:ap.code, place:ap.name, tod:rvTod('Asia/Tokyo'), pet });
     const html=()=>`<h2>${k==='takeoff'?'🛫 離陸':'🛬 着陸'}の写真</h2><div class="rvx-stage">${hsTripPhotoSVG(Object.assign({},p,{ pm }))}</div><p class="rvx-cap">📍 ${esc2(ap.name)}${pet?`　🐾 ${esc2(pet.name)}もいっしょ`:''}</p><div class="rvh-btns">${pet?`<button class="rv-btn rv-sub" type="button" data-pm="side" aria-pressed="${pm==='side'}">🐾 横にならぶ</button><button class="rv-btn rv-sub" type="button" data-pm="hold" aria-pressed="${pm==='hold'}">🤗 抱っこする</button>`:''}<button class="rv-btn" type="button" data-snap="1">📸 写真をとる</button></div>`;
     rvModal(html(),(e,mm)=>{ const b=e.target.closest('[data-pm]'); if(b){ pm=b.dataset.pm; mm.querySelector('.rvx-mbox').innerHTML=`<button class="rvx-x" type="button" aria-label="戻る">← 戻る</button>`+html(); return; }
