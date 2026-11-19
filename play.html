@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.109">
+<meta name="lifebook-version" content="v178.110">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -840,7 +840,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.109';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.110';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20070,16 +20070,22 @@ function lbnMine(){ const out=[]; try{ if(typeof KEY_FLGOT==='undefined') return
   const ph=(store.get('fl.phGot',[])||[]).filter(x=>!x.seen); if(ph.length){ const who=[...new Set(ph.map(x=>x.fromBy).filter(Boolean))].slice(0,2).map(n=>esc(n)+'さん').join('、'); out.push(`<button type="button" class="lbn-me" data-lbn-me="album"><span class="lbn-new">NEW</span><span class="lbn-t">あなたに、お花の写真📷が届いています</span><span class="lbn-who">${who?who+'から':''}</span></button>`); } }catch(e){} return out; }
 function lbnRefresh(){ try{ const o=document.querySelector('#app .lbn'); if(o) o.remove(); lbnPlace(); }catch(e){} }
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-lbn-me]'); if(!b) return; e.preventDefault(); const k=b.dataset.lbnMe; try{ if(k==='album'){ const L=store.get('fl.phGot',[]); L.forEach(x=>x.seen=1); store.set('fl.phGot',L); } if(typeof flOpen==='function'){ _flMsg=''; flOpen(k); } }catch(_){} b.remove(); });
-function lbnHTML(){ const L=lbnList(), me=lbnMine(); if(!L.length&&!me.length) return ''; const seen=store.get(KEY_LBNSEEN,{}); const nNew=L.filter(x=>!seen[x.i]).length;
+// v178.未読：開いていないニュースのうち、出てから1日以上たったもの（14日以内）を「未読○件」に
+function lbnSince(){ let t=0; try{ t=+store.get('hitotsu.newsSince',0)||0; if(!t){ t=(typeof st!=='undefined'&&st&&st.birthTime)||Date.now(); store.set('hitotsu.newsSince',t); } }catch(e){} return t; }
+function lbnUnreadOk(x,seen,now,since){ return !seen[x.i]&&x.d&&x.d>=since&&now-x.d>=864e5&&now-x.d<14*864e5; }
+function lbnUnread(L,seen){ const now=Date.now(), since=lbnSince(); return L.filter(x=>lbnUnreadOk(x,seen,now,since)).length; }
+function lbnUnreadSet(el){ const c=el&&el.querySelector('.lbn-n'), n=lbnUnread(lbnList(),store.get(KEY_LBNSEEN,{})); if(!c) return; if(n){ c.textContent='未読'+n+'件'; } else c.remove(); }
+function lbnHTML(){ const L=lbnList(), me=lbnMine(); if(!L.length&&!me.length) return ''; const seen=store.get(KEY_LBNSEEN,{}); const nNew=lbnUnread(L,seen);
   const item=x=>`<details class="lbn-i" data-lbn="${esc(x.i)}"><summary>${!seen[x.i]?'<span class="lbn-new">NEW</span>':''}<span class="lbn-t">${esc(x.t)}</span><span class="lbn-d">${lbnDate(x.d)}</span></summary>${x.b?`<p>${esc(x.b).replace(/\n/g,'<br>')}</p>`:''}</details>`;
   const top=L.slice(0,3), past=L.slice(3);
-  return `<section class="lbn" aria-label="LIFE BOOK ニュース"><h3 class="lbn-h">✨ LIFE BOOK ニュース${nNew?`<span class="lbn-n">${nNew}</span>`:''}</h3>${me.join('')}${top.map(item).join('')}${past.length?`<details class="lbn-past"${_lbnOpen?' open':''}><summary>これまでのお知らせ（${past.length}）</summary>${past.map(item).join('')}</details>`:''}</section>`; }
+  return `<section class="lbn" aria-label="LIFE BOOK ニュース"><h3 class="lbn-h">✨ LIFE BOOK ニュース${nNew?`<button type="button" class="lbn-n" aria-label="まだ読んでいないニュース">未読${nNew}件</button>`:''}</h3>${me.join('')}${top.map(item).join('')}${past.length?`<details class="lbn-past"${_lbnOpen?' open':''}><summary>これまでのお知らせ（${past.length}）</summary>${past.map(item).join('')}</details>`:''}</section>`; }
 function lbnPlace(){ try{ const app=document.getElementById('app'); if(!app||typeof page==='undefined'||page!=='home'||app.querySelector('.lbn')) return; const html=lbnHTML(); if(!html) return;
   const box=document.createElement('div'); box.innerHTML=html; const el=box.firstElementChild;
   const cid=app.querySelector('.hm-cid'), osm=app.querySelector('.osm'), hint=app.querySelector('.hm-hint'), home=app.querySelector('.home');
   if(cid) cid.after(el); else if(osm) osm.before(el); else if(hint) hint.before(el); else if(home) home.prepend(el); else return;
-  el.querySelectorAll('.lbn-i').forEach(d=>d.addEventListener('toggle',()=>{ if(!d.open) return; const s=store.get(KEY_LBNSEEN,{}); if(!s[d.dataset.lbn]){ s[d.dataset.lbn]=Date.now(); const ks=Object.keys(s); if(ks.length>80) delete s[ks[0]]; store.set(KEY_LBNSEEN,s); const n=d.querySelector('.lbn-new'); if(n) n.remove(); const c=el.querySelector('.lbn-n'); const left=lbnList().filter(x=>!s[x.i]).length; if(c){ if(left) c.textContent=left; else c.remove(); } } }));
+  el.querySelectorAll('.lbn-i').forEach(d=>d.addEventListener('toggle',()=>{ if(!d.open) return; const s=store.get(KEY_LBNSEEN,{}); if(!s[d.dataset.lbn]){ s[d.dataset.lbn]=Date.now(); const ks=Object.keys(s); if(ks.length>80) delete s[ks[0]]; store.set(KEY_LBNSEEN,s); const n=d.querySelector('.lbn-new'); if(n) n.remove(); lbnUnreadSet(el); } }));
   const p=el.querySelector('.lbn-past'); if(p) p.addEventListener('toggle',()=>{ _lbnOpen=p.open; });
+  const nb=el.querySelector('.lbn-n'); if(nb) nb.addEventListener('click',()=>{ try{ const s=store.get(KEY_LBNSEEN,{}), now=Date.now(); const x=lbnList().find(x=>lbnUnreadOk(x,s,now,lbnSince())); if(!x) return; const d=[...el.querySelectorAll('.lbn-i')].find(d=>d.dataset.lbn===x.i); if(!d) return; const pp=d.closest('.lbn-past'); if(pp) pp.open=true; d.open=true; d.scrollIntoView({block:'center',behavior:'smooth'}); }catch(_){} });
   try{ queueMicrotask(lbnMob); }catch(_){ setTimeout(lbnMob,0); }
 }catch(e){ try{ console.warn('[news]',e); }catch(_){} } }
 // v178.54：携帯では、ニュースを「いろんな国の人生」の帯のすぐ上へ（ほかのカードは元の場所のまま。描き終わってから動かす）
@@ -20096,7 +20102,7 @@ async function lbnFetch(){ try{ if(typeof FB==='undefined'||!FB||!FB.db) return;
   document.addEventListener('visibilitychange',()=>{ if(!document.hidden) lbnFetch(); }); })();
 try{ document.head.insertAdjacentHTML('beforeend',`<style>
 .lbn{ margin:14px 0 4px; padding:12px 16px 10px; border-radius:18px; background:linear-gradient(135deg,#FFF6D8,#FFE9F2); border:2px solid #FFD27A; color:#4A3A2A; }
-.lbn-h{ margin:0 0 6px; font-family:inherit; font-size:15px; color:#C2476B; display:flex; align-items:center; gap:8px; } .lbn-n{ background:#FF5C8A; color:#fff; border-radius:999px; font-size:11px; padding:1px 8px; }
+.lbn-h{ margin:0 0 6px; font-family:inherit; font-size:15px; color:#C2476B; display:flex; align-items:center; gap:8px; } .lbn-n{ background:#FF5C8A; color:#fff; border:0; border-radius:999px; font:inherit; font-size:12px; font-weight:800; padding:3px 10px; min-height:26px; cursor:pointer; white-space:nowrap; } .lbn-n:focus-visible{ outline:3px solid #8EC3E6; }
 .lbn-i{ border-top:1px dashed rgba(194,71,107,.25); } .lbn-i:first-of-type{ border-top:0; }
 .lbn-i summary, .lbn-past > summary{ cursor:pointer; list-style:none; padding:7px 0; display:flex; align-items:baseline; gap:8px; font-size:14px; } .lbn-i summary::-webkit-details-marker, .lbn-past > summary::-webkit-details-marker{ display:none; }
 .lbn-i summary::before{ content:'▸'; color:#E0809A; } .lbn-i[open] summary::before{ content:'▾'; }
