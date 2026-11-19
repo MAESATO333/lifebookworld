@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.89">
+<meta name="lifebook-version" content="v178.90">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -747,7 +747,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.89';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.90';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -16891,7 +16891,7 @@ function mpPageHTML(){ const p=mpGet(); if(mpStageLog(p)) mpSet(p); if(p.per==nu
   ${gone?`<div class="mp-rb"><p>🌈 ${esc(p.name)}は、${p.life}歳まで、たくさんの愛情に包まれて生きました。</p><p>いまは虹の橋のたもとで、元気に走りまわっています。いつかまた会える日まで、ゆっくり待っていてくれるそうです。</p><p>💗 もらった愛情 ${p.love||0}　📷 思い出の写真 ${(p.photos||[]).length}枚　🏠 いっしょにいた日 ${mpTogether(p)}日</p><p class="tiny">思い出のアルバムは、ずっとここに残ります。</p></div>`:`${(w=>w.all.length?`<p class="tiny muted">あなた（Higher Self）が、だれにお願いしますか？${w.all.some(x=>x.k==='ch')?'':'（Channel は、まだ小さくて動けません。3歳になったら、お世話できます）'}</p><div class="mp-who">${w.all.map(x=>`<button type="button" class="mp-w${x.k===w.k?' on':''}" data-mpw="${esc(x.k)}">${esc(x.call==='Channel'?x.n+'（Channel）':x.call+'の'+x.n)}</button>`).join('')}</div>`:'')(mpWho())}<div class="mp-acts">${Object.keys(MP_ACT).map(k=>`<button type="button" class="mp-a${(k==='food'?done.filter(x=>x==='food').length>=2:done.includes(k))?' done':''}" data-mpa="${k}">${MP_ACT[k][1]} ${k==='play'&&p.kind==='dog'?'さんぽに行ってあげて':MP_ACT[k][0]}${k==='food'?(n=>n>=2?' ✓':n?' （あと1回）':'')(done.filter(x=>x==='food').length):done.includes(k)?' ✓':''}</button>`).join('')}<button type="button" class="mp-a mp-cam" data-mp="photo">📷 写真をとる</button></div>
   ${mpFoodHTML(p)}${(an=>an?`<p class="mp-anniv">${esc(an)}</p>`:'')(mpAnniv(p))}${mpAnnivHTML(p)}${typeof mpWcHTML==='function'?mpWcHTML(p):''}${p.cry?`<span class="mp-cry">${esc(p.cry)}</span>`:''}<p class="mp-msg" id="mpMsg" role="status">${esc(p.msg||'きょうも、見守ってあげてね。')}</p><p class="tiny muted">${esc(p.name)}は、${esc(per.d)}。</p>${mpChatHTML(p)}`}
   <p class="tiny muted">見守った日</p><div class="stp-row">${days.map(x=>{ const on=S.has(dayKey(x)); return `<span class="stp ${on?'on':''} ${dayKey(x)===dayKey()?'today':''}"><small>${W[x.getDay()]}</small>${on?'<i aria-hidden="true"></i>':x.getDate()}</span>`; }).join('')}</div>
-  ${mpDiaryHTML(p)}<h4 class="mp-h4">📷 ${esc(p.name)}のアルバム</h4>${ph.length?`<div class="mp-album">${ph.map(x=>`<figure class="mp-ph">${mpArt(p,x.k)}<figcaption>${esc(String(x.c).replace(/^\d+年\d+月\d+日/,mpStoryDate(x.t)))}</figcaption></figure>`).join('')}</div>`:'<p class="tiny muted">まだ写真はありません。「写真をとる」を押すと、いまの姿がアルバムに残ります。</p>'}
+  ${mpDiaryHTML(p)}<h4 class="mp-h4">📷 ${esc(p.name)}のアルバム</h4>${typeof hsAlbOpen==='function'?'<button type="button" class="linkish hsa-lnk" data-hsaopen="1">📒 Higher Self のアルバム（ぜんぶの写真）を見る</button>':''}${ph.length?`<div class="mp-album">${ph.map(x=>`<figure class="mp-ph">${x.h&&typeof pgHousePhoto==='function'?pgHousePhoto(p,x):mpArt(p,x.k)}<figcaption>${esc(String(x.c).replace(/^\d+年\d+月\d+日/,mpStoryDate(x.t)))}</figcaption></figure>`).join('')}</div>`:'<p class="tiny muted">まだ写真はありません。「写真をとる」を押すと、いまの姿がアルバムに残ります。</p>'}
   <div class="mp-row">${gone?`<button type="button" class="mp-btn" data-mp="again">新しい家族を迎える</button>`:''}<button type="button" class="linkish" data-mp="close">もどる</button></div>
   <p class="mp-src">寿命の目安：犬の平均は約14.6歳、猫は約15.8歳（日本ペットフード協会 2023年）。この中では、約1か月で1歳、年をとります。</p>`; }
 function mpAdopt(){ const k=_mpPick.kind, br=_mpPick.col||(document.getElementById('mpBreed')||{}).value||_mpPick.breed; const inp=document.getElementById('mpName'); let nm=(inp&&inp.value||'').trim().slice(0,12); if(!nm){ const er=document.getElementById('mpNameErr'); if(er) er.hidden=false; if(inp){ inp.focus(); inp.classList.add('mp-in-err'); } return; }
@@ -19900,6 +19900,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // v166: Life Home の上のほうに「✨ LIFE BOOKのニュース」。新しい機能・更新のお知らせ。
 // ゲームに入っているお知らせ（LBN_BUILTIN）＋ 管理者が Firebase の os/news に書いたお知らせ（{ n:[{ i, d:ミリ秒, t:題, b:説明 }] }）。新しい順に3つ、のこりは「これまでのお知らせ」。
 const LBN_BUILTIN=[
+  { i:'v178-hsalbum', d:Date.UTC(2026,10,19,3,0), t:'📒 Higher Self のアルバムができました', b:'ペット・ペットの家・街ブラ・乗り物・Gateway の写真や動く写真・お花の部屋の写真が、ぜんぶ1つのアルバムに新しい順で並びます。マイページのアルバム欄や、ペットのアルバムから開けます。ペットの家の「📒 アルバムに保存」で、お部屋の様子も写真に残せます。' },
   { i:'v178-petclothes', d:Date.UTC(2026,10,19,2,51), t:'👕 うちのペットに、服を着せられるようになりました', b:'うちのペットのページの「👕 服を着せる」から、形・色・模様を組み合わせて、100種類以上の服を着せられます。着せたまま写真をとって、アルバムに残したり、画像として保存したりもできます。服を着せられるのは、飼い主だけです。' },
   { i:'v178-pethouse', d:Date.UTC(2026,10,19,2,50), t:'🏠 ペットの家ができました', b:'うちのペットを押すと、ペットの家の大きな部屋が見られます。友だちからもらったプレゼントやおもちゃが、お部屋にかざられます。帽子やリボンは、ペットが動いてもいっしょに動き、「はずす」で外すこともできます。' },
   { i:'v178-petgifts', d:Date.UTC(2026,10,19,2,40), t:'🎁 ペットに贈れるプレゼントが、9種類になりました', b:'友だちのペットに、💗可愛い！・🎁ごはんのほかに、🧸おもちゃ・🍪おやつ・🎀おしゃれ・🛏️ベッド・💐お花・🪮おていれが贈れるようになりました。そのペットのお誕生日には、🎂ケーキも贈れます。中身は動物ごとにちがいます。もらったペットは、リボンをつけて公園を走ったり、ベッドで眠ったり、おもちゃで遊んだりします。' },
@@ -21400,6 +21401,75 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 .pg-clbt{ display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:10px; } .pg-clx{ border:1.5px solid #E86A88; background:#fff; color:#C2476B; border-radius:999px; padding:7px 8px; font:inherit; font-size:13px; font-weight:700; min-height:40px; cursor:pointer; } .pg-clgo{ background:#FF8FAB; color:#fff; }
 .pg-hctl .pg-clb{ grid-column:1/-1; background:#F3ECFF; border-color:#A67CE0; color:#6B4FA0; }
 </style>`); }catch(e){}
+
+// v178.90（MITSUさん 2026-11-19）：Higher Self が撮った写真を、ぜんぶ1つのアルバムで見る（ペット・ペットの家・街ブラ・乗り物・Gateway の写真と動く写真・お花の部屋）
+// 写真はそれぞれ今までの場所に保存したまま（消えない・動かない）。ここでは集めて、新しい順にならべるだけ。絵は画面に見えた時だけ描く（固まらないように）。
+function pgHousePhoto(p,x){ try{ const q=Object.assign({},p,{ gifts:(p.gifts||[]).slice(0,x.g==null?999:x.g), cl:x.cl&&typeof pgClParse==='function'?pgClParse(x.cl):null }); return pgHouseSVG(q,{ hr:x.hr, fx:x.fx||{} }); }catch(e){ return ''; } }
+function hsAlbDay(d){ const m=/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/.exec(String(d||'')); return m?new Date(+m[1],m[2]-1,+m[3],12).getTime():0; }
+function hsAlbDate(t){ if(!t) return ''; const d=new Date(t); return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`; }
+function hsAlbItems(){ const L=[];
+  try{ const p=typeof mpGet==='function'?mpGet():null; if(p&&Array.isArray(p.photos)) p.photos.forEach(x=>L.push({ ty:x.h?'house':'pet', t:+x.t||0, x, p })); }catch(e){}
+  try{ if(window.lbMb) window.lbMb.list().forEach(m=>L.push({ ty:'machi', t:hsAlbDay(m.a.d), x:m.a, m })); }catch(e){}
+  try{ if(typeof window.lbRvAlb==='function') window.lbRvAlb().forEach(x=>L.push({ ty:'ride', t:+x.at||hsAlbDay(x.d), x })); }catch(e){}
+  try{ if(typeof gwAlbum==='function') gwAlbum().forEach(r=>L.push({ ty:'gw', t:+r.t>1e12?+r.t:0, x:r })); }catch(e){}
+  try{ (store.get(KEY_FLALB,[])||[]).forEach(ph=>L.push({ ty:'fl', t:+ph.t||0, x:ph })); }catch(e){}
+  return L.sort((a,b)=>b.t-a.t); }
+const HSA_TY={ pet:'🐾 ペット', house:'🏠 ペットの家', machi:'🏙️ 街ブラ', ride:'🚲 乗り物', gw:'🌊 Gateway', fl:'💐 お花' };
+const HSA_F=[['all','ぜんぶ'],['pet','🐾 ペット'],['machi','🏙️ 街ブラ'],['ride','🚲 乗り物'],['gw','🌊 Gateway'],['fl','💐 お花']];
+let _hsaF='all', _hsaN=24, _hsaL=[], _hsaIO=null;
+function hsAlbArt(it){ try{ const x=it.x;
+  if(it.ty==='pet') return mpArt(it.p,x.k,undefined,x.t);
+  if(it.ty==='house') return pgHousePhoto(it.p,x);
+  if(it.ty==='machi') return window.lbMb.art(it.m);
+  if(it.ty==='ride') return window.lbRvPhoto(x).svg;
+  if(it.ty==='gw') return gwPhHTML('a:'+x.t);
+  if(it.ty==='fl') return flPhotoSVG(x); }catch(e){} return '<p class="tiny muted">写真を描けませんでした</p>'; }
+function hsAlbCap(it){ const x=it.x; let c='';
+  try{ if(it.ty==='pet'||it.ty==='house') c=String(x.c||'').replace(/^\d+年\d+月\d+日・?/,'');
+    else if(it.ty==='machi') c=window.lbMb.pl(it.m);
+    else if(it.ty==='ride') c=(window.lbRvPhoto(x).n||'')+(x.place?' 📍'+x.place:'');
+    else if(it.ty==='gw') c=x.m?'🎬 動く写真':'';
+    else if(it.ty==='fl') c=typeof flPhCap==='function'?flPhCap(x):''; }catch(e){}
+  return `<b>${HSA_TY[it.ty]}</b>${it.t?` <small>${hsAlbDate(it.t)}</small>`:''}${c?`<br>${esc(String(c).slice(0,60))}`:''}`; }
+function hsAlbList(){ return _hsaF==='all'?_hsaL:_hsaL.filter(it=>it.ty===_hsaF||(_hsaF==='pet'&&it.ty==='house')); }
+function hsAlbHTML(){ const A=hsAlbList(), show=A.slice(0,_hsaN);
+  const cnt={}; _hsaL.forEach(it=>{ const k=it.ty==='house'?'pet':it.ty; cnt[k]=(cnt[k]||0)+1; });
+  const chips=HSA_F.filter(f=>f[0]==='all'||cnt[f[0]]).map(f=>`<button type="button" class="mp-w${_hsaF===f[0]?' on':''}" data-hsaf="${f[0]}">${f[1]} ${f[0]==='all'?_hsaL.length:cnt[f[0]]}</button>`).join('');
+  return `<h3 class="gsz-h">📒 Higher Self のアルバム</h3><p class="tiny muted">あなた（Higher Self）が撮った写真が、ぜんぶここに集まります。新しい順です。写真を押すと大きく見られます。</p>
+  <div class="hsa-f">${chips}</div>${A.length?`<div class="hsa-g">${show.map((it,i)=>`<button type="button" class="hsa-c" data-hsai="${_hsaL.indexOf(it)}"><span class="hsa-a"></span><span class="hsa-t">${hsAlbCap(it)}</span></button>`).join('')}</div>${A.length>_hsaN?`<div class="np-row"><button type="button" class="mp-btn" data-hsamore="1">もっと見る（あと${A.length-_hsaN}枚）</button></div>`:''}`
+  :'<p class="tiny muted">まだ写真がありません。ペットの「📷 写真をとる」「📒 アルバムに保存」、街ブラの「📸 写真をとる」などで撮ると、ここに集まります。</p>'}`; }
+function hsAlbFill(){ const d=document.getElementById('gsZoom'); if(!d) return; const cs=[...d.querySelectorAll('.hsa-c:not(.hsa-done)')]; if(!cs.length) return;
+  const draw=el=>{ if(el.classList.contains('hsa-done')) return; el.classList.add('hsa-done'); const it=_hsaL[+el.dataset.hsai]; if(!it) return; const a=el.querySelector('.hsa-a'); a.innerHTML=hsAlbArt(it);
+    try{ if(it.ty==='gw'&&typeof gwFill==='function') gwFill(a); if(it.ty==='machi') window.lbMb.freeze(a,it.x.t); a.querySelectorAll('svg').forEach(v=>{ try{ if(it.ty!=='gw') v.pauseAnimations&&v.pauseAnimations(); }catch(_){} }); }catch(_){} };
+  if(_hsaIO){ try{ _hsaIO.disconnect(); }catch(_){} _hsaIO=null; }
+  if('IntersectionObserver' in window){ _hsaIO=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ draw(e.target); _hsaIO&&_hsaIO.unobserve(e.target); } }),{ root:null, rootMargin:'200px' }); cs.forEach(c=>_hsaIO.observe(c)); }
+  else cs.slice(0,12).forEach(draw); }
+function hsAlbOpen(keep){ if(!keep){ _hsaF='all'; _hsaN=24; } _hsaL=hsAlbItems(); if(typeof gsZoomOpen!=='function') return; gsZoomOpen(`<div class="hsa">${hsAlbHTML()}</div>`); const d=document.getElementById('gsZoom'); if(d) d.classList.add('hsa-on'); setTimeout(hsAlbFill,30); }
+function hsAlbBig(i){ const it=_hsaL[i]; if(!it) return; const L=hsAlbList(), k=L.indexOf(it);
+  gsZoomOpen(`<div class="hsa hsa-big"><div class="hsa-ba">${hsAlbArt(it)}</div><p class="hsa-bc">${hsAlbCap(it)}</p><div class="pa-nav"><button type="button" class="pa-b" data-hsab="${k>0?_hsaL.indexOf(L[k-1]):-1}" ${k<=0?'disabled':''}>← まえ</button><span>${k+1} / ${L.length}</span><button type="button" class="pa-b" data-hsab="${k<L.length-1?_hsaL.indexOf(L[k+1]):-1}" ${k>=L.length-1?'disabled':''}>つぎ →</button></div><div class="np-row"><button type="button" class="mp-btn" data-hsaback="1">📒 アルバムにもどる</button></div></div>`);
+  try{ const d=document.getElementById('gsZoom'); if(it.ty==='gw'&&typeof gwFill==='function') gwFill(d); }catch(_){} }
+// ペットの家を、そのまま写真に（いまの時刻・プレゼント・おしゃれ・服で）
+function hsAlbSaveHouse(){ const p=mpGet(); if(!p||(typeof mpGone==='function'&&mpGone(p))) return; const t=new Date(); const fx={}; try{ const f=pgFxMine(p); Object.keys(f).forEach(k=>{ fx[k]={ e:f[k].e, f:f[k].f, by:f[k].by, t:f[k].t, until:f[k].until }; }); }catch(e){}
+  const st=typeof mpStage==='function'?mpStage(p):['',1]; p.photos=p.photos||[];
+  p.photos.push({ t:Date.now(), k:st[1], h:1, g:(p.gifts||[]).length, hr:t.getHours(), fx, cl:p.cl?`${p.cl.s}.${p.cl.c}.${p.cl.m}`:'', c:`${t.getFullYear()}年${t.getMonth()+1}月${t.getDate()}日・${p.name}の家で` });
+  if(p.photos.length>60) p.photos=p.photos.slice(-60); try{ mpLog(p,'家の写真をとって、アルバムに保存した。','photo'); }catch(e){} mpSet(p); try{ pgToast('📒 アルバムに保存しました'); }catch(e){} mpOpen(); }
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-hsaf],[data-hsai],[data-hsamore],[data-hsab],[data-hsaback],[data-hsaopen],[data-hsasave]'); if(!t) return; e.preventDefault(); e.stopPropagation();
+  if(t.dataset.hsasave){ hsAlbSaveHouse(); return; }
+  if(t.dataset.hsaopen){ hsAlbOpen(); return; }
+  if(t.dataset.hsaf){ _hsaF=t.dataset.hsaf; _hsaN=24; hsAlbOpen(true); return; }
+  if(t.dataset.hsamore){ _hsaN+=24; const sy=(document.querySelector('#gsZoom .gsz-in')||{}).scrollTop||0; hsAlbOpen(true); try{ document.querySelector('#gsZoom .gsz-in').scrollTop=sy; }catch(_){} return; }
+  if(t.dataset.hsaback){ hsAlbOpen(true); return; }
+  if(t.dataset.hsab!=null){ const i=+t.dataset.hsab; if(i>=0) hsAlbBig(i); return; }
+  if(t.dataset.hsai!=null){ hsAlbBig(+t.dataset.hsai); return; } },true);
+try{ document.head.insertAdjacentHTML('beforeend',`<style>
+.hsa-f{ display:flex; gap:5px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; margin:6px 0 8px; } .hsa-f .mp-w{ flex:0 0 auto; font-size:12px; padding:4px 10px; min-height:32px; white-space:nowrap; }
+.hsa-g{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; }
+.hsa-c{ display:block; text-align:left; background:#fff; border:0; padding:6px 6px 8px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.12); cursor:pointer; font:inherit; color:inherit; }
+.hsa-a{ display:block; min-height:90px; background:#F7F2F5; border-radius:4px; overflow:hidden; } .hsa-a svg,.hsa-a img{ display:block; width:100%; height:auto; }
+.hsa-a .gw-ph{ aspect-ratio:720/250; } .hsa-t{ display:block; font-size:11px; line-height:1.5; color:#6A5A64; margin-top:4px; } .hsa-t b{ color:#B23A64; }
+.hsa-ba svg,.hsa-ba img{ display:block; width:100%; height:auto; } .hsa-bc{ font-size:13px; margin:6px 0; } .hsa-lnk{ display:block; margin:0 0 8px; font-size:13px; }
+.mp-ph .pg-hs{ width:100%; height:auto; display:block; }
+</style>`); }catch(e){}
 // v178.86（MITSUさん）：ペットだけの家。中が見える大きな部屋に、もらったプレゼント・おもちゃを飾る。うちのペットのページの一番上に出す
 function pgHouseItems(p){ const by={}; (Array.isArray(p&&p.gifts)?p.gifts:[]).forEach(g=>{ if(!g||!g.k) return; (by[g.k]=by[g.k]||[]); const f=String(g.f||''); if(g.k==='love'||g.k==='food'){ by[g.k].push(g); return; } if(!by[g.k].some(x=>x.f===f)) by[g.k].push({ f, e:pgEmo(f)||pgIco(g.k), n:f.replace(/^\S+\s*/,''), by:g.by }); }); return by; }
 // v178.90（MITSUさん 2026-11-19「全員が違うように」）：ペットごとに、家の屋根・かべ紙・床・ラグ・窓・カーテンが少しずつちがう（迎えた時刻と種類から決まる。毎回同じ）
@@ -21430,10 +21500,10 @@ function pgHouseV(p){ let h=2166136261; const key=String(p&&p.at||'')+'|'+String
   const rg=P(['#FFD3E0','#CDE7FF','#D7F2C8','#FFE6B3','#E6DAFF','#FFD0C2']), rt=R(3);
   const rug=rt===0?`<ellipse cx="180" cy="256" rx="78" ry="13" fill="${rg}" opacity=".9"/>`:rt===1?`<rect x="104" y="244" width="152" height="24" rx="8" fill="${rg}" opacity=".9"/><rect x="112" y="248" width="136" height="16" rx="6" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="4 3"/>`:`<ellipse cx="180" cy="256" rx="82" ry="14" fill="${rg}" opacity=".9"/><ellipse cx="180" cy="256" rx="56" ry="9" fill="#fff" opacity=".45"/>`;
   return { pid, roof, wall, pat, fl:fl[0], floor, rug, wrx:P([4,12,26]), wf:P(['#fff','#FFE7A8','#D8F0FF','#FFD6E4']), cur:P(['#FF9FB9','#9FD0FF','#B9E6A0','#FFC98A','#CDB6FF','#FFB3B3']) }; }
-function pgHouseSVG(p){ const T=(x,y,z,e,t)=>`<text x="${x}" y="${y}" font-size="${z}" text-anchor="middle">${t?`<title>${esc(t)}</title>`:''}${esc(e)}</text>`;
-  const I=pgHouseItems(p), fx=pgFxMine(p), hr=new Date().getHours(), night=hr<6||hr>=19, eve=hr>=17&&hr<19;
+function pgHouseSVG(p,O){ const T=(x,y,z,e,t)=>`<text x="${x}" y="${y}" font-size="${z}" text-anchor="middle">${t?`<title>${esc(t)}</title>`:''}${esc(e)}</text>`;
+  const I=pgHouseItems(p), fx=O&&O.fx?O.fx:pgFxMine(p), hr=O&&O.hr!=null?O.hr:new Date().getHours(), night=hr<6||hr>=19, eve=hr>=17&&hr<19;
   const sky=night?['#1E2A55','#3B4A80']:eve?['#FFB38A','#FFD9B8']:['#8FD3FF','#DDF3FF']; const V=pgHouseV(p);
-  let o=`<svg class="pg-hs" viewBox="0 0 360 300" role="img" aria-label="${esc(p.name)}の家"><defs><linearGradient id="pgSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient>${V.pat}</defs>
+  let o=`<svg class="pg-hs" viewBox="0 0 360 300" role="img" aria-label="${esc(p.name)}の家"><defs><linearGradient id="pgSky${night?'n':eve?'e':'d'}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient>${V.pat}</defs>
   <rect width="360" height="300" rx="18" fill="${night?'#2A3566':'#EAF6FF'}"/><rect y="272" width="360" height="28" fill="${night?'#3E6A4A':'#BFE3A6'}"/>
   ${V.roof}
   <text x="180" y="78" font-size="15" font-weight="700" text-anchor="middle" fill="#B23A64">🏠 ${esc(p.name)}の家</text>
@@ -21442,7 +21512,7 @@ function pgHouseSVG(p){ const T=(x,y,z,e,t)=>`<text x="${x}" y="${y}" font-size=
   <polygon points="33,94 52,106 52,218 33,276" fill="${V.wall[3]}"/><polygon points="327,94 308,106 308,218 327,276" fill="${V.wall[3]}"/>
   <polygon points="52,218 308,218 327,276 33,276" fill="${V.fl}"/>${V.floor}
   ${V.rug}
-  <rect x="214" y="114" width="78" height="52" rx="${V.wrx}" fill="url(#pgSky)" stroke="${V.wf}" stroke-width="4"/>${night?'<circle cx="270" cy="130" r="7" fill="#FFF3B0"/><circle cx="236" cy="126" r="1.4" fill="#fff"/><circle cx="252" cy="148" r="1.2" fill="#fff"/>':'<circle cx="272" cy="128" r="8" fill="#FFE680"/>'}<line x1="253" y1="114" x2="253" y2="166" stroke="#fff" stroke-width="3"/><path d="M212 112 q10 30 -2 56 h12 q-6 -28 0 -56z" fill="${V.cur}"/><path d="M294 112 q-10 30 2 56 h-12 q6 -28 0 -56z" fill="${V.cur}"/>
+  <rect x="214" y="114" width="78" height="52" rx="${V.wrx}" fill="url(#pgSky${night?'n':eve?'e':'d'})" stroke="${V.wf}" stroke-width="4"/>${night?'<circle cx="270" cy="130" r="7" fill="#FFF3B0"/><circle cx="236" cy="126" r="1.4" fill="#fff"/><circle cx="252" cy="148" r="1.2" fill="#fff"/>':'<circle cx="272" cy="128" r="8" fill="#FFE680"/>'}<line x1="253" y1="114" x2="253" y2="166" stroke="#fff" stroke-width="3"/><path d="M212 112 q10 30 -2 56 h12 q-6 -28 0 -56z" fill="${V.cur}"/><path d="M294 112 q-10 30 2 56 h-12 q6 -28 0 -56z" fill="${V.cur}"/>
   <rect x="58" y="178" width="96" height="5" rx="2" fill="#C98B6B"/><rect x="164" y="178" width="40" height="5" rx="2" fill="#C98B6B"/>`;
   // おしゃれ：かべのフック
   (I.wear||[]).slice(0,5).forEach((x,i)=>{ const X=68+i*20; o+=`<circle cx="${X}" cy="118" r="2.4" fill="#C98B6B"/>`+T(X,138,15,x.e,`${x.n}（${x.by}さんから）`); });
@@ -21469,7 +21539,7 @@ function pgHouseSVG(p){ const T=(x,y,z,e,t)=>`<text x="${x}" y="${y}" font-size=
 if(typeof mpPageHTML==='function'){ const MP3=mpPageHTML; mpPageHTML=function(){ let h=MP3.apply(this,arguments); try{ const p=mpGet(); if(!p||(typeof mpGone==='function'&&mpGone(p))) return h;
   const a=h.indexOf('<div class="mp-top">'); if(a<0) return h; const s0=h.indexOf('<svg',a); if(s0<0) return h; let dep=0, i=s0, e0=-1; const re=/<svg\b|<\/svg>/g; re.lastIndex=s0; let m; while((m=re.exec(h))){ dep+=m[0]==='</svg>'?-1:1; if(!dep){ e0=m.index+6; break; } } if(e0<0) return h;
   let rest=h.slice(e0); const ac=rest.indexOf('<div class="mp-acts">'); let ctl='';
-  if(ac>=0){ const ae=rest.indexOf('</div>',ac)+6; const w0=rest.indexOf('<p class="tiny muted">あなた（Higher Self）'); const st=w0>=0&&w0<ac?w0:ac; ctl=rest.slice(st,ae).replace('さんぽに行ってあげて','さんぽに行こう'); if(pgClOk(p.kind)) ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-clb" data-pgclo="1">👕 服を着せる${p.cl?`（${esc(pgClName(p.cl))}）`:''}</button></div>`); rest=rest.slice(0,st)+rest.slice(ae); }
+  if(ac>=0){ const ae=rest.indexOf('</div>',ac)+6; const w0=rest.indexOf('<p class="tiny muted">あなた（Higher Self）'); const st=w0>=0&&w0<ac?w0:ac; ctl=rest.slice(st,ae).replace('さんぽに行ってあげて','さんぽに行こう'); if(pgClOk(p.kind)) ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-hsv" data-hsasave="1">📒 アルバムに保存</button></div>`); if(pgClOk(p.kind)) ctl=ctl.replace(/<\/div>$/,`<button type="button" class="mp-a pg-clb" data-pgclo="1">👕 服を着せる${p.cl?`（${esc(pgClName(p.cl))}）`:''}</button></div>`); rest=rest.slice(0,st)+rest.slice(ae); }
   return h.slice(0,a)+`<div class="pg-house">${pgHouseSVG(p)}</div>${ctl?`<div class="pg-hctl">${ctl}</div>`:''}<div class="mp-top pg-ht">`+rest; }catch(e){ return h; } }; }
 // 公園で、うちのペットを押した時も、まず家へ
 if(typeof prOpen==='function'){ const PO3=prOpen; prOpen=function(pp){ if(pp&&pp.mine&&typeof mpOpen==='function'){ try{ mpOpen(); return; }catch(e){} } return PO3.apply(this,arguments); }; }
@@ -21770,7 +21840,7 @@ async function acKeepsFill(){ const box=document.getElementById('acKeeps'); if(!
 
 // ---- マイページの欄（アルバム・ペット・本棚・友だち）：開いた欄だけ作る（軽くするため） ----
 function acRow(ic,name,n,unit,act,thumbs){ return `<div class="ac-row"><span class="ac-ic" aria-hidden="true">${ic}</span><span class="ac-rn">${name}<small>${n}${unit}</small></span>${act?`<button class="frd-b frd-pink ac-go" type="button" data-acgo="${act}">見る</button>`:''}</div>${thumbs||''}`; }
-function acAlbumPane(){ let h='';
+function acAlbumPane(){ let h=typeof hsAlbOpen==='function'?'<button class="frd-b frd-pink ac-wide" type="button" data-acgo="hsalb">📒 Higher Self のアルバム（ぜんぶの写真）</button>':'';
   try{ if(cur&&typeof albumPhotos==='function'){ const n=albumPhotos(cur.P,cur.L,Math.floor(clock().age),30).length; h+=acRow('📖','人生のアルバム',n,'枚','life'); } }catch(e){}
   try{ if(typeof eaCollected==='function'){ const ids=eaCollected(); const th=ids.length?`<div class="ac-th">${ids.slice(-8).reverse().map(id=>`<img src="ea-photo/${encodeURIComponent(id)}.webp" alt="" loading="lazy" decoding="async">`).join('')}</div>`:''; h+=acRow('🌏','地球の名所の絵はがき',ids.length,'枚','earth',th); } }catch(e){}
   try{ const a=JSON.parse(localStorage.getItem('hitotsu.machiAlbum')||'[]'); h+=acRow('🏙️','街ブラの写真',Array.isArray(a)?a.length:0,'枚',typeof machiBuraOpen==='function'?'machi':''); }catch(e){}
@@ -21796,7 +21866,7 @@ function acFriendsPane(){ const L=(store.get(KEY_FRIEND,[])||[]).filter(f=>f&&f.
     return `<div class="ac-li"><b>👤 ${esc(f.by||'なまえなし')}さん</b><small>${esc(ch)}</small></div>`; }).join('')}</div>${btn}`; }
 function acBindPanes(d){ d.querySelectorAll('[data-actab]').forEach(b=>b.onclick=()=>{ _acTab=b.dataset.actab; acOpen(); });
   d.querySelectorAll('[data-acgo]').forEach(b=>b.onclick=()=>{ const g=b.dataset.acgo; acClose(); setTimeout(()=>acFromStart(g),0);
-    try{ if(g==='life'){ if(typeof goLife==='function') goLife(); } else if(g==='earth') eaOpenDialog(); else if(g==='machi') machiBuraOpen(); else if(g==='ride') ridesOpen(); else if(g==='hs') hsTripOpen(); else if(g==='pet') mpOpen(); else if(g==='invite'){ const o=document.querySelector('.fr-open'); if(o) o.click(); } }catch(e){ console.warn(e); } });
+    try{ if(g==='life'){ if(typeof goLife==='function') goLife(); } else if(g==='earth') eaOpenDialog(); else if(g==='machi') machiBuraOpen(); else if(g==='ride') ridesOpen(); else if(g==='hs') hsTripOpen(); else if(g==='pet') mpOpen(); else if(g==='hsalb') hsAlbOpen(); else if(g==='invite'){ const o=document.querySelector('.fr-open'); if(o) o.click(); } }catch(e){ console.warn(e); } });
   d.querySelectorAll('[data-acarc]').forEach(b=>b.onclick=()=>{ const a=(store.get(KEY_ARC,[])||[])[+b.dataset.acarc]; if(!a) return; acClose(); viewing={ seed:a.seed, country:a.country, force:a.force||null, choice:a.choice, bs:a.bs||null }; render(); window.scrollTo(0,0); acFromStart('arc'); }); }
 // v178.60（MITSUさん 2026-11-19）：携帯を横にしている間は、上のボタンをかくす。ロゴの右の「☰ ボタンを出す」で出し入れ（横にするたび、かくれた状態から）
 (function(){ try{ const h=document.querySelector('.masthead'), logo=h&&h.querySelector('.lb-logo'); if(!logo) return; const b=document.createElement('button'); b.type='button'; b.className='lb-landbtn';
@@ -24050,6 +24120,7 @@ function mbxTileRefresh(){ try{ const app=document.getElementById('app'); if(app
 (function(){ if(typeof render1!=='function') return; const _r=render1; render1=function(){ const r=_r.apply(this,arguments); mbxPlace(); return r; }; })();
 setTimeout(mbxPlace,0);
 window.machiBuraOpen=machiBuraOpen;
+window.lbMb={ list:()=>mbxGet().map(a=>({ a, ci:mbxCI(a.c) })).filter(x=>x.ci>=0&&mbxV(x.ci,x.a.v)), art:x=>{ mbxCss(); return `<span class="${x.a.f?'mbx-flip':''}" style="display:block">${mbxDraw(x.ci,x.a.v,x.a.tod||'day',x.a.s)}</span>`; }, pl:x=>(mbxV(x.ci,x.a.v)||{}).pl||'', freeze:(el,t)=>mbxFreeze(el,t) };
 })();
 </script>
 <script>
@@ -25783,6 +25854,8 @@ function hsTripOpen(){ try{ rvCss(); }catch(e){} let home=rvGet(K_HSHOME,null), 
 window.hsTripOpen=hsTripOpen;
 window.lbVehicles={ list:lbVList, g:lbVG, svg:lbVSvg, pick:lbVPick, rented:lbVRented, look:rvRandLook, person:(x,y,look,o)=>rvPerson(x,y,look,o||{}), GROUND:G, WATER:W };
 window.ridesOpen=ridesOpen;
+window.lbRvAlb=function(){ const a=rvGet(K_ALB,[]); return Array.isArray(a)?a.filter(x=>x&&rvType(x.cat,x.type)):[]; };
+window.lbRvPhoto=function(x){ rvCss(); const T=rvType(x.cat,x.type); return { svg:rvPhotoSVG(Object.assign({ still:1 },x)), n:T?T.n:'' }; };
 
 })();
 ;try{ if(typeof render==="function") render(); }catch(e){}
