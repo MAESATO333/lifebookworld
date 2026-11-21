@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.116">
+<meta name="lifebook-version" content="v178.117">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -852,7 +852,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.116';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.117';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20040,6 +20040,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // v166: Life Home の上のほうに「✨ LIFE BOOKのニュース」。新しい機能・更新のお知らせ。
 // ゲームに入っているお知らせ（LBN_BUILTIN）＋ 管理者が Firebase の os/news に書いたお知らせ（{ n:[{ i, d:ミリ秒, t:題, b:説明 }] }）。新しい順に3つ、のこりは「これまでのお知らせ」。
 const LBN_BUILTIN=[
+  { i:'v178-hsname', d:Date.UTC(2026,10,21,8,20), t:'🌟 Higher Self（あなた）の名前を 登録しましょう', b:'名前がまだの方は、かんたんに登録できます。友だちには、この名前で届きます。\n\n【登録のしかた】\n① 上のボタンの「友だちに紹介」を押す\n② いちばん上の「あなたの呼び名（友だちに表示されます）」に 名前を入れる\n③「OK！」を押す\n\n「○○で保存しました」と出たら完了です。名前は、あとから同じ場所で 変えられます。\n\n※ パソコンでボタンが見えない時は、ロゴの右の「☰ ボタンを出す」を押してください。' },
   { i:'v178-homescreen', d:Date.UTC(2026,10,21,8,10), t:'📱 LIFE BOOK を ホーム画面に置くと便利です', b:'アプリのように、ホーム画面のアイコンから すぐに開けます。\n\n【iPhone】\n① Safari で LIFE BOOK を開く\n② 画面の下にある 共有ボタン（□に↑のマーク）を押す\n③「ホーム画面に追加」を押す\n\n【Android】\n① Chrome で LIFE BOOK を開く\n② 右上の「︙」を押す\n③「ホーム画面に追加」を押す' },
   { i:'v178-passbook', d:Date.UTC(2026,10,21,7,50), t:'📒 宇宙銀行に「通帳明細」ができました', b:'🪐 LIFEBOOK 宇宙銀行の「🏦 あなたの光の口座」に「📒 通帳明細を見る」ができました。いつ・いくら・だれから（なぜ）光が入ったり出たりしたかと、そのあとの残高が 1行ずつのります。毎日の光、友だちから届いた光、ありがとう返し、贈った光、夢・服・花束に使った光、森へ行った光が分かります。※ 今日より前の光は、だれからかを記録していなかったため、分かる分だけ「通帳をはじめる前の光」にのせています。' },
   { i:'v178-spacebank', d:Date.UTC(2026,10,19,8,10), t:'🪐 LIFEBOOK 宇宙銀行がオープンしました', b:'Life Home のいちばん上のボタンの下に「🪐 LIFEBOOK 宇宙銀行」ができました。宇宙を旅するお城の銀行が、LIFE BOOK の中だけの「光（ヒカリ）」を発行しています。毎日の光は、友だちが多いほど増えます。友だちに光を贈ると、半分が「ありがとう返し」でもどってきます。光は、うちのペットへの夢プレゼント・キラキラの服・花束にも使えます。7日間使わなかった光は、お城の中の「みんなの森」の木になります。' },
