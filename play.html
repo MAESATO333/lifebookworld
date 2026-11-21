@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.125">
+<meta name="lifebook-version" content="v178.126">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -855,7 +855,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.125';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.126';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20225,6 +20225,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // v166: Life Home の上のほうに「✨ LIFE BOOKのニュース」。新しい機能・更新のお知らせ。
 // ゲームに入っているお知らせ（LBN_BUILTIN）＋ 管理者が Firebase の os/news に書いたお知らせ（{ n:[{ i, d:ミリ秒, t:題, b:説明 }] }）。新しい順に3つ、のこりは「これまでのお知らせ」。
 const LBN_BUILTIN=[
+  { i:'v178-flowerreal', d:Date.UTC(2026,10,21,10,40), t:'💐 お花の絵が、本物に近くなりました', b:'お花と枝・葉の絵を、細かく描き直しました。花びらを何枚も重ねて、光と影のぼかしで立体的に。バラのうずまき、ユリのすじやおしべ、葉の葉脈まで見えます。花束・花びん・生け花・大きな花瓶、友だちから届いたお花も、ぜんぶ新しい絵になります。' },
   { i:'v178-flower12', d:Date.UTC(2026,10,21,10,10), t:'💐 お花は12本まで、枝・葉は5本まで えらべます', b:'「💐 お花」で えらべる数が ふえました。お花は12本まで、そこに 🌿 枝・葉を5本まで そえられます。大きな花束を作って、部屋に飾ったり、友だちに贈ったりしてね。' },
   { i:'v178-haikukeep', d:Date.UTC(2026,10,21,10,6), t:'📒 気に入った俳句を保管して、何度でも使えます', b:'お花を贈るときの俳句を、保管できるようになりました。\n\n【使い方】\n① 「💐 お花」の「贈る」で俳句を書く\n② 俳句の下の「📌 この俳句を保管する」を押す\n③ 次からは「📒 保管した俳句」を押すと、すぐ俳句の欄に入ります\n\n送信したあとも俳句はそのまま残るので、ほかの友だちにも同じ俳句で贈れます。いらない俳句は 🗑 で消せます（50こまで）。' },
   { i:'v178-greens', d:Date.UTC(2026,10,21,10,5), t:'🌿 お花に「枝・葉」をそえられるようになりました', b:'「💐 お花」の「えらぶ・飾る」に「🌿 枝・葉を そえる」ができました。アイビー・ユーカリ・ゴッドセファ・ドラセナ・レザーファン・ミスカンサス・ルスカス・スマイラックス・オリーブ・ミモザの葉・モンステラ・ドウダンツツジの枝の12種類から、3つまでえらべます。花束・花びん・生け花・大きな花瓶に飾れて、友だちに贈ることもできます。' },
