@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.119">
+<meta name="lifebook-version" content="v178.120">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -855,7 +855,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.119';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.120';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -21375,10 +21375,11 @@ setInterval(pgFlush,8000);
 document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('[data-pg]'); if(!b) return; e.preventDefault(); e.stopPropagation(); const [oid,k]=b.dataset.pg.split('|'); pgSend(oid,k,b); },true);
 function pgToast(t){ let d=document.getElementById('pgToast'); if(!d){ d=document.createElement('div'); d.id='pgToast'; d.className='pg-toast'; d.setAttribute('role','status'); document.body.appendChild(d); } d.textContent=t; d.classList.add('on'); clearTimeout(d._t); d._t=setTimeout(()=>d.classList.remove('on'),4200); }
 // 届いたものを受けとる
-let _pgL=false;
-function pgListen(){ if(_pgL||!pgOn()) return; _pgL=true; const { collection, onSnapshot, deleteDoc }=FB.D;
-  onSnapshot(collection(FB.db,'ids',myId(),'gift'),snap=>{ const got=[];
-    snap.forEach(d=>{ const x=d.data()||{}; if(!PG_KSET.includes(x.k)) return; got.push({ id:d.id, by:String(x.by||'友だち').slice(0,20), k:x.k, f:String(x.f||'').slice(0,20), t:+x.t||Date.now(), rt:Date.now() }); });
+let _pgL=false; const _pgLs={};
+// v178.120：番号ごとに見張る（id なし＝自分の番号。前の番号 alias も見張れる）
+function pgListen(lid){ const me0=myId(), id=lid||me0, al=id!==me0; if(!al&&_pgL) return; if(_pgLs[id]||!pgOn()) return; _pgLs[id]=1; if(!al) _pgL=true; const { collection, onSnapshot, deleteDoc }=FB.D;
+  onSnapshot(collection(FB.db,'ids',id,'gift'),snap=>{ const got=[];
+    snap.forEach(d=>{ const x=d.data()||{}; if(!PG_KSET.includes(x.k)) return; got.push({ id:(al?id+'/':'')+d.id, did:d.id, by:String(x.by||'友だち').slice(0,20), k:x.k, f:String(x.f||'').slice(0,20), t:+x.t||Date.now(), rt:Date.now() }); });
     if(!got.length) return; const p=typeof mpGet==='function'&&mpGet(); if(!p) return; /* v178.12：ペットがまだいない時は、受けとらずに置いておく */ const seen=store.get('pg.seen',[]);
     const nu=got.filter(g=>!seen.includes(g.id)); if(nu.length){ store.set('pg.seen',seen.concat(nu.map(g=>g.id)).slice(-300));
       if(p){ if(typeof pmCounts==='function'){ const c0=pmCounts(p); p.gotL=c0.l; p.gotF=c0.f; p.gotO=c0.o||0; } p.gifts=(Array.isArray(p.gifts)?p.gifts:[]).concat(nu).slice(-60); nu.forEach(g=>{ if(g.k==='food') p.gotF=(p.gotF||0)+1; else if(g.k==='love') p.gotL=(p.gotL||0)+1; else p.gotO=(p.gotO||0)+1; }); nu.forEach(g=>{ p.love=(p.love||0)+(g.k==='love'?1:g.k==='cake'?3:2); if(typeof mpLog==='function') mpLog(p,g.k!=='love'?`${g.by}さんから、${g.f||pgName(g.k)}のプレゼントが届いた。`:g.f?`${g.by}さんから「可愛い！」と「${g.f}」が届いた。`:`${g.by}さんから「可愛い！」が届いた。`,'gift'); }); mpSet(p); }
@@ -21386,8 +21387,8 @@ function pgListen(){ if(_pgL||!pgOn()) return; _pgL=true; const { collection, on
       const g=nu[nu.length-1], nm=p?p.name:'うちのペット'; pgToast(nu.length>1?`${nm}に、${nu.length}つのプレゼントが届きました🎁`:g.k!=='love'?`${g.by}さんから、${nm}に${g.f||pgName(g.k)}が届きました${pgIco(g.k)}`:g.f?`${g.by}さんから、${nm}に「可愛い！」と「${g.f}」が届きました💗`:`${g.by}さんから、${nm}に「可愛い！」が届きました💗`);
       try{ const dl=document.getElementById('mpDlg'); if(dl&&!dl.hidden&&typeof mpOpen==='function') mpOpen(); else if(typeof render==='function'&&typeof page!=='undefined'&&page==='home') render(); }catch(_){} }
       try{ if(p&&typeof fbPush==='function') setTimeout(()=>fbPush(),300); }catch(_){} /* v178.12：ふえた数を、すぐ友だちに知らせる */
-    got.forEach(g=>{ try{ deleteDoc(FB.D.doc(FB.db,'ids',myId(),'gift',g.id)); }catch(_){} });
-  },e=>{ _pgL=false; /* v178.12：読めなかった時は、あとでもう一度 */ try{ console.warn('[petgift] 届いたプレゼントを読めませんでした',e&&e.code||e); }catch(_){} }); }
+    got.forEach(g=>{ try{ deleteDoc(FB.D.doc(FB.db,'ids',id,'gift',g.did||g.id)); }catch(_){} });
+  },e=>{ delete _pgLs[id]; if(!al) _pgL=false; /* v178.12：読めなかった時は、あとでもう一度 */ try{ console.warn('[petgift] 届いたプレゼントを読めませんでした',e&&e.code||e); }catch(_){} }); }
 // v178.12：サーバーにつながるのがおそい時（4分より後）でも、届いたものを受けとれるように。ずっと見張る（つながったら1回だけ始める）
 setInterval(()=>{ try{ pgListen(); }catch(_){} },3000); setTimeout(()=>{ try{ pgListen(); }catch(_){} },1500);
 // ペットのつながりの木：贈るボタン
@@ -22109,7 +22110,7 @@ async function acReadBlob(path,head){ const { doc, getDoc }=FB.D; const parts=aw
 function acPath(){ return ['users',acUser().uid]; }
 async function acPush(m){ const rev=Date.now().toString(36)+Math.random().toString(36).slice(2,6); await acWriteBlob(acPath(),m,{ rev }); acSet(AC_REV,rev); acSet(AC_BASE,acHashes(m)); acSet(AC_AT,Date.now()); acSet(AC_UID,acUser().uid); return rev; }
 // 受けとった記録を、ゲームより先に入れるため、読み直す
-function acStageReload(R,local,meta){ const set={}, del=[]; for(const k in R) if(local[k]!==R[k]) set[k]=R[k]; for(const k in local) if(!(k in R)) del.push(k);
+function acStageReload(R,local,meta){ try{ R=acKeepAlias(R,local); }catch(e){} const set={}, del=[]; for(const k in R) if(local[k]!==R[k]) set[k]=R[k]; for(const k in local) if(!(k in R)) del.push(k);
   if(!Object.keys(set).length&&!del.length){ for(const k in meta) try{ localStorage.setItem(k,meta[k]); }catch(e){} return false; }
   const n=+(sessionStorage.getItem('ac.reloads')||0), t=+(sessionStorage.getItem('ac.reloadT')||0);
   if(Date.now()-t<60000&&n>=3){ _acLastErr='読み直しが続いたので、いったん止めました'; return false; } // 念のため：読み直しがくり返されないように
@@ -22126,6 +22127,7 @@ function acUnion(a,b,key){ try{ const A=JSON.parse(a)||[], B=JSON.parse(b)||[]; 
 function acMergeKey(k,L,C){ if(k==='hitotsu.current') return acPickLife(L,C);
   if(k==='hitotsu.archive'){ try{ const u=JSON.parse(acUnion(L,C,x=>x.seed+':'+(x.at||0))); u.sort((x,y)=>(y.at||0)-(x.at||0)); return JSON.stringify(u.slice(0,30)); }catch(e){ return L; } }
   if(k==='hitotsu.friends') return acUnion(L,C,x=>x&&x.id);
+  if(k==='hitotsu.alias') return acUnion(L,C,x=>x&&x.i);
   return L; }
 // 3つを見くらべて合わせる（B＝前に合わせたときの印、L＝この端末、C＝マイページ）
 function acMerge(L,C,B){ const R={}; const keys=new Set([...Object.keys(L),...Object.keys(C),...Object.keys(B||{})]);
@@ -22190,7 +22192,8 @@ function acErr(e){ const c=String(e&&e.code||''); if(/argument-error|missing-pas
   if(/too-many-requests/.test(c)) return '何回も試したため、少し待ってから もう一度どうぞ。';
   if(/operation-not-allowed|configuration-not-found/.test(c)) return 'いま準備中です。少し待ってから もう一度どうぞ。';
   if(/network/.test(c)) return '通信が不安定です。もう一度どうぞ。'; return 'うまくいきませんでした（'+c.replace('auth/','')+'）'; }
-async function acAfterLogin(){ try{ sessionStorage.setItem('ac.reopen','1'); }catch(e){} acMsg('マイページとつないでいます…'); try{ store.set('hitotsu.fbreg',''); }catch(e){} if(typeof FB!=='undefined'&&FB) FB.uid=acUser().uid;
+async function acAfterLogin(){ try{ sessionStorage.setItem('ac.reopen','1'); }catch(e){} acMsg('マイページとつないでいます…'); try{ store.set('hitotsu.fbreg',''); }catch(e){} let _u0=''; if(typeof FB!=='undefined'&&FB){ _u0=FB.uid; FB.uid=acUser().uid; }
+  try{ if(typeof FB!=='undefined'&&FB&&_u0!==FB.uid) await fbRelink(); }catch(e){}
   await acSync('login'); if(_acReloading) return; try{ sessionStorage.removeItem('ac.reopen'); }catch(e){} acDlgRefresh();
   // 「つないでいます…」が残らないように、終わったら結果を出す
   acMsg(_acLastErr?'うまくつながりませんでした。「保存する」を押してください。':acHasLife(acLocal())?'ログインしました。この人生はマイページに保存されています。':'ログインしました。ほかの端末で見守っている人生は、その端末でも同じ方法でログインすると、ここに出てきます。'); }
@@ -26768,5 +26771,46 @@ function tick(){ const ready=!!(typeof FB!=='undefined'&&FB&&FB.auth);
 function start(){ tick(); poll=setInterval(tick,800); }
 if(document.body) start(); else document.addEventListener('DOMContentLoaded',start);
 })();
+</script>
+<script>
+// ===== v178.120 ペットのプレゼントが届かない人を直す（MITSUさん 2026-11-21「反映しない人がいます。修正して！」） =====
+// 1) ログインで端末のログイン（uid）が変わった時：自分の番号に結びつけ直して、受け箱の見張りをやり直す
+let _fbRelinked='';
+async function fbRelink(){ if(typeof FB==='undefined'||!FB||!FB.uid) return; const tag=myId()+'|'+FB.uid; if(_fbRelinked===tag) return;
+  try{ await fbRegister(); }catch(e){ try{ console.warn('[giftfix] 結びつけ直しできませんでした',e&&e.code||e); }catch(_){} return; }
+  _fbRelinked=tag; try{ fbListen(); fbListenReq(); }catch(_){} try{ _pgL=false; delete _pgLs[myId()]; pgListen(); }catch(_){}
+  try{ fbAliasStart(true); }catch(_){} try{ setTimeout(()=>fbPush(),500); }catch(_){} }
+// 2) 前の番号（2台の人生を1つに揃えた時に使わなくなった番号）
+function acKeepAlias(R,L){ const oi=L&&L['hitotsu.myid'], ni=R&&R['hitotsu.myid']; let A=[]; const rd=v=>{ try{ const a=JSON.parse(v||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } };
+  A=rd(R['hitotsu.alias']).concat(rd(L&&L['hitotsu.alias']));
+  if(oi&&ni&&oi!==ni){ let i0='', k0=''; try{ i0=JSON.parse(oi); k0=JSON.parse(L['hitotsu.myidk']||'""'); }catch(e){} if(i0&&k0) A.push({ i:i0, k:k0, at:Date.now() }); }
+  let me=''; try{ me=JSON.parse(ni||'""'); }catch(e){}
+  const seen=new Set(), out=[]; A.forEach(a=>{ if(a&&a.i&&a.k&&a.i!==me&&!seen.has(a.i)){ seen.add(a.i); out.push(a); } });
+  if(!out.length) return R; return Object.assign({},R,{ 'hitotsu.alias':JSON.stringify(out.slice(-5)) }); }
+function fbAliases(){ const me=myId(); return (store.get('hitotsu.alias',[])||[]).filter(a=>a&&a.i&&a.k&&a.i!==me).slice(-5); }
+const _fbAl={}, _fbAlIn={}, _fbAlFr={};
+async function fbAliasStart(again){ if(typeof FB==='undefined'||!FB||!FB.uid||FB_ST!=='ok') return; const { doc, setDoc, arrayUnion, collection, onSnapshot }=FB.D;
+  for(const a of fbAliases()){ const tag=a.i+'|'+FB.uid; if(_fbAl[a.i]===tag&&!again) continue;
+    try{ await setDoc(doc(FB.db,'ids',a.i),{ k:a.k, uids:arrayUnion(FB.uid) },{ merge:true }); }catch(e){ try{ console.warn('[giftfix] 前の番号に結びつけられませんでした',e&&e.code||e); }catch(_){} continue; }
+    _fbAl[a.i]=tag; try{ pgListen(a.i); }catch(_){}
+    // 前の番号の友だち（その受け箱に書いてくれている人）にも、いまの Channel とペットを知らせる
+    if(!_fbAlIn[a.i]){ _fbAlIn[a.i]=1; try{ onSnapshot(collection(FB.db,'ids',a.i,'inbox'),snap=>{ const fr=[]; snap.forEach(d=>{ const x=d.data()||{}; if(x.from) fr.push({ id:String(x.from), by:String(x.by||''), t:+x.t||0 }); }); _fbAlFr[a.i]=fr; fbAliasPush(a); },e=>{ delete _fbAl[a.i]; delete _fbAlIn[a.i]; }); }catch(_){ delete _fbAlIn[a.i]; } } } }
+async function fbAliasPush(a){ const h=myHero(); const FR=a&&_fbAlFr[a.i]; if(!FB||!h||!Array.isArray(FR)) return; const by=store.get(KEY_ME,'')||'', mine=new Set(fbFriends().map(f=>f.id)), done=store.get('hitotsu.fbpushA',{});
+  for(const f of FR){ if(!f.id||f.id===a.i||f.id===myId()||mine.has(f.id)) continue; // 今の番号でもつながっている人には、二重に出さない
+    const fr=fbFrList(f.id).slice(0,20), sig=a.i+'>'+fbHeroSig(h,by)+'#'+JSON.stringify(fr);
+    if(done[a.i+'>'+f.id]===sig) continue;
+    try{ await FB.D.setDoc(FB.D.doc(FB.db,'ids',f.id,'inbox',a.i),{ from:a.i, by:String(by).slice(0,20), s:h.s, c:h.c||null, f:h.f||null, ch:h.ch||null, t:f.t||Date.now(), fr });
+      const d2=store.get('hitotsu.fbpushA',{}); d2[a.i+'>'+f.id]=sig; store.set('hitotsu.fbpushA',d2); }catch(e){} } }
+// すでに揃えてしまった人（この直しの前）：マイページの「保管してある人生」から前の番号を1回だけ拾う
+let _acAlScan=false;
+async function acAliasScan(){ if(_acAlScan||typeof acIn!=='function'||!acIn()||typeof FB_ST==='undefined'||FB_ST!=='ok') return; _acAlScan=true;
+  const uid=acUser().uid; if(store.get('hitotsu.aliasScan','')===uid) return;
+  try{ const L=await acKeepList(); let R={ 'hitotsu.myid':JSON.stringify(myId()), 'hitotsu.alias':JSON.stringify(store.get('hitotsu.alias',[])) };
+    for(const h of L.slice(0,5)){ try{ const K=await acReadBlob([...acPath(),'keep',h.id],h); R=acKeepAlias(R,K); }catch(e){} }
+    const A=JSON.parse(R['hitotsu.alias']||'[]'); if(A.length) store.set('hitotsu.alias',A); store.set('hitotsu.aliasScan',uid); }catch(e){ _acAlScan=false; } }
+setInterval(()=>{ try{ acAliasScan(); }catch(_){} },7000);
+// つながったら前の番号も始める。ペットの数が変わったら、前の番号の友だちにも知らせる
+setInterval(()=>{ try{ if(fbAliases().length) fbAliasStart(false); }catch(_){} },5000);
+if(typeof fbPush==='function'){ const _fp=fbPush; fbPush=async function(){ const r=await _fp.apply(this,arguments); try{ for(const a of fbAliases()) if(_fbAlFr[a.i]) await fbAliasPush(a); }catch(_){} return r; }; }
 </script>
 </body></html>
