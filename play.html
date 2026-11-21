@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.121">
+<meta name="lifebook-version" content="v178.122">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -855,7 +855,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.121';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.122';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -2217,7 +2217,12 @@ function weaveYear(X){
     }
   }
   // きょうだい
-  if(X.sib && X.sib.alive){
+  if(X.sib && X.sib.alive && X.sibNew){ const sb=X.sib, sa=sibAgeOf(P,sb,age);
+    if(!sb._wed && sa>=22 && sa<=35 && r.chance(.15)){ sb._wed=age; S.sibWed=S.sibWed||age; push(`${sb.label}の${sb.name}が結婚した。`,'式の途中、子どもの頃のことを次々に思い出した。',3); }
+    else if(sb._wed && !sb._kid && age>sb._wed && r.chance(.3)){ sb._kid=true; const boy=nbHash('sk|'+P.seed+'|'+sb.name)%2===0; if(!S.sibKid){ S.sibKid=true; push(`${sb.label}の${sb.name}に子どもが生まれ、{名}は${sb.older?(P.gender==='男性'?'叔父':'叔母'):(P.gender==='男性'?'伯父':'伯母')}になった。`,`小さな${boy?'甥':'姪'}っ子を抱くと、不思議な気持ちになった。`,3); } else push(`${sb.label}の${sb.name}にも、子どもが生まれた。`,`小さな${boy?'甥':'姪'}っ子の顔に、子どもの頃の${sb.name}の面影があった。`,3); }
+    else if(age>=25 && r.chance(.1)){ const s=r.pick(SIB_ARC); push(s[0],s[1],s[2]); }
+  }
+  else if(X.sib && X.sib.alive){
     if(!S.sibWed && age>=22 && age<=35 && r.chance(.15)){ S.sibWed=age; push(`${X.sib.label}の${X.sib.name}が結婚した。`,'式の途中、子どもの頃のことを次々に思い出した。',3); }
     else if(S.sibWed && !S.sibKid && age>S.sibWed && r.chance(.3)){ S.sibKid=true; push(`${X.sib.name}に子どもが生まれ、{名}は${P.gender==='男性'?'叔父':'叔母'}になった。`,'小さな甥っ子を抱くと、不思議な気持ちになった。',3); }
     else if(age>=25 && r.chance(.1)){ const s=r.pick(SIB_ARC); push(s[0],s[1],s[2]); }
@@ -3694,8 +3699,107 @@ function nbMeaning(P,name){ const C=P.country||{}; if(C.lang&&NB_MEAN[C.lang]&&N
   if(typeof JP_KANJI_MEAN!=='undefined'&&/[\u3400-\u9FFF]/.test(name)&&(C.id==='jp')){ const ms=[...name].map(ch=>JP_KANJI_MEAN[ch]?`「${ch}」は${JP_KANJI_MEAN[ch]}`:null); if(ms.every(Boolean)) return ms.join('、'); }
   return null; }
 
+// ---- v178.122 きょうだい全員：物語に順番に出る・年下は「生まれた」を記録・兄姉弟妹の上下をそろえる ----
+// この時刻より前に生まれた人生は、その時の年齢まで（今までの記録）を、前のまま残す
+const SIB_T0=Date.parse('2026-11-21T12:00:00Z');
+function sibPool(P,g,used){ const C=P.country; let pool=[]; try{ pool=circleNames(C,g,false); }catch(e){ pool=(g==='男性'?C.male:C.female)||[]; }
+  const fp=pool.filter(n=>!n[2]||n[2]===(P.religion==='muslim'?'m':'c')).filter(n=>!used.has(n[0])); return fp.length?fp:pool.filter(n=>!used.has(n[0])); }
+// きょうだいの名簿（最初に決めた1人のほか）。乱数は使わない（ほかの出来事を変えない）
+function sibRoster(P){ if(P._sibRoster) return P._sibRoster; const out=[]; P._sibRoster=out; if(!P.siblings||!P.sib) return out;
+  const from=P._sibFrom||0, froz=P._sibx||[];
+  const mainYoung=P.sib.older===false, mainGap=mainYoung?2+P.seed%3:0;
+  const used=new Set([P.given,P.father&&P.father.name,P.mother&&P.mother.name,P.sib.name,...froz.map(x=>x.name)]);
+  froz.forEach(x=>out.push(Object.assign({ role:'sibling', alive:true, rel:.55, secrets:[], extraSib:true },x,{ older:/[兄姉]/.test(x.label) })));
+  // 自分がいちばん上なら、ほかのきょうだいも全員年下
+  const eldest=mainYoung&&!froz.some(x=>/[兄姉]/.test(x.label));
+  const ma=(P.mother&&P.mother.age)||28, mD=(P.mother&&P.mother.dies!=null)?P.mother.dies:99;
+  let cap=Math.min(45-ma, mD-1, P.deathAge); if(P.structure==='ひとり親'&&P.single&&P.single.age!=null) cap=Math.min(cap,P.single.age-1);
+  let last=Math.max(0,mainGap,...froz.map(x=>x.metAge||0));
+  for(let i=froz.length;i<P.siblings-1;i++){ const h=nbHash('sib2|'+P.seed+'|'+i); const g=h%2?'男性':'女性';
+    let older=from>0?false:(eldest?false:((h>>>9)%2===0)), metAge=0;
+    if(!older){ const base=Math.max(last,from-1); let t=base+1+((h>>>11)%3); if(t>cap) t=base+1;
+      if(t>cap){ if(!eldest&&from===0) older=true; else continue; } else { metAge=t; last=t; } }
+    const pool=sibPool(P,g,used); if(!pool.length) continue; const pick=pool[(h>>>3)%pool.length]; used.add(pick[0]);
+    out.push({ id:'ps'+(2000+i), role:'sibling', name:pick[0], kana:pick[1], label:older?(g==='男性'?'兄':'姉'):(g==='男性'?'弟':'妹'), gender:g, older, metAge, rel:Math.round((.4+((h>>>13)%50)/100)*100)/100, alive:true, secrets:[], extraSib:true }); }
+  return out; }
+// 年下のきょうだいが生まれた日を、その年の記録に入れる（物語の中で生まれた子は、もう入っている）
+function sibBirthAdd(P,L){ const ys=L.years||[]; const born={};
+  (L.persons||[]).filter(p=>p.role==='sibling'&&p.extraSib&&p.metAge>0&&p.metAge<=L.deathAge).sort((a,b)=>a.metAge-b.metAge).forEach(p=>{
+    const y=ys.find(v=>v.age===p.metAge); if(!y||!y.events) return; if(y.events.some(e=>e.text&&e.text.indexOf(p.name+'が生まれた')>=0)) return;
+    const a=p.metAge, h=nbHash('sb|'+P.seed+'|'+p.name), me=P.gender==='男性'?'お兄ちゃん':'お姉ちゃん';
+    const twin=born[a]||y.events.some(e=>e.text&&/が生まれた。/.test(e.text)&&/^(弟|妹)の/.test(e.text)); born[a]=1;
+    const younger=(L.persons||[]).some(q=>q!==p&&q.role==='sibling'&&/[弟妹]/.test(q.label)&&q.metAge!=null&&q.metAge>0&&q.metAge<a);
+    const T=twin?[`その年、${p.label}の${p.name}も生まれた。家の中が、いっぺんににぎやかになった。`]
+      :[`${p.label}の${p.name}が生まれた。家の中に、小さな寝息がひとつ増えた。`,`${p.label}の${p.name}が生まれた。${P.given}は、ベビーベッドの柵ごしに、長いあいだ寝顔を見ていた。`,`${p.label}の${p.name}が生まれた。病院から帰ってきた母の腕の中に、小さな${p.name}がいた。`,`${p.label}の${p.name}が生まれた。${P.given}は、そっと、小さな足の裏にさわった。`];
+    const F=a<=3?['ふしぎそうに、何度も顔をのぞきこんだ。','母のひざの上に、もうひとり、だれかがいた。']
+      :a<=7?[`「${me}だよ」と、小さな声で話しかけた。`,'ねむっている顔を、だまって見ていた。']
+      :a<=12?['おむつを替えるのを、少しだけ手伝った。','小さな手が、指をぎゅっとにぎりかえしてきた。']
+      :['夜泣きの声で目がさめても、なぜか腹は立たなかった。','年のはなれたきょうだいは、少しだけ、自分の子どものようにも思えた。'];
+    const I=a<=3?['ちっちゃいなあ','あかちゃん、ねてる']:a<=12?[P.gender==='男性'?'ぼくが、まもってあげる':'わたしが、まもってあげる','ちっちゃい手']:null;
+    const e={ kind:'life', big:true, d:3, text:T[h%T.length], feel:(younger&&!twin&&h%3===0)?'きょうだいが、またひとり増えた。':F[(h>>>4)%F.length], memo:'', sibBirth:p.id };
+    if(I) e.inner=I[(h>>>7)%I.length];
+    let k=-1; if(twin){ for(let j=y.events.length-1;j>=0;j--){ const t=y.events[j].text||''; if(/^(弟|妹)の.*が生まれた。/.test(t)){ k=j+1; break; } } } if(k<0){ k=y.events.findIndex(v=>!['birth','origin'].includes(v.kind)); if(k<0) k=y.events.length; } y.events.splice(k,0,e); }); }
+// きょうだいと遊ぶ・話す場面（年齢に合わせて）。{s}=「姉の○○」 {n}=名前 {名}=Channel {me}=下の子が呼ぶ呼び名 {you}=上の子を呼ぶ呼び名 {自}=Channelの「ぼく/わたし」
+// 条件 o:上のきょうだいだけ y:下のきょうだいだけ  [文, 気持ち, 条件, きょうだいの年齢の下限, 上限]
+const SIB_SC={
+  tod:[['{s}と、積み木を高く積んでは、くずして笑った。','くずれるたびに、ふたりでころげまわった。'],['{s}と、ボールを転がしっこして遊んだ。','どちらも、なかなかやめようとしなかった。'],['{s}と、ひとつの絵本をとりあって、ふたりで泣いた。','しばらくすると、ならんで同じページを見ていた。'],['{s}と、お風呂でおもちゃを浮かべて遊んだ。','のぼせるまで、出てこなかった。'],['{s}のまねをして、同じところで、同じように転んだ。','',  'o'],['{s}のあとを、どこへでもついて歩いた。','「まってー」と、何度も呼んだ。','o'],['{s}と、ふとんの上で、とびはねて遊んだ。','しかられても、くすくす笑いが止まらなかった。'],['{s}と、ふたりでお絵かきをした。紙からはみだして、床にまで線がのびた。','']],
+  baby:[['{s}が泣きだすと、{名}は、自分のおもちゃを持っていって見せた。','泣きやむと、なんだか得意な気持ちになった。'],['{s}が、{名}の指をにぎって、はなさなかった。','その手は、思ったよりあたたかかった。'],['{s}に、いないいないばあをした。けらけらと笑ってくれた。','何度やっても、同じところで笑った。'],['{s}が、はじめて「{me}」と呼んだ。','「もういっかい」と、何度もせがんだ。','y',1,2],['ねむっている{s}の顔を、そばでじっと見ていた。','小さな胸が、上がったり下がったりしていた。']],
+  kid:[['{s}と、日が暮れるまで外で遊んだ。','家に帰ると、ふたりとも、どろだらけだった。'],['{s}と、ひとつのふとんの中で、こそこそ怖い話をした。','最後は、ふたりとも眠れなくなった。'],['{s}と、テレビのチャンネルをとりあって、けんかになった。','夕飯のころには、もう仲直りしていた。'],['{s}と、かくれんぼをした。{n}は、いつも同じところに隠れていた。','見つけるたびに、ふたりで笑った。'],['{s}と、トランプで遊んだ。負けると「もういっかい」と言いはった。',''],['{s}が、宿題のわからないところを、教えてくれた。','「{you}、すごい」と思った。','o'],['{s}に、字の書き方を教えてあげた。','ゆっくり、ゆっくり、いっしょに書いた。','y',4,9],['{s}と、おやつを半分こした。','少しだけ大きいほうを、ゆずった。'],['寝る前に、{s}と、あした何をして遊ぶか話した。','話しているうちに、どちらも眠っていた。'],['{s}と、ふたりで留守番をした。','物音がするたびに、顔を見合わせた。'],['{s}と、秘密の合言葉を決めた。','家族のだれにも、教えなかった。'],['{s}と、どちらが先に着くか、家まで走って競争した。','']],
+  teen:[['{s}と、夜おそくまで、好きな音楽の話をした。',''],['{s}に、だれにも言えなかった話を、少しだけした。','{n}は、だまって聞いてくれた。',null,12,99],['{s}と、どうでもいいことで言い合いになった。','次の日には、何もなかったように話していた。'],['{s}の部屋で、ふたりでゲームをした。','気づけば、夜中になっていた。'],['{s}に、進路のことを相談した。','「{名}なら、だいじょうぶ」と言われた。','o'],['{s}の勉強を、ときどき見てやった。','教えているうちに、自分のほうがよくわかった。','y',7,99],['{s}を、自転車の後ろに乗せて、公園まで行った。','{s}は、ずっと歌を歌っていた。','y',3,10],['{s}と、台所にならんで、夕飯の準備を手伝った。',''],['{s}と、学校であったことを話しながら、遠回りして帰った。','',null,10,22]],
+  ya:[['{s}から、ひさしぶりに電話がかかってきた。','気づけば、一時間も話していた。',null,14,99],['{s}と、ふたりで出かけた。','子どもの頃の話で、ずっと笑っていた。',null,14,99],['休みに家へ帰ると、{s}も来ていた。','夜おそくまで、話がつきなかった。',null,16,99],['{s}に、仕事の悩みを聞いてもらった。','言葉にしたら、少し軽くなった。',null,18,99],['家へ帰ると、{s}が駆けよってきた。','少し見ないあいだに、ずいぶん大きくなっていた。','y',3,12],['{s}から、短いメッセージが届いた。「元気？」とだけ書いてあった。','その一言が、うれしかった。',null,12,99]],
+  ad:[['{s}と、電話で長話をした。','声を聞くと、子どもの頃に戻ったような気がした。'],['年の終わりに、{s}の家族と集まった。','にぎやかな食卓を見ながら、昔の家を思い出した。'],['{s}から、写真つきの短いメッセージが届いた。',''],['{s}と、ひさしぶりに食事をした。','会うとすぐ、昔の呼び方に戻った。'],['{s}と、子どもの頃に遊んだ場所を、ふたりで歩いた。','思っていたより、ずっと小さく見えた。'],['{s}の誕生日に、電話をかけた。','おめでとう、のあとで、ふたりとも少し照れた。']],
+  old:[['{s}と、お茶を飲みながら、昔の家の話をした。','同じ思い出を持っている人がいることが、ありがたかった。'],['{s}から、季節のたよりが届いた。','字は、昔と少しも変わっていなかった。'],['{s}と電話で、おたがいの体の話ばかりした。','最後は、笑って切った。'],['{s}と、古い写真を見ながら、名前を思い出しあった。','']]
+};
+// きょうだいの、その年の年齢（上の子は、少し年上）
+function sibAgeOf(P,x,a){ if(x.older) return a+1+nbHash('gap|'+P.seed+'|'+x.name)%4; return a-(x.metAge||0); }
+function sibSceneAdd(P,L){ const from=P._sibFrom; if(from==null) return; const sibs=(L.persons||[]).filter(p=>p.role==='sibling'&&p.alive!==false); if(!sibs.length) return;
+  const me=P.gender==='男性'?'お兄ちゃん':'お姉ちゃん', cnt={}, usedT={};
+  // 今までの記録に出てきた回数（少ない人から出す）
+  for(const y of L.years||[]) for(const e of y.events||[]){ const t=(e.text||'')+(e.feel||''); for(const x of sibs) if(t.indexOf(x.name)>=0) cnt[x.id]=(cnt[x.id]||0)+1; }
+  for(const y of L.years||[]){ const a=y.age; if(a<from||a<2||a>=L.deathAge||!y.events) continue;
+    const pres=sibs.filter(x=>x.older||(x.metAge!=null&&x.metAge<a)); if(!pres.length) continue;
+    const h=nbHash('ss|'+P.seed+'|'+a);
+    const rate=a<=17?100:a<=30?60:a<=60?40:30; if(h%100>=rate) continue;
+    const n=a<=17&&pres.length>=2&&(h>>>8)%2===0?2:1;
+    const order=pres.slice().sort((p,q)=>((cnt[p.id]||0)-(cnt[q.id]||0))||(nbHash(p.name+a)%7-nbHash(q.name+a)%7));
+    let added=0;
+    for(const x of order){ if(added>=n) break; const sa=sibAgeOf(P,x,a); if(sa<0) continue;
+      let stg; if(a<=17){ const m=Math.min(a,sa); stg=m<=5?'tod':m<=12?'kid':'teen'; } else stg=sa<18||a<=30?'ya':a<=60?'ad':'old';
+      let pool=SIB_SC[stg]; if(!x.older&&sa<=2) pool=a>=4?SIB_SC.baby:null; if(!pool) continue;
+      const ok=pool.map((t,i)=>[t,i]).filter(([t,i])=>!(t[2]==='o'&&!x.older)&&!(t[2]==='y'&&x.older)&&!(t[3]!=null&&sa<t[3])&&!(t[4]!=null&&sa>t[4])&&!usedT[x.id+'|'+stg+i]);
+      if(!ok.length) continue; const [t,i]=ok[nbHash('st|'+P.seed+'|'+a+'|'+x.name)%ok.length]; usedT[x.id+'|'+stg+i]=1;
+      const you=x.gender==='男性'?'お兄ちゃん':'お姉ちゃん';
+      const f=v=>(v||'').replace('{s}',`${x.label}の${x.name}`).replace(/\{s\}/g,x.name).replace(/\{n\}/g,x.name).replace(/\{名\}/g,P.given).replace(/\{me\}/g,me).replace(/\{you\}/g,you);
+      const e={ kind:'daily', text:f(t[0]), feel:f(t[1]), d:2, season:nbHash('se|'+P.seed+'|'+a+x.name)%4, sibScene:1 };
+      const end=y.events.findIndex(v=>['death','choice','branch'].includes(v.kind)); const lim=end<0?y.events.length:end; let st0=y.events.findIndex(v=>!['birth','origin','life','rite'].includes(v.kind)); if(st0<0||st0>lim) st0=lim;
+      const k=st0+(lim>st0?nbHash('sk|'+P.seed+'|'+a+x.name)%(lim-st0+1):0); y.events.splice(k,0,e); cnt[x.id]=(cnt[x.id]||0)+1; added++; } } }
+// 今の年からの記録で、きょうだいがいないのに「弟や妹」と書かないように（いる時は、その子の名前で）
+function sibTextFix(P,L){ const from=P._sibFrom; if(from==null) return; const sibs=(L.persons||[]).filter(p=>p.role==='sibling');
+  for(const y of L.years||[]){ const a=y.age; if(a<from||!y.events) continue;
+    const yng=sibs.filter(x=>!x.older&&x.metAge!=null&&x.metAge<a&&a-x.metAge>=2), old=sibs.filter(x=>x.older), any=sibs.filter(x=>x.older||(x.metAge!=null&&x.metAge<=a));
+    const pk=(arr,k)=>arr[nbHash(k+'|'+P.seed+'|'+a)%arr.length];
+    for(const e of y.events){ for(const k of ['text','feel']){ let t=e[k]; if(!t||typeof t!=='string') continue; const t0=t;
+      if(t.indexOf('弟や妹の手を引いて')>=0) t=t.replace('弟や妹の手を引いて',yng.length?(x=>`${x.label}の${x.name}の手を引いて`)(pk(yng,'hk')):old.length?(x=>`${x.label}の${x.name}に手を引かれて`)(pk(old,'hk')):'ゆっくりと');
+      if(t.indexOf('弟や妹の面倒を見た')>=0) t=t.replace('弟や妹の面倒を見た',yng.length?(x=>`${x.label}の${x.name}の面倒を見た`)(pk(yng,'mn')):'近所の小さな子の面倒を見た');
+      if(t.indexOf('小さなきょうだいの面倒を見た')>=0) t=t.replace('小さなきょうだいの面倒を見た',yng.length?(x=>`${x.label}の${x.name}の面倒を見た`)(pk(yng,'mn2')):'近所の小さな子の面倒を見た');
+      if(!any.length){ t=t.replace('後ろの席で、きょうだいとずっと言い合いをしていた。','後ろの席で、ずっと窓の外をながめていた。').replace('どちらが抱っこするかで、きょうだいとけんかになった。','抱っこしようとして、するりと逃げられた。'); }
+      if(t!==t0) e[k]=t; } } } }
+
+// 自分の人生：今までに出ていたきょうだいを覚えて、次の年から全員が出てくるようにする
+function sibPrep(P){ try{ if(typeof st==='undefined'||!st||st.seed!==P.seed) return;
+  if(st.sibv!==1){ const born=st.birthTime||Date.now(); const mpy=st.spd===3?msPerYear(P):(st.spd===2?mpy2(P):oldMpy(P)); let a=SIB_T0>born?Math.floor((SIB_T0-born)/mpy)+1:0; if(a>0&&a<7&&P.religion==='hindu') a=7; /* 6歳で決まる家の食べ方が、前と同じになるように */
+    st.sibFrom=Math.max(0,a); st.sibx=[];
+    if(a>0&&P.siblings>=2){ const P0=makeBirth(st.seed,{country:st.country||null,force:st.force||null}); const L0=simulate(P0,st.choice||undefined);
+      siblingsLegacy(P0,L0); /* 名前は、人生の中の人の名前だけで決まる（ほかの場面は人を足さない） */
+      st.sibx=(L0.persons||[]).filter(p=>p.extraSib&&p.metAge<a).map(p=>({ id:p.id, name:p.name, kana:p.kana, label:p.label, gender:p.gender, metAge:p.metAge, rel:p.rel })); }
+    st.sibv=1; try{ save(); }catch(e){} }
+  P._sibFrom=st.sibFrom||0; P._sibx=st.sibx||[];
+  // 新しい人生：最初のきょうだいが、本人や親と同じ名前にならないように
+  if(P._sibFrom===0&&P.sib){ const bad=new Set([P.given,P.father&&P.father.name,P.mother&&P.mother.name]); if(bad.has(P.sib.name)){ const pool=sibPool(P,P.sib.gender,bad); if(pool.length){ const pk=pool[nbHash('ms|'+P.seed)%pool.length]; P.sib.name=pk[0]; P.sib.kana=pk[1]; } } } }catch(e){} }
+
 // ---- きょうだい全員を、出会った人に入れる（物語にはひとりだけ名前で出てくるため、ほかのきょうだいにも名前をつける） ----
-function siblingsApply(P,L){ if(!L||L._sibs||!P.siblings) return; L._sibs=1; const have=(L.persons||[]).filter(p=>p.role==='sibling').length; const need=P.siblings-have; if(need<=0) return;
+function siblingsApply(P,L){ if(!L||L._sibs||!P.siblings) return; L._sibs=1; if(L._sibNew){ (L.sibs||[]).forEach(x=>{ if(x.extraSib&&!x._in&&x.metAge<=L.deathAge){ x._in=1; L.persons.push(x); } }); sibBirthAdd(P,L); sibTextFix(P,L); sibSceneAdd(P,L); return; } siblingsLegacy(P,L); sibBirthAdd(P,L); }
+function siblingsLegacy(P,L){ const have=(L.persons||[]).filter(p=>p.role==='sibling').length; const need=P.siblings-have; if(need<=0) return;
   const used=new Set([P.given,P.father&&P.father.name,P.mother&&P.mother.name,...(L.persons||[]).map(p=>p.name)]);
   const C=P.country; let pid=1000;
   for(let i=0;i<need;i++){ const h=nbHash('sib|'+P.seed+'|'+i); const g=h%2?'男性':'女性'; let pool=[]; try{ pool=circleNames(C,g,false); }catch(e){ pool=(g==='男性'?C.male:C.female)||[]; }
@@ -8535,7 +8639,7 @@ function infantPlan(P,S){
     :['父は、仕事を抜け出して駆けつけたが、間に合わなかった。','父は、新幹線の中で知らせを受けた。','父は、生まれた写真をすぐに親戚じゅうに送った。','父は、廊下で何度も行ったり来たりしていた。']);
   const sib=P.sib; let sibL='';
   if(sib && sib.older) sibL=r.pick([`${sib.label}の${sib.name}が、こわごわと、小さな指をつついた。`,`${sib.label}の${sib.name}は、赤ちゃんより、お見舞いのお菓子に夢中だった。`,`${sib.label}の${sib.name}は、「${/[兄弟]/.test(sib.label)?"ぼくの":"わたしの"}赤ちゃん」と言って離れなかった。`,`${sib.label}の${sib.name}は、母をとられたと思ったのか、その夜から赤ちゃん返りをした。`]);
-  else if(P.siblings>=3) sibL='にぎやかなきょうだいたちに、また一人が加わった。';
+  else if(P.siblings>=3&&P._sibFrom!==0) sibL='にぎやかなきょうだいたちに、また一人が加わった。';
   // 6. 名前
   const rel=P.religion; const nameL=r.pick([
     `名前の「${P.given}」は、${gp||r.chance(.3)?'祖父':'父と母'}が何日もかけて考えた。`,
@@ -8563,7 +8667,7 @@ function infantYear(X){
   const { age, r, S, P } = X; const out=[]; if(age>2) return out; const I=infantPlan(P,S); const c=P.countryId, y=X.year, jp=c==='jp';
   const W=WSTAT[c]||{}; const poor=W.inc==='low_income'||W.inc==='lower_middle_income';
   const mom=X.present('mother')?'母':I.gp?'祖母':'父'; const dad=X.present('father')?'父':I.gp?'祖父':'母';
-  const sb=X.sib&&P.sib&&P.sib.older?`${P.sib.label}の${P.sib.name}`:null;
+  const sb=X.sibNew?(X.sib&&X.sib.older?`${X.sib.label}の${X.sib.name}`:null):(X.sib&&P.sib&&P.sib.older?`${P.sib.label}の${P.sib.name}`:null);
   const who=r.pick([mom,dad,mom,sb||mom,I.gp?'祖母':dad,I.gp?'祖父':mom].filter(Boolean));
   const push=(mo,t,d)=>out.push({ kind:'body', text:t, feel:'', d:d||1, season:infSeasonOf(P,mo), inner:null, mo });
   const inYear=mo=>mo!=null&&Math.floor(mo/12)===age;
@@ -10380,7 +10484,9 @@ function simulate(P, choice, FORCE){
   let sib=null; if(P.sib) sib=person('sibling',P.sib.name,{ label:P.sib.label, gender:P.sib.gender, rel:clamp(r.normal(.6,.2),.1,.95) });
   // 年下のきょうだいは、2〜4年あとに生まれる
   const sibGap=P.sib&&!P.sib.older?2+P.seed%3:0; if(sib&&sibGap>P.deathAge){ persons.splice(persons.indexOf(sib),1); sib=null; }
-  const sibNow=()=>sib&&S.age>=sibGap?sib:null;
+  const SBF=P._sibFrom==null?Infinity:P._sibFrom; const sibsX=SBF<Infinity?sibRoster(P).map(x=>Object.assign({},x,{secrets:[]})):[]; if(sib) sib.older=!!P.sib.older; let sibCur=null;
+  const sibsAll=()=>[sib,...sibsX].filter(Boolean);
+  const sibNow=()=>S.age>=SBF?sibCur:(sib&&S.age>=sibGap?sib:null);
   let friend=null, teacher=null, partner=null, firstLove=null, mentor=null;
   const kids=S.kids;
   S.present=(role)=>{ const p=role==='father'?father:mother; return p.alive && S.age<p.presentUntil; };
@@ -10389,13 +10495,13 @@ function simulate(P, choice, FORCE){
   const parentWord=()=> S.present('father')&&(!S.present('mother')||r.chance(.5))?'父':(S.present('mother')?'母':(grandma?'祖母':'おば'));
   let curParent='父';
   const ctx=()=>({ 名:P.given, 国:C.name, 恋人:partner?partner.name:(firstLove&&firstLove.alive&&!firstLove.ended?firstLove.name:'恋人'), 配偶者:partner?partner.name:'連れ合い',
-    友人:friend?friend.name:'友人', 子:kids[0]?kids[0].name:'子ども', 親:curParent, 兄弟:sibNow()?`${sib.label}の${sib.name}`:'きょうだい',
+    友人:friend?friend.name:'友人', 子:kids[0]?kids[0].name:'子ども', 親:curParent, 兄弟:(()=>{ const s0=sibNow(); return s0?`${s0.label}の${s0.name}`:'きょうだい'; })(),
     恩師:teacher?teacher.name:(mentor?mentor.name:'先生'), ペット:S.pets.length?S.pets[S.pets.length-1].name:'',
     父:'父', 母:'母', 同僚:S.cast&&S.cast.coworker?'同僚の'+S.cast.coworker:'同僚', 上司:S.cast&&S.cast.boss?'上司の'+S.cast.boss:'上司', 隣人:S.cast&&S.cast.neighbor?'近所に住む'+S.cast.neighbor:'近所の人',
     去った親: story&&story.gone?story.gone.label:'父', 喪主:'家族' });
   const fmt=(s,extra)=>{ const c=Object.assign(ctx(),extra||{}); return (s||'').replace(/\{([^}]+)\}/g,(m,k)=>c[k]!==undefined?c[k]:m); };
   const addBelief=(id,s,age,origin)=>{ const b=S.beliefs[id]; if(b){ b.s=clamp(b.s+s*.6,0,1.5); b.reinforced.push({age,text:origin.text}); }
-    else { const bctx=`${origin.text||''} ${origin.feel||''} @${P.gender}${age>=18?' @大人':''}${P.siblings&&P.sib&&P.sib.older===false?' @長子':''}`; const fc=typeof pickFacet==='function'?pickFacet(P,id,age,bctx):null;
+    else { const bctx=`${origin.text||''} ${origin.feel||''} @${P.gender}${age>=18?' @大人':''}${(age>=SBF?(P.siblings&&!sibsAll().some(x=>x.older)):(P.siblings&&P.sib&&P.sib.older===false))?' @長子':''}`; const fc=typeof pickFacet==='function'?pickFacet(P,id,age,bctx):null;
       S.beliefs[id]=Object.assign({ id, s, age, origin, reinforced:[] },personalizeBeliefFit(P.seed,id,bctx),fc?personalizeFacet(P,fc):{}); if(age<=12 && typeof kidFrame==='function'){ const nb=S.beliefs[id]; if(nb.core) nb.text=kidFrame(P.seed,id,BELIEFS[id].kind,nb.core); } L.beliefOrigins.push({ id, age, ...origin }); } };
   const otoNote=(age,scene)=>{ const ss=P.oto.sounds; if(!ss.length) return; const snd=r.wpick(ss,x=>x.weight); const side=S.h>=55?'表':(S.h<45?'裏':(r.chance(.5)?'表':'裏'));
     L.otoLog.push({ age, ch:snd.ch, base:snd.base, side, scene }); };
@@ -10408,6 +10514,11 @@ function simulate(P, choice, FORCE){
 
   for(let age=0; age<=deathAge; age++){
     S.age=age;
+    // その年に話に出るきょうだいを、ひとり選ぶ（全員が順番に出てくる。生まれたばかりの弟・妹は、少し大きくなってから）
+    if(age>=SBF){ if(age===SBF) for(const x of sibsX) used.add(x.name);
+      const pres=sibsAll().filter(x=>x.alive!==false&&(x===sib?age>=sibGap:x.metAge<=age)); const big=pres.filter(x=>x.older||age-(x===sib?sibGap:x.metAge)>=3); const cand=big.length?big:pres;
+      { const py=L.years[L.years.length-1]; if(py&&py.events) for(const x of pres){ if(py.events.some(e=>((e.text||'')+(e.feel||'')).indexOf(x.name)>=0)) x._m=(x._m||0)+1; } }
+      if(cand.length){ const hs=nbHash('sp|'+P.seed+'|'+age); const mn=Math.min(...cand.map(x=>x._m||0)); const lo=cand.filter(x=>(x._m||0)<=mn+1); sibCur=lo[hs%lo.length]; } else sibCur=null; }
     const ev=[];
     const add=(o)=>{ o.text=fmt(o.text); if(o.feel) o.feel=fmt(o.feel); if(o.result) o.result=fmt(o.result); if(typeof islandSkip==='function'&&islandSkip(P,o)){ o.skipped=true; return o; } if(typeof placeName==='function') placeName(P,S,age,o); if(typeof onoAdd==='function') onoAdd(P,S,age,o);
       if(P.religion==='muslim'){ const nd=t=>t&&t.replace(/飲みにさそわれた/g,'食事にさそわれた').replace(/飲み会/g,'食事会').replace(/今度、飲もう/g,'今度、ごはんでも').replace(/居酒屋/g,'食堂').replace(/ビール/g,'冷たいお茶').replace(/酒/g,'お茶'); o.text=nd(o.text); if(o.feel) o.feel=nd(o.feel); if(o.result) o.result=nd(o.result); }
@@ -10486,7 +10597,7 @@ function simulate(P, choice, FORCE){
     }
     // 子ども時代にも、観念が動く場面（勉強・学校・先生・友人・親・きょうだい・進学）
     if(age>=7 && age<=17 && age<deathAge && r.chance(.5)){
-      const kd=[]; if(S.schoolNow||S.school&&age<=15&&!S.flags.noSchool) kd.push('勉強','勉強','学校','先生'); if(friend) kd.push('友人','友人'); if(S.present('father')||S.present('mother')){ curParent=parentWord(); kd.push('親','親'); } if(sib) kd.push('きょうだい'); if(age>=14&&S.schoolNow) kd.push('進学','進学');
+      const kd=[]; if(S.schoolNow||S.school&&age<=15&&!S.flags.noSchool) kd.push('勉強','勉強','学校','先生'); if(friend) kd.push('友人','友人'); if(S.present('father')||S.present('mother')){ curParent=parentWord(); kd.push('親','親'); } if(age>=SBF?sibNow():sib) kd.push('きょうだい'); if(age>=14&&S.schoolNow) kd.push('進学','進学');
       if(kd.length) patternEvent(r.pick(kd), age, ev, add);
     }
     // --- 大人になってから ---
@@ -10573,7 +10684,7 @@ function simulate(P, choice, FORCE){
       // 観念が動く場面
       const pp=age<=70?.9:.6;
       for(let pk=0, pn=1+r.int(0,1); pk<pn; pk++) if(r.chance(pp)){
-        const doms=['人間関係','お金',FORT_EL_DOM[fortunePlan(P).sunEl]]; if(S.job&&!S.retired) doms.push('仕事','仕事'); if(partner) doms.push('恋愛','恋愛'); if(kids.length||S.married) doms.push('家族'); if(S.job&&!S.retired&&age>=25&&age<=60) doms.push('出世'); if(age>=24&&age<=45&&(partner||r.chance(.5))) doms.push('結婚'); if(S.hob&&S.hob.length) doms.push('趣味'); doms.push('人助け'); if(age>=30) doms.push('生き方','生き方'); if(friend) doms.push('友人'); if(sib&&sib.alive!==false) doms.push('きょうだい'); if((father.alive||mother.alive)&&age<=70){ curParent=mother.alive?'母':'父'; doms.push('親'); }
+        const doms=['人間関係','お金',FORT_EL_DOM[fortunePlan(P).sunEl]]; if(S.job&&!S.retired) doms.push('仕事','仕事'); if(partner) doms.push('恋愛','恋愛'); if(kids.length||S.married) doms.push('家族'); if(S.job&&!S.retired&&age>=25&&age<=60) doms.push('出世'); if(age>=24&&age<=45&&(partner||r.chance(.5))) doms.push('結婚'); if(S.hob&&S.hob.length) doms.push('趣味'); doms.push('人助け'); if(age>=30) doms.push('生き方','生き方'); if(friend) doms.push('友人'); if(age>=SBF?sibNow():(sib&&sib.alive!==false)) doms.push('きょうだい'); if((father.alive||mother.alive)&&age<=70){ curParent=mother.alive?'母':'父'; doms.push('親'); }
         patternEvent(r.pick(doms), age, ev, add);
       }
       if(ev.length<2 && r.chance(.3)){ const opts=FLAVOR_ADULT.filter(f=>age>=f[0]&&age<=f[1]); if(opts.length){ const f=r.pick(opts); add({ kind:'life', d:f[3], text:f[2] }); } }
@@ -10612,7 +10723,7 @@ function simulate(P, choice, FORCE){
     const afterPick=(pk)=>{ S.rngNext=new Rng(P.seed*13+7+7919*(chosenK+1)+(pk==='A'?1:pk==='B'?2:3)); chosenK++; };
     if(age===P.choiceAge && age<deathAge){
       const strongest=Object.values(S.beliefs).filter(b=>BELIEFS[b.id].kind==='neg').sort((a,b)=>b.s-a.s);
-      const co={ friend, partner, sib, kids, est:S.estrangedParent(), father, mother }; const ok=CHOICES.filter(c=>c.cond(P,S,co));
+      const co={ friend, partner, sib:age>=SBF?sibNow():sib, kids, est:S.estrangedParent(), father, mother }; const ok=CHOICES.filter(c=>c.cond(P,S,co));
       let tpl=null, linked=null;
       for(const b of strongest){ const t=ok.find(c=>c.link.includes(b.id)||c.link.includes(BELIEFS[b.id].parent)); if(t){ tpl=t; linked=b.id; break; } }
       if(!tpl) tpl=r.pick(ok.length?ok:CHOICES.filter(c=>c.id==='care'||c.id==='dream'));
@@ -10698,7 +10809,7 @@ function simulate(P, choice, FORCE){
     if(S.job && !S.cast.coworker){ S.cast.coworker=newName(r.chance(.5)?'男性':'女性')[0]; S.cast.boss=newName(r.chance(.6)?'男性':'女性')[0]; }
     if(age>=22 && !S.cast.neighbor){ S.cast.neighbor=newName(r.chance(.5)?'男性':'女性')[0]; }
     const X={ age, r, S, P, present:S.present, alive:(role)=>(role==='father'?father:mother).alive,
-      sibOlder:!!(sib&&P.sib&&P.sib.older), sib:sibNow(), friend, partner, married:!!(S.married&&partner), single:!partner, hadLove:!!(firstLove||S.exPartner),
+      sibOlder:age>=SBF?!!(sibNow()&&sibNow().older):!!(sib&&P.sib&&P.sib.older), sibNew:age>=SBF, sib:sibNow(), friend, partner, married:!!(S.married&&partner), single:!partner, hadLove:!!(firstLove||S.exPartner),
       kids:kids.length, kidsList:kids, father, mother, job:S.job, retired:!!S.retired, college:!!S.college, noSchool:!!S.flags.noSchool, workingTeen:!!S.flags.workingTeen,
       poorDev:P.econ===0&&C.u5>40, econ:P.econ, cid:C.id, year:P.year+age, rnd:()=>r.next(), newName, schoolNow:S.schoolNow||null, school:S.school||null, firstLoveActive:firstLove&&!firstLove.ended?{ name:firstLove.name, gender:firstLove.gender }:null };
     if(!(age===deathAge && age===0)){
@@ -10777,7 +10888,7 @@ function simulate(P, choice, FORCE){
   L.svcSpy=S.spyPast||(S.job&&S.job.intel)||null; L.svcVet=S.vet||(S.job&&S.job.mil)||null; L.svcBB=S.gym&&(S.gym.bb||S.gym.done)?S.gym:null;
   L.dietLog=S.dietLog||[];
   L.deathAge=deathAge; L.beliefs=S.beliefs; L.job=S.job; L.kids=kids; L.flags=S.flags; L.partnerFinal=partner; L.ex=S.exPartner||null;
-  L.friend=friend; L.sib=sib; L.father=father; L.mother=mother; L.grandma=grandma;
+  L.friend=friend; L.sib=sib; if(SBF<Infinity){ L._sibNew=1; L.sibs=sibsAll(); } L.father=father; L.mother=mother; L.grandma=grandma;
   L.college=!!S.college; L.everMarried=S.marriedAt!=null||!!S.married||!!S.divorced;
   if(!L.pending && L.death) L.funeral=makeFuneral(P,L,r,fmt);
   return L;
@@ -10818,7 +10929,7 @@ function makeFuneral(P,L,r,fmt){
   if(L.ex && L.ex.alive) absent.push({ name:L.ex.name, label:'かつての'+L.ex.label });
   L.kids.forEach(k=>consider(k,'child'));
   if(age<45){ consider(L.father,'parent'); consider(L.mother,'parent'); }
-  if(L.sib) consider(L.sib,'sibling');
+  if(L.sib) consider(L.sib,'sibling'); if(L._sibNew) (L.sibs||[]).forEach(x=>{ if(x!==L.sib&&x.extraSib&&x.metAge<=age) consider(x,'sibling'); });
   if(L.friend) consider(L.friend,'friend');
   L.persons.filter(p=>p.role==='teacher'||p.role==='mentor').forEach(p=>consider(p,'mentor'));
   const grand=L.years.some(y=>y.events.some(e=>e.text.startsWith('初めての孫')));
@@ -11923,6 +12034,7 @@ const MO_KC={};
 function moHash(...a){ let x=2166136261>>>0; const s=a.join('|'); for(let i=0;i<s.length;i++){ x^=s.charCodeAt(i); x=Math.imul(x,16777619)>>>0; } x=(x^(x>>>15))>>>0; x=Math.imul(x,2246822519)>>>0; return (x^(x>>>13))>>>0; }
 function moPeople(L,age,P){ const out=[]; for(const p of (L.persons||[])){ if(!p.name||p.metAge==null||p.metAge>age) continue; if(p.deathAge!=null&&p.deathAge<age) continue;
   const lab=p.role==='father'?'父':p.role==='mother'?'母':p.label||''; out.push(/父|母/.test(lab)&&lab.length<=1?lab:`${lab?lab+'の':''}${p.name}`); }
+  if(L&&L._sibNew&&P&&P._sibFrom!=null&&age>=P._sibFrom) for(const x of (L.sibs||[])){ if(!x.extraSib||x._in||x.alive===false) continue; if(x.older||(x.metAge!=null&&age-x.metAge>=3)) out.push(`${x.label}の${x.name}`); }
   if(!out.length) out.push('家族'); return out; }
 function moStage(age){ return age<=2?'baby':age<=5?'kid':age<=12?'school':age<=18?'teen':age<=64?'adult':'elder'; }
 function moOne(P,L,y,i,used,ctx){ const age=y.age, stg=moStage(age);
@@ -16237,7 +16349,7 @@ let viewing=null;     // 過去の人生のレポートを読んでいる時 { s
 
 function load(){
   if(!st){ cur=null; return; }
-  const P=makeBirth(st.seed,{country:st.country||null,force:st.force||null});
+  const P=makeBirth(st.seed,{country:st.country||null,force:st.force||null}); sibPrep(P);
   const L=simulate(P, st.choice||undefined); if(typeof birthSitApply==='function'){ if(!st.bs&&st.bsNew){ st.bs=bsChoose(P,L); delete st.bsNew; save(); } birthSitApply(P,L,st.bs||null); } if(typeof momentsApply==='function') momentsApply(P,L); if(typeof mpLifeApply==='function') mpLifeApply(P,L); if(typeof petExtraApply==='function') petExtraApply(P,L); if(typeof fort2Apply==='function') fort2Apply(P,L); if(typeof petBreedApply==='function') petBreedApply(P,L); if(typeof siblingsApply==='function') siblingsApply(P,L); if(typeof dreamApply==='function') dreamApply(P,L); if(typeof friendMeet==='function') friendMeet(P,L);
   cur={P,L};
   // 速さを変えた前から続いている人生は、今の年齢を保ったまま新しい速さに切りかえる
