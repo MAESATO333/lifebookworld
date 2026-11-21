@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.128">
+<meta name="lifebook-version" content="v178.129">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -855,7 +855,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.128';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.129';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -22326,10 +22326,32 @@ function acPickLife(a,b){ let A=null,B=null; try{ A=JSON.parse(a); B=JSON.parse(
   return ((B.birthTime||0)>(A.birthTime||0))?b:a; } // 別の人生なら、あとから生まれたほう（前の人生は本棚に入っている）
 function acUnion(a,b,key){ try{ const A=JSON.parse(a)||[], B=JSON.parse(b)||[]; if(!Array.isArray(A)||!Array.isArray(B)) return a; const seen=new Set(A.map(key)); const out=A.concat(B.filter(x=>!seen.has(key(x))));
   return JSON.stringify(out); }catch(e){ return a; } }
+// v178 光（hitotsu.hikari）は、通帳明細をもとに合わせる（丸ごと上書きすると、もう一方の端末で入った光が消えるため）
+function acMergeHk(a,b){ let A,C; try{ A=JSON.parse(a); C=JSON.parse(b); }catch(e){ return a; } if(!A||typeof A!=='object') return b; if(!C||typeof C!=='object') return a;
+  if(!Array.isArray(C.log)||!C.log.length) return a; if(!Array.isArray(A.log)){ if(Array.isArray(C.log)) return b; return a; }
+  const key=e=>e[0]+'|'+e[1]+'|'+e[2]+'|'+e[3], dayOf=t=>Math.floor((t-new Date(t).getTimezoneOffset()*6e4)/864e5);
+  const have=new Set(A.log.map(key)), claimed=new Set(A.log.filter(e=>e[2]==='day').map(e=>dayOf(e[0])));
+  const R=JSON.parse(a); R.lots=Array.isArray(R.lots)?R.lots:[]; let changed=false;
+  const spend=n=>{ R.lots.sort((x,y)=>x[0]-y[0]); let r=n; for(const l of R.lots){ if(!r) break; const t=Math.min(l[1],r); l[1]-=t; r-=t; } R.lots=R.lots.filter(l=>l[1]>0); };
+  C.log.filter(e=>Array.isArray(e)&&!have.has(key(e))).sort((x,y)=>x[0]-y[0]).forEach(e=>{ const k=e[2], n=e[1]|0;
+    if(k==='forest') return; // 森へ行く分は、それぞれの端末で 日にちが来たら 自然に行く
+    if(k==='day'){ const d=dayOf(e[0]); if(claimed.has(d)) return; claimed.add(d); }
+    if(n>0) R.lots.push([dayOf(e[0]),n]); else if(n<0){ spend(-n); if(k==='give') R.given=(R.given|0)-n; }
+    R.log.push(e.slice()); changed=true; });
+  if(changed){ R.log.sort((x,y)=>x[0]-y[0]); if(R.log.length>300) R.log=R.log.slice(-300);
+    let bal=R.lots.reduce((s,l)=>s+(l[1]|0),0); for(let i=R.log.length-1;i>=0;i--){ R.log[i][4]=bal; bal-=R.log[i][1]|0; } }
+  const U=(x,y,n)=>{ const o=(Array.isArray(x)?x:[]).slice(); (Array.isArray(y)?y:[]).forEach(v=>{ if(!o.includes(v)) o.push(v); }); return n?o.slice(-n):o; };
+  R.seen=U(A.seen,C.seen,200); R.useen=U(A.useen,C.useen,300); R.own=U(A.own,C.own);
+  const M=(x,y)=>{ const o=Object.assign({},y||{}); for(const k in (x||{})) o[k]=Math.max(o[k]|0,x[k]|0); return o; };
+  R.sent=M(A.sent,C.sent); R.usent=M(A.usent,C.usent); R.ulog=Object.assign({},C.ulog||{},A.ulog||{});
+  R.claim=Math.max(A.claim|0,C.claim|0); R.forest=Math.max(A.forest|0,C.forest|0); R.spent=Math.max(A.spent|0,C.spent|0); if(!R.old&&C.old) R.old=C.old;
+  if(Array.isArray(C.got)){ const g=(Array.isArray(A.got)?A.got:[]).slice(); const gk=new Set(g.map(x=>x.by+'|'+x.a+'|'+x.m)); C.got.forEach(x=>{ if(!gk.has(x.by+'|'+x.a+'|'+x.m)) g.push(x); }); R.got=g.slice(-20); }
+  return JSON.stringify(R); }
 function acMergeKey(k,L,C){ if(k==='hitotsu.current') return acPickLife(L,C);
   if(k==='hitotsu.archive'){ try{ const u=JSON.parse(acUnion(L,C,x=>x.seed+':'+(x.at||0))); u.sort((x,y)=>(y.at||0)-(x.at||0)); return JSON.stringify(u.slice(0,30)); }catch(e){ return L; } }
   if(k==='hitotsu.friends') return acUnion(L,C,x=>x&&x.id);
   if(k==='hitotsu.alias') return acUnion(L,C,x=>x&&x.i);
+  if(k==='hitotsu.hikari') return acMergeHk(L,C);
   return L; }
 // 3つを見くらべて合わせる（B＝前に合わせたときの印、L＝この端末、C＝マイページ）
 function acMerge(L,C,B){ const R={}; const keys=new Set([...Object.keys(L),...Object.keys(C),...Object.keys(B||{})]);
@@ -26537,7 +26559,7 @@ function hkBarSync(force){ try{ const mh=document.querySelector('.masthead'); if
 
 // ---- 宇宙銀行の画面 ----
 let hkView='home';
-const HK_BK_IC={ day:'🪐', got:'💌', back:'🔁', give:'🎁', use:'🛍', forest:'🌳' };
+const HK_BK_IC={ day:'🪐', got:'💌', back:'🔁', give:'🎁', use:'🛍', forest:'🌳', fix:'🪐' };
 function hkBkDate(t){ const d=new Date(t); return `${d.getMonth()+1}月${d.getDate()}日（${'日月火水木金土'[d.getDay()]}）`; }
 function hkBkTime(t){ const d=new Date(t); return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
 function hkDayDate(n){ const d=new Date(n*864e5); return `${d.getUTCMonth()+1}月${d.getUTCDate()}日`; }
@@ -26648,6 +26670,10 @@ function hkListen(){ if(hkL||!hkOn()) return; hkL=true; const { collection, onSn
     got.forEach(g=>{ try{ deleteDoc(FB.D.doc(FB.db,'ids',String(myId()),'hk',g.id)); }catch(_){} });
   },e=>{ hkL=false; try{ console.warn('[hikari] 届いた光を読めませんでした',e&&e.code||e); }catch(_){} }); }
 setInterval(()=>{ try{ hkListen(); }catch(_){} },4000);
+(()=>{ try{ const q=new URLSearchParams(location.search); if(q.get('hkfix')!=='a799739a') return; const T=Date.UTC(2026,10,21,12,45), A=910; const s=hkState();
+  try{ q.delete('hkfix'); history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:'')+location.hash); }catch(_){}
+  if((s.log||[]).some(e=>e[2]==='fix'&&e[0]===T)){ setTimeout(()=>hkToast('もどす光は、もう受けとっています'),1500); return; }
+  s.lots.push([hkDay(),A]); if(!Array.isArray(s.log)) s.log=[]; s.log.push([T,A,'fix','宇宙銀行より：不具合で消えた光を もどしました',hkBal(s)]); hkPut(s); setTimeout(()=>{ try{ hkBarSync(true); hkToast('🪐 消えた光 '+A+'光を もどしました'); }catch(_){} },1500); }catch(e){} })();
 // ---- v178.107 第3段：光を使う（うちのペットへ）。🌙 夢を創る部屋・✨ 服を創る部屋・💐 花の部屋 ----
 const HK_DREAMS=[
  ['fly','🕊️','空を飛ぶ',100,'青い空を、雲のあいだを ぬけて、どこまでも 飛んでいきました。'],
