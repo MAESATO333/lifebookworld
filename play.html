@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.118">
+<meta name="lifebook-version" content="v178.119">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -855,7 +855,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.118';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.119';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -26716,6 +26716,9 @@ const css=`#lgWall{ position:fixed; inset:0; z-index:2147483000; background:line
 #lgWall .lg-note{ background:#fff4c2; border-radius:14px; padding:10px 12px; font-size:13px; line-height:1.6; margin:0 0 12px; }
 #lgWall .lg-back{ display:inline-block; margin:18px auto 0; background:#ff9cbd; color:#fff; border-radius:999px; padding:10px 22px; font-weight:700; text-decoration:none; font-size:15px; }
 #lgWall .lg-wait{ text-align:center; color:#6d6585; font-size:14px; margin:8px 0 0; }
+#lgWall .lg-big{ min-height:62px; font-size:19px; }
+#lgWall .lg-gi{ display:grid; place-items:center; width:32px; height:32px; background:#fff; border-radius:50%; }
+#lgWall .lg-gl{ text-align:center; font-size:13px; font-weight:700; color:#ff6f9f; margin:0 0 6px; }
 body.lg-on{ overflow:hidden; }`;
 const G='<svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
 function has(){ try{ return acHasLife(acLocal()); }catch(e){ return false; } }
@@ -26725,13 +26728,13 @@ function html(){ const ready=!!(typeof FB!=='undefined'&&FB&&FB.auth);
   <p class="lg-lead">${has()?'今見守っている人生は、<b>消えません</b>。<br>登録すると、そのまま続きが見られます。':'登録すると、スマホでもパソコンでも、<br><b>同じ1つの人生</b>を見守れます。'}</p>
   <div class="lg-card">
   ${inApp?'<p class="lg-note"><b>いつものブラウザ（Safari・Chrome）で開いてください。</b>アプリの中のブラウザでは、Googleで登録できないことがあります。</p>':''}
-  <button class="lg-b lg-gg" id="lgG" type="button"${ready?'':' disabled'}>${G}<span>Googleで ${mode==='in'?'ログイン':'はじめる'}</span></button>
+  <p class="lg-gl">いちばん かんたん</p><button class="lg-b lg-pink lg-big" id="lgG" type="button"${ready?'':' disabled'}><i class="lg-gi">${G}</i><span>Googleで ${mode==='in'?'ログイン':'はじめる'}</span></button>
   <p class="lg-or">または メールアドレスで</p>
   <div class="lg-seg" role="tablist"><button type="button" data-lgm="new" class="${mode==='new'?'on':''}">初めての人</button><button type="button" data-lgm="in" class="${mode==='in'?'on':''}">もう登録した人</button></div>
   <label>メールアドレス<input id="acEm" type="email" autocomplete="email" inputmode="email" maxlength="120"></label>
   <label>パスワード${mode==='new'?'（8文字以上）':''}<input id="acPw" type="password" autocomplete="${mode==='new'?'new-password':'current-password'}" maxlength="64"></label>
   ${mode==='new'?'<label>パスワード（確認のため、もう一度）<input id="lgPw2" type="password" autocomplete="new-password" maxlength="64"></label>':''}
-  <button class="lg-b lg-pink" id="lgGo" type="button"${ready?'':' disabled'}>${mode==='new'?'登録して はじめる':'ログインする'}</button>
+  <button class="lg-b lg-gg" id="lgGo" type="button"${ready?'':' disabled'}>${mode==='new'?'登録して はじめる':'ログインする'}</button>
   ${mode==='in'?'<p style="text-align:center;margin:8px 0 0"><button class="lg-link" id="lgForgot" type="button">パスワードを忘れたとき</button></p>':''}
   <p class="lg-msg" id="acMsg" role="status"></p>
   ${ready?'':'<p class="lg-wait" id="lgWait">つないでいます…</p>'}
