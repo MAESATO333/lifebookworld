@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.112">
+<meta name="lifebook-version" content="v178.113">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -841,7 +841,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.112';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.113';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -26631,5 +26631,85 @@ function flPhotoTabHTML(){ const L=store.get(KEY_FLALB,[])||[], G=store.get(KEY_
 function flPhSendOnlyHTML(){ const L=store.get(KEY_FLALB,[])||[], ph=L[_flPhSend];
   if(!ph) return `<div class="fl-act"><button type="button" class="mp-btn" data-hsago="fl">📒 アルバムにもどる</button></div>`;
   return `<p class="fl-lb">💌 この写真を、友だちの Higher Self に送る</p><ul class="fl-alb"><li><figure>${flPhotoSVG(ph)}<figcaption>${flPhDate(ph.t)}<br><span class="tiny muted">${esc(flPhCap(ph))}</span></figcaption></figure>${flPhSendForm(ph)}</li></ul><div class="fl-act"><button type="button" class="linkish" data-hsago="fl">📒 アルバムにもどる</button></div>`; }
+</script>
+<script>
+// ===== v178.113 入り口の登録（MITSUさん 2026-11-21「全員に登録してもらう」） =====
+(function(){
+if(typeof acGoogle!=='function'||!/^https?:$/.test(location.protocol)) return;
+const LK='lb.acIn';
+let mode='new', box=null, t0=Date.now(), poll=null;
+try{ const m=(location.hash||'').match(/^#start=(google|email|login)$/); if(m){ mode=m[1]==='login'?'in':'new'; history.replaceState(null,'',location.pathname+location.search); } }catch(e){}
+const inApp=/\bLine\/|FBAN|FBAV|Instagram|MicroMessenger|KAKAOTALK/i.test(navigator.userAgent||'');
+const css=`#lgWall{ position:fixed; inset:0; z-index:2147483000; background:linear-gradient(#a9dcff,#e9f6ff 45%,#fff0f5); overflow-y:auto; -webkit-overflow-scrolling:touch; font-family:inherit; color:#3b3550; }
+#lgWall .lg-in{ max-width:440px; margin:0 auto; padding:18px 16px 40px; }
+#lgWall .lg-logo{ width:110px; height:110px; display:block; margin:0 auto 8px; border-radius:22px; }
+#lgWall h2{ font-size:21px; text-align:center; margin:0 0 6px; line-height:1.5; }
+#lgWall .lg-lead{ text-align:center; font-size:15px; margin:0 0 14px; line-height:1.7; }
+#lgWall .lg-card{ background:#fff; border-radius:22px; padding:18px 16px; box-shadow:0 3px 0 #f3cddb,0 6px 18px rgba(255,111,159,.12); }
+#lgWall .lg-b{ display:flex; align-items:center; justify-content:center; gap:10px; width:100%; min-height:54px; border:0; border-radius:999px; font:inherit; font-weight:700; font-size:17px; cursor:pointer; padding:8px 16px; }
+#lgWall .lg-pink{ background:#ff6f9f; color:#fff; box-shadow:0 4px 0 #e2507f; }
+#lgWall .lg-gg{ background:#fff; color:#3b3550; border:2px solid #f6c9d8; box-shadow:0 4px 0 #ecd6df; }
+#lgWall .lg-b:disabled{ opacity:.5; }
+#lgWall .lg-or{ text-align:center; font-size:13px; color:#6d6585; margin:16px 0 10px; }
+#lgWall .lg-seg{ display:grid; grid-template-columns:1fr 1fr; gap:6px; background:#fff0f5; border-radius:999px; padding:4px; margin:0 0 12px; }
+#lgWall .lg-seg button{ border:0; background:transparent; border-radius:999px; min-height:40px; font:inherit; font-weight:700; font-size:14px; color:#6d6585; cursor:pointer; }
+#lgWall .lg-seg button.on{ background:#ff6f9f; color:#fff; }
+#lgWall label{ display:block; font-size:14px; font-weight:700; margin:0 0 10px; }
+#lgWall input{ display:block; width:100%; box-sizing:border-box; font-size:16px; padding:12px; border:2px solid #f3dbe5; border-radius:14px; margin-top:4px; font-family:inherit; }
+#lgWall .lg-msg{ min-height:1.4em; font-size:14px; color:#d0457a; margin:10px 0 0; line-height:1.6; font-weight:700; }
+#lgWall .lg-small{ font-size:13px; color:#6d6585; line-height:1.65; margin:12px 0 0; }
+#lgWall .lg-link{ background:none; border:0; color:#ff6f9f; font:inherit; font-weight:700; text-decoration:underline; padding:4px 0; cursor:pointer; font-size:14px; }
+#lgWall .lg-note{ background:#fff4c2; border-radius:14px; padding:10px 12px; font-size:13px; line-height:1.6; margin:0 0 12px; }
+#lgWall .lg-back{ display:inline-block; margin:18px auto 0; background:#ff9cbd; color:#fff; border-radius:999px; padding:10px 22px; font-weight:700; text-decoration:none; font-size:15px; }
+#lgWall .lg-wait{ text-align:center; color:#6d6585; font-size:14px; margin:8px 0 0; }
+body.lg-on{ overflow:hidden; }`;
+const G='<svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
+function has(){ try{ return acHasLife(acLocal()); }catch(e){ return false; } }
+function html(){ const ready=!!(typeof FB!=='undefined'&&FB&&FB.auth);
+  return `<div class="lg-in"><img class="lg-logo" src="welcome/logo.webp" alt="LIFE BOOK" width="120" height="120">
+  <h2>${has()?'登録して、続きを見守ろう':'登録して、はじめましょう'}</h2>
+  <p class="lg-lead">${has()?'今見守っている人生は、<b>消えません</b>。<br>登録すると、そのまま続きが見られます。':'登録すると、スマホでもパソコンでも、<br><b>同じ1つの人生</b>を見守れます。'}</p>
+  <div class="lg-card">
+  ${inApp?'<p class="lg-note"><b>いつものブラウザ（Safari・Chrome）で開いてください。</b>アプリの中のブラウザでは、Googleで登録できないことがあります。</p>':''}
+  <button class="lg-b lg-gg" id="lgG" type="button"${ready?'':' disabled'}>${G}<span>Googleで ${mode==='in'?'ログイン':'はじめる'}</span></button>
+  <p class="lg-or">または メールアドレスで</p>
+  <div class="lg-seg" role="tablist"><button type="button" data-lgm="new" class="${mode==='new'?'on':''}">初めての人</button><button type="button" data-lgm="in" class="${mode==='in'?'on':''}">もう登録した人</button></div>
+  <label>メールアドレス<input id="acEm" type="email" autocomplete="email" inputmode="email" maxlength="120"></label>
+  <label>パスワード${mode==='new'?'（8文字以上）':''}<input id="acPw" type="password" autocomplete="${mode==='new'?'new-password':'current-password'}" maxlength="64"></label>
+  ${mode==='new'?'<label>パスワード（確認のため、もう一度）<input id="lgPw2" type="password" autocomplete="new-password" maxlength="64"></label>':''}
+  <button class="lg-b lg-pink" id="lgGo" type="button"${ready?'':' disabled'}>${mode==='new'?'登録して はじめる':'ログインする'}</button>
+  ${mode==='in'?'<p style="text-align:center;margin:8px 0 0"><button class="lg-link" id="lgForgot" type="button">パスワードを忘れたとき</button></p>':''}
+  <p class="lg-msg" id="acMsg" role="status"></p>
+  ${ready?'':'<p class="lg-wait" id="lgWait">つないでいます…</p>'}
+  <p class="lg-small">預かるのは、ゲームの記録とログイン用のメールアドレスだけです。パスワードは Google の安全な仕組み（Firebase）で守られ、運営者にも見えません。</p>
+  </div>
+  <p style="text-align:center"><a class="lg-back" href="welcome.html">← 戻る</a></p></div>`; }
+function bind(){ const q=id=>box.querySelector('#'+id);
+  box.querySelectorAll('[data-lgm]').forEach(b=>b.onclick=()=>{ const em=(q('acEm')||{}).value||''; mode=b.dataset.lgm; draw(); if(em) q('acEm').value=em; });
+  if(q('lgG')) q('lgG').onclick=()=>{ if(!FB) return; acGoogle(); };
+  if(q('lgForgot')) q('lgForgot').onclick=()=>acReset();
+  if(q('lgGo')) q('lgGo').onclick=()=>{ if(!FB) return; const pw=q('acPw').value||'';
+    if(mode==='new'){ if(pw.length<8){ acMsg('パスワードは 8文字以上にしてください（英字と数字をまぜると、もっと安全です）。'); return; }
+      if(pw!==(q('lgPw2').value||'')){ acMsg('2つのパスワードが ちがいます。もう一度入れてください。'); return; }
+      acEmail('new'); } else acEmail('in'); }; }
+function draw(){ if(!box) return; box.innerHTML=html(); bind(); }
+function show(){ if(box) return; try{ const d=document.getElementById('acDlg'); if(d&&!d.hidden) acClose(); if(d) d.innerHTML=''; }catch(e){}
+  if(!document.getElementById('lgCss')){ const st=document.createElement('style'); st.id='lgCss'; st.textContent=css; document.head.appendChild(st); }
+  box=document.createElement('div'); box.id='lgWall'; box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','登録');
+  document.body.appendChild(box); document.body.classList.add('lg-on'); draw(); }
+function hide(){ if(!box) return; box.remove(); box=null; document.body.classList.remove('lg-on'); }
+function tick(){ const ready=!!(typeof FB!=='undefined'&&FB&&FB.auth);
+  if(ready){ if(acIn()){ try{ localStorage.setItem(LK,'1'); }catch(e){} hide(); return; }
+    try{ localStorage.removeItem(LK); }catch(e){}
+    if(!box) show(); else if(box.querySelector('#lgWait')){ const em=(box.querySelector('#acEm')||{}).value||''; draw(); if(em) box.querySelector('#acEm').value=em; }
+    return; }
+  // まだつながっていない：ログイン済みの印がない人だけ、先に画面を出す
+  let wasIn=false; try{ wasIn=localStorage.getItem(LK)==='1'; }catch(e){}
+  if(!wasIn&&!box&&document.body) show();
+  // つながらない時（サーバーが止まっている等）は、閉じこめない
+  if(Date.now()-t0>25000&&typeof FB_ST!=='undefined'&&FB_ST==='ng') hide(); }
+function start(){ tick(); poll=setInterval(tick,800); }
+if(document.body) start(); else document.addEventListener('DOMContentLoaded',start);
+})();
 </script>
 </body></html>
