@@ -79,8 +79,7 @@ h2+.h2sub{text-align:center;color:var(--sub);font-size:14px;margin:0 0 14px}
 .gico{width:22px;height:22px;flex:none}
 .safe{font-size:13px;color:var(--sub);margin:14px 0 0;text-align:left;line-height:1.65}
 .safe li{margin:2px 0}
-.again{margin:16px 0 0;font-size:14px}
-.again a{color:var(--pink);font-weight:900}
+.again-box{border-color:#cfe8ff;box-shadow:0 4px 0 #cfe2f3,0 8px 24px rgba(80,140,200,.12);margin-top:0}
 .more{display:block;text-align:center;margin:8px 0 0;color:var(--sub);font-size:14px}
 footer{text-align:center;font-size:12px;color:var(--sub);padding:18px 16px 40px}
 footer a{color:var(--sub);margin:0 6px}
@@ -172,7 +171,11 @@ footer a{color:var(--sub);margin:0 6px}
       <li>預かるのは、ゲームの記録とログイン用のメールアドレスだけです。</li>
       <li>パスワードは Google の安全な仕組み（Firebase）で守られ、運営者にも見えません。</li>
     </ul>
-    <p class="again">もう見守っている人は <a href="play-test.html#start=login" data-go>ログイン</a></p>
+  </section>
+  <section class="start again-box" id="again">
+    <h2 style="font-size:19px">もう人生が始まって、<br>Higher Self として<br>見守っている方は こちらから</h2>
+    <p style="font-size:14px;color:var(--sub);margin:6px 0 14px;line-height:1.7">今の人生は消えません。<br>Google かメールアドレスで登録すると、<br>そのまま続きが見られます。</p>
+    <a class="btn" href="play-test.html#start=continue" data-go>🌱 続きを見守る</a>
   </section>
   <a class="more" href="index.html?gw=1">くわしい紹介（Gateway）を見る</a>
 </main>
@@ -194,8 +197,8 @@ footer a{color:var(--sub);margin:0 6px}
   document.getElementById('lives').innerHTML=h;
   // 登録の枠が見えている間は、下の「はじめる」をかくす
   var st=document.getElementById('sticky'), box=document.getElementById('start'), sky=document.querySelector('.sky');
-  if('IntersectionObserver' in window){ var vis={}; var io=new IntersectionObserver(function(es){ es.forEach(function(e){ vis[e.target.id||'sky']=e.isIntersecting; }); st.classList.toggle('hide',!!(vis.start||vis.sky)); });
-    io.observe(box); io.observe(sky); }
+  if('IntersectionObserver' in window){ var vis={}; var io=new IntersectionObserver(function(es){ es.forEach(function(e){ vis[e.target.id||'sky']=e.isIntersecting; }); st.classList.toggle('hide',!!(vis.start||vis.sky||vis.again)); });
+    io.observe(box); io.observe(sky); io.observe(document.getElementById('again')); }
   // 帯は見えていない時は止める（固まらないように）
   var row=document.getElementById('lives');
   if('IntersectionObserver' in window){ new IntersectionObserver(function(es){ row.style.animationPlayState=es[0].isIntersecting?'running':'paused'; }).observe(row); }

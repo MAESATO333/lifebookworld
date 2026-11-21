@@ -26638,7 +26638,8 @@ function flPhSendOnlyHTML(){ const L=store.get(KEY_FLALB,[])||[], ph=L[_flPhSend
 if(typeof acGoogle!=='function'||!/^https?:$/.test(location.protocol)) return;
 const LK='lb.acIn';
 let mode='new', box=null, t0=Date.now(), poll=null;
-try{ const m=(location.hash||'').match(/^#start=(google|email|login)$/); if(m){ mode=m[1]==='login'?'in':'new'; history.replaceState(null,'',location.pathname+location.search); } }catch(e){}
+const has0=()=>{ try{ return acHasLife(acLocal()); }catch(e){ return false; } };
+try{ const m=(location.hash||'').match(/^#start=(google|email|login|continue)$/); if(m){ mode=m[1]==='login'?'in':m[1]==='continue'?(has0()?'new':'in'):'new'; history.replaceState(null,'',location.pathname+location.search); try{ sessionStorage.setItem('lg.mode',mode); }catch(_){} } else { const v=sessionStorage.getItem('lg.mode'); if(v==='in'||v==='new') mode=v; } }catch(e){}
 const inApp=/\bLine\/|FBAN|FBAV|Instagram|MicroMessenger|KAKAOTALK/i.test(navigator.userAgent||'');
 const css=`#lgWall{ position:fixed; inset:0; z-index:2147483000; background:linear-gradient(#a9dcff,#e9f6ff 45%,#fff0f5); overflow-y:auto; -webkit-overflow-scrolling:touch; font-family:inherit; color:#3b3550; }
 #lgWall .lg-in{ max-width:440px; margin:0 auto; padding:18px 16px 40px; }
