@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.117">
+<meta name="lifebook-version" content="v178.118">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -126,7 +126,10 @@ html.hk-open,html.hk-open body{ overflow:hidden; }
 .hk-toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#3a3340; color:#fff; padding:10px 18px; border-radius:999px; z-index:9500; font-weight:800; font-size:14px; max-width:calc(100vw - 32px); width:max-content; text-align:center; line-height:1.5; }
 /* v178.105 贈る */
 .hk-fl{ padding:6px 10px; } .hk-fr{ display:flex; justify-content:space-between; align-items:center; width:100%; background:none; border:0; border-bottom:1px solid #f6e6ee; padding:12px 6px; font:inherit; font-size:15px; font-weight:700; color:#3a3340; cursor:pointer; text-align:left; min-height:48px; }
-.hk-fr:last-child{ border-bottom:0; } .hk-fr.on{ background:#ffe6f1; border-radius:12px; } .hk-fr small{ font-size:11.5px; color:#7a7085; font-weight:600; } .hk-fr:disabled{ opacity:.45; }
+.hk-fr:last-child{ border-bottom:0; }
+.hk-frm{ justify-content:flex-start; gap:10px; } .hk-frm .hk-frn{ flex:1 1 auto; } .hk-ck{ flex:0 0 26px; width:26px; height:26px; border-radius:50%; border:2px solid #ffc2dc; background:#fff; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; } .hk-fr.on .hk-ck{ background:#ff5fa2; border-color:#ff5fa2; }
+.hk-amt{ display:flex; align-items:center; gap:8px; margin-top:10px; font-weight:800; font-size:15px; } .hk-amt input{ flex:1 1 auto; min-width:0; max-width:180px; font:inherit; font-size:18px; font-weight:800; padding:9px 12px; border:2px solid #ffd6e8; border-radius:14px; background:#fff; color:#3a3340; }
+.hk-sum{ text-align:center; } .hk-sumr{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap; font-size:15px; } .hk-sumr b{ font-size:20px; color:#c88a00; } .hk-warn{ color:#e0457f; font-weight:800; font-size:14px; } .hk-fr.on{ background:#ffe6f1; border-radius:12px; } .hk-fr small{ font-size:11.5px; color:#7a7085; font-weight:600; } .hk-fr:disabled{ opacity:.45; }
 .hk-h3{ font-size:15px; margin:14px 0 6px; } .hk-chips{ display:flex; flex-wrap:wrap; gap:8px; }
 .hk-chip{ border:2px solid #ffd6e8; background:#fff; border-radius:999px; padding:8px 14px; font:inherit; font-weight:800; font-size:15px; color:#3a3340; cursor:pointer; min-height:42px; } .hk-chip.on{ background:#ff5fa2; border-color:#ff5fa2; color:#fff; } .hk-chip:disabled{ opacity:.4; }
 .hk-btn:disabled{ opacity:.5; }
@@ -852,7 +855,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.117';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.118';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -26390,36 +26393,50 @@ function hkViewHTML(){ const s=hkState(), d=hkDaily(s), b=hkBal(s);
 
 // ---- v178.105 友だちに光を贈る（Firebase：ids/{相手}/hk/{自分_日付_1〜3}）----
 const HK_AMT=[10,30,50,100], HK_MSGS=['いつもありがとう','おめでとう！','元気でね！','大好き！','お疲れ様！','また会おうね'];
-let hkTo='', hkAmt=50, hkMsg=0, hkBusy=false;
+let hkTo='', hkAmt=50, hkMsg=0, hkBusy=false, hkTos=null;
+const HK_MAXTO=20, HK_AMTMAX=1000000, HK_BACKMAX=Infinity;
+function hkBack(a){ return Math.min(Math.floor(a/2),HK_BACKMAX); }
 function hkYmd(){ const d=new Date(); return ''+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0'); }
 function hkFrList(){ try{ return (typeof fbFriends==='function'?fbFriends():[]).map(f=>({ id:String(f.id), by:String(f.by||'友だち').slice(0,20) })); }catch(e){ return []; } }
 function hkSentN(s,id){ const k=id+'|'+hkYmd(); return (s.sent&&s.sent[k])|0; }
 function hkOn(){ return typeof fbOnline==='function'&&fbOnline()&&typeof FB!=='undefined'&&FB&&FB.D; }
 function hkGiveHTML(s){ const fr=hkFrList(), b=hkBal(s);
   if(!fr.length) return `<h2 class="hk-h">💌 友だちに光を贈る</h2><div class="hk-card hk-c"><p>まだ友だちがいません。</p><p class="hk-note">「友だちに紹介」から つながると、光を贈れます。友だちが増えると、毎日の光も増えます。</p></div>`;
-  if(!hkTo||!fr.some(f=>f.id===hkTo)) hkTo=fr[0].id;
-  return `<h2 class="hk-h">💌 だれに贈りますか？</h2><div class="hk-card hk-fl">${fr.map(f=>{ const n=hkSentN(s,f.id); return `<button type="button" class="hk-fr${f.id===hkTo?' on':''}" data-hkto="${f.id}"${n>=3?' disabled':''}><span>${hkEsc(f.by)}</span><small>${n>=3?'今日はもう3回 贈りました':n?'今日 '+n+'回 贈りました':''}</small></button>`; }).join('')}</div>
-  <h3 class="hk-h3">いくつ贈りますか？</h3><div class="hk-chips">${HK_AMT.map(a=>`<button type="button" class="hk-chip${a===hkAmt?' on':''}" data-hkamt="${a}"${a>b?' disabled':''}>${a}</button>`).join('')}</div>
+  if(!Array.isArray(hkTos)) hkTos=[];
+  hkTos=hkTos.filter(id=>fr.some(f=>f.id===id)&&hkSentN(s,id)<3);
+  const full=hkTos.length>=HK_MAXTO, cust=!HK_AMT.includes(hkAmt);
+  return `<h2 class="hk-h">💌 だれに贈りますか？<small>押すと ✓ がつきます。${HK_MAXTO}人まで いっしょに 選べます</small></h2>
+  <div class="hk-card hk-fl">${fr.map(f=>{ const n=hkSentN(s,f.id), on=hkTos.includes(f.id), dis=n>=3||(full&&!on); return `<button type="button" class="hk-fr hk-frm${on?' on':''}" data-hkto="${f.id}" aria-pressed="${on}"${dis?' disabled':''}><span class="hk-ck" aria-hidden="true">${on?'✓':''}</span><span class="hk-frn">${hkEsc(f.by)}</span><small>${n>=3?'今日はもう3回 贈りました':n?'今日 '+n+'回 贈りました':''}</small></button>`; }).join('')}</div>
+  <h3 class="hk-h3">1人に いくつ贈りますか？</h3><div class="hk-chips">${HK_AMT.map(a=>`<button type="button" class="hk-chip${a===hkAmt&&!cust?' on':''}" data-hkamt="${a}">${a}</button>`).join('')}</div>
+  <label class="hk-amt"><span>ほかの数</span><input id="hkAmtIn" type="number" inputmode="numeric" min="1" max="${HK_AMTMAX}" step="1" placeholder="例：500" value="${cust&&hkAmt?hkAmt:''}"><span>光</span></label>
   <h3 class="hk-h3">ひとこと</h3><div class="hk-chips">${HK_MSGS.map((m,i)=>`<button type="button" class="hk-chip${i===hkMsg?' on':''}" data-hkmsg="${i}">${m}</button>`).join('')}</div>
-  <button type="button" class="hk-btn" data-hk="send"${hkAmt>b?' disabled':''}>✨ ${hkAmt}光を贈る</button>
-  <p class="hk-note hk-c">贈ると、半分が「ありがとう返し」で もどります。同じ人へは 1日3回まで。</p>`; }
+  <div class="hk-card hk-sum" id="hkSum">${hkSumHTML(b)}</div>
+  <p class="hk-note hk-c">贈ると、半分が「ありがとう返し」で もどります${HK_BACKMAX<1e9?`（1人につき 最大${HK_BACKMAX}光）`:''}。同じ人へは 1日3回まで。</p>`; }
+function hkSumHTML(b){ const n=hkTos.length, a=hkAmt|0, t=a*n, bk=hkBack(a)*n, ok=n&&a>=1&&a<=HK_AMTMAX&&t<=b;
+  return `<p class="hk-sumr"><span>${n?`1人 ${fmt(a)}光 × ${n}人`:'まだ だれも 選んでいません'}</span><b>${n?'合計 '+fmt(t)+'光':''}</b></p>
+  ${n&&t>b?`<p class="hk-warn">光が たりません（残高 ${fmt(b)}光）</p>`:n&&bk?`<p class="hk-note">ありがとう返し：+${fmt(bk)}光 もどります</p>`:''}
+  <button type="button" class="hk-btn" data-hk="send"${ok?'':' disabled'}>✨ ${n?`${n}人に ${fmt(t)}光を贈る`:'光を贈る'}</button>`; }
+function hkSumSync(){ const el=document.getElementById('hkSum'); if(el) el.innerHTML=hkSumHTML(hkBal(hkState())); }
+document.addEventListener('input',e=>{ if(!e.target||e.target.id!=='hkAmtIn') return; const v=Math.floor(+e.target.value||0); hkAmt=Math.max(0,Math.min(HK_AMTMAX,v)); document.querySelectorAll('[data-hkamt]').forEach(c=>c.classList.toggle('on',false)); hkSumSync(); });
 function hkEsc(t){ return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function hkSpend(s,a){ s.lots.sort((x,y)=>x[0]-y[0]); let r=a; for(const l of s.lots){ if(!r) break; const t=Math.min(l[1],r); l[1]-=t; r-=t; } s.lots=s.lots.filter(l=>l[1]>0); return r===0; }
-async function hkSend(){ if(hkBusy) return; const s=hkState(), a=hkAmt, m=HK_MSGS[hkMsg]||'', to=hkTo, f=hkFrList().find(x=>x.id===to);
-  if(!f) return; if(a>hkBal(s)){ hkToast('光が たりません'); return; } const n=hkSentN(s,to); if(n>=3){ hkToast('同じ人へは 1日3回までです'); return; }
+async function hkSend(){ if(hkBusy) return; const s=hkState(), a=hkAmt|0, m=HK_MSGS[hkMsg]||'', L=hkFrList(), tos=(hkTos||[]).map(id=>L.find(x=>x.id===id)).filter(Boolean);
+  if(!tos.length) return; if(a<1||a>HK_AMTMAX){ hkToast('贈る数を 入れてください'); return; } if(a*tos.length>hkBal(s)){ hkToast('光が たりません'); return; }
   if(!hkOn()){ hkToast('いまは つながっていません。少しあとで もう一度'); return; }
   hkBusy=true; const btn=document.querySelector('[data-hk="send"]'); if(btn){ btn.disabled=true; btn.textContent='おくっています…'; }
-  const me=String(myId()), by=String((typeof store!=='undefined'&&store.get(KEY_ME,''))||'').slice(0,20)||'友だち', id=me+'_'+hkYmd()+'_'+(n+1);
-  try{ await Promise.race([FB.D.setDoc(FB.D.doc(FB.db,'ids',to,'hk',id),{ from:me, by, a, m, t:Date.now() }), new Promise((_,rj)=>setTimeout(()=>rj({ code:'timeout' }),15000))]);
-    const s2=hkState(); hkSpend(s2,a); hkLog(s2,-a,'give',`${f.by}さんに 贈った「${m}」`); const back=Math.floor(a/2); s2.lots.push([hkDay(),back]); hkLog(s2,back,'back',`ありがとう返し（${f.by}さんに贈ったお礼）`); s2.given+=a; s2.sent=s2.sent||{}; const dk=hkYmd(); const keep={}; Object.keys(s2.sent).filter(k=>k.endsWith(dk)).forEach(k=>keep[k]=s2.sent[k]); keep[to+'|'+dk]=(keep[to+'|'+dk]|0)+1; s2.sent=keep; hkPut(s2);
-    hkToast(`${f.by}さんに ${a}光を贈りました。ありがとう返し +${back}光`);
-  }catch(err){ const c=String(err&&(err.code||err.message)||err||''); try{ console.warn('[hikari]',c); }catch(_){}
-    hkToast(c.includes('permission')?'まだ贈れません（サーバーの準備中です）':'うまく送れませんでした。少しあとで もう一度'); }
+  const me=String(myId()), by=String((typeof store!=='undefined'&&store.get(KEY_ME,''))||'').slice(0,20)||'友だち'; let ok=0, back=0, err='';
+  for(const f of tos){ const n=hkSentN(hkState(),f.id); if(n>=3) continue; const id=me+'_'+hkYmd()+'_'+(n+1);
+    try{ await Promise.race([FB.D.setDoc(FB.D.doc(FB.db,'ids',f.id,'hk',id),{ from:me, by, a, m, t:Date.now() }), new Promise((_,rj)=>setTimeout(()=>rj({ code:'timeout' }),15000))]);
+      const s2=hkState(); hkSpend(s2,a); hkLog(s2,-a,'give',`${f.by}さんに 贈った「${m}」`); const bk=hkBack(a); if(bk){ s2.lots.push([hkDay(),bk]); hkLog(s2,bk,'back',`ありがとう返し（${f.by}さんに贈ったお礼）`); }
+      s2.given+=a; s2.sent=s2.sent||{}; const dk=hkYmd(); const keep={}; Object.keys(s2.sent).filter(k=>k.endsWith(dk)).forEach(k=>keep[k]=s2.sent[k]); keep[f.id+'|'+dk]=(keep[f.id+'|'+dk]|0)+1; s2.sent=keep; hkPut(s2); ok++; back+=bk;
+    }catch(e){ err=String(e&&(e.code||e.message)||e||''); try{ console.warn('[hikari]',err); }catch(_){} } }
+  if(ok){ hkToast(`${ok}人に ${fmt(a*ok)}光を贈りました${back?`。ありがとう返し +${fmt(back)}光`:''}${ok<tos.length?`（${tos.length-ok}人は 送れませんでした）`:''}`); hkTos=[]; }
+  else hkToast(err.includes('permission')?'まだ贈れません（サーバーの準備中です）':'うまく送れませんでした。少しあとで もう一度');
   hkBusy=false; hkBarSync(true); hkRender(); }
 function hkGotHTML(s){ const g=(s.got||[]).slice(-5).reverse(); if(!g.length) return ''; return `<div class="hk-card"><h3>💌 とどいた光</h3>${g.map(x=>`<p>${hkEsc(x.by)}さんから <b>${x.a}光</b>「${hkEsc(x.m)}」</p>`).join('')}</div>`; }
 let hkL=false;
 function hkListen(){ if(hkL||!hkOn()) return; hkL=true; const { collection, onSnapshot, deleteDoc }=FB.D;
-  onSnapshot(collection(FB.db,'ids',String(myId()),'hk'),snap=>{ const got=[]; snap.forEach(d=>{ const x=d.data()||{}; const a=x.a|0; if(HK_AMT.includes(a)) got.push({ id:d.id, by:String(x.by||'友だち').slice(0,20), a, m:String(x.m||'').slice(0,20) }); });
+  onSnapshot(collection(FB.db,'ids',String(myId()),'hk'),snap=>{ const got=[]; snap.forEach(d=>{ const x=d.data()||{}; const a=x.a|0; if(a>=1&&a<=HK_AMTMAX) got.push({ id:d.id, by:String(x.by||'友だち').slice(0,20), a, m:String(x.m||'').slice(0,20) }); });
     if(!got.length) return; const s=hkState(); s.seen=Array.isArray(s.seen)?s.seen:[]; const nu=got.filter(g=>!s.seen.includes(g.id));
     if(nu.length){ nu.forEach(g=>{ s.lots.push([hkDay(),g.a]); hkLog(s,g.a,'got',`${g.by}さんから「${g.m}」`); }); s.seen=s.seen.concat(nu.map(g=>g.id)).slice(-200); s.got=(Array.isArray(s.got)?s.got:[]).concat(nu.map(g=>({ by:g.by, a:g.a, m:g.m }))).slice(-20); hkPut(s);
       const g=nu[nu.length-1]; hkToast(nu.length>1?`💌 ${nu.length}人から 光が届きました`:`💌 ${g.by}さんから ${g.a}光が届きました「${g.m}」`); hkBarSync(true); const M=document.getElementById('hkM'); if(M&&!M.hidden) hkRender(); }
@@ -26593,7 +26610,7 @@ document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closes
   else if(a==='buy') hkBuy(t.dataset.hkb||'');
   else if(a==='house') { hkClose(); try{ mpOpen(); }catch(_){} }
   else { hkView=a; hkRender(); } });
-document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-hkto],[data-hkamt],[data-hkmsg]'); if(!t) return; if(t.dataset.hkto) hkTo=t.dataset.hkto; if(t.dataset.hkamt) hkAmt=+t.dataset.hkamt; if(t.dataset.hkmsg) hkMsg=+t.dataset.hkmsg; hkRender(); });
+document.addEventListener('click',e=>{ const t=e.target.closest&&e.target.closest('[data-hkto],[data-hkamt],[data-hkmsg]'); if(!t) return; if(t.dataset.hkto){ const id=t.dataset.hkto; if(!Array.isArray(hkTos)) hkTos=[]; const i=hkTos.indexOf(id); if(i>=0) hkTos.splice(i,1); else if(hkTos.length<HK_MAXTO) hkTos.push(id); else hkToast(HK_MAXTO+'人まで 選べます'); } if(t.dataset.hkamt) hkAmt=+t.dataset.hkamt; if(t.dataset.hkmsg) hkMsg=+t.dataset.hkmsg; hkRender(); });
 function hkToast(t){ const d=document.createElement('div'); d.className='hk-toast'; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),2400); }
 window.hkOpen=hkOpen; window.hkBalance=()=>hkBal(hkState());
 // 軽い見はり（1.5秒ごとに文字だけ比べる。変わった時だけ書きかえる）
