@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.113">
+<meta name="lifebook-version" content="v178.114">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -106,6 +106,17 @@ html.hk-open,html.hk-open body{ overflow:hidden; }
 .hk-card p+p{ margin-top:8px; } .hk-card h3{ font-size:15px; color:#ff5fa2; margin:12px 0 4px; } .hk-card ul{ margin:0; padding-left:18px; }
 .hk-c{ text-align:center; } .hk-note{ font-size:12.5px; color:#7a7085; }
 .hk-soon{ background:#fffaf0; }
+.hk-bookb small{ display:block; font-size:11.5px; font-weight:700; opacity:.85; } .hk-btn.hk-bookb{ margin-top:10px; }
+.hk-bk{ padding:6px 12px; background:#fffdf7; border:1px solid #f3e4c4; }
+.hk-bk-d{ font-size:12.5px; font-weight:800; color:#8a5a00; background:#fff3c4; border-radius:999px; display:inline-block; padding:2px 10px; margin:10px 0 2px; }
+.hk-bk-r{ display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px dashed #eadcc4; font-size:14px; line-height:1.45; }
+.hk-bk-r:last-child{ border-bottom:0; }
+.hk-bk-ic{ flex:0 0 26px; font-size:18px; text-align:center; }
+.hk-bk-w{ flex:1 1 auto; min-width:0; word-break:break-word; } .hk-bk-w small{ display:block; font-size:11.5px; color:#7a7085; }
+.hk-bk-a{ flex:0 0 auto; text-align:right; } .hk-bk-a b{ display:block; font-size:16px; } .hk-bk-a small{ display:block; font-size:11px; color:#7a7085; white-space:nowrap; }
+.hk-in1{ color:#c88a00; } .hk-out1{ color:#e0457f; }
+.hk-bk-sum{ display:flex; gap:10px; text-align:center; } .hk-bk-sum>div{ flex:1; } .hk-bk-sum small{ display:block; font-size:12px; color:#7a7085; } .hk-bk-sum b{ font-size:22px; }
+.hk-bk-old{ background:#fbf8f3; } .hk-bk-old .hk-bk-r{ font-size:13.5px; }
 .hk-h{ font-size:19px; margin:4px 0 6px; } .hk-h small{ display:block; font-size:12px; color:#7a7085; font-weight:600; }
 .hk-orb{ width:110px; height:110px; border-radius:50%; margin:8px auto 0; background:radial-gradient(circle at 40% 35%,#fffbe6,#ffe27a 45%,#ffb800 75%,rgba(255,184,0,0) 76%); box-shadow:0 0 36px #ffd24d; }
 .hk-tb{ width:100%; border-collapse:collapse; font-size:13px; margin:6px 0 10px; } .hk-tb td{ padding:4px 6px; } .hk-tb td:last-child{ text-align:right; } .hk-tb tr.on{ background:#fff3c4; font-weight:900; }
@@ -841,7 +852,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.113';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.114';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -20029,6 +20040,7 @@ try{ document.head.insertAdjacentHTML('beforeend',`<style>
 // v166: Life Home の上のほうに「✨ LIFE BOOKのニュース」。新しい機能・更新のお知らせ。
 // ゲームに入っているお知らせ（LBN_BUILTIN）＋ 管理者が Firebase の os/news に書いたお知らせ（{ n:[{ i, d:ミリ秒, t:題, b:説明 }] }）。新しい順に3つ、のこりは「これまでのお知らせ」。
 const LBN_BUILTIN=[
+  { i:'v178-passbook', d:Date.UTC(2026,10,21,7,50), t:'📒 宇宙銀行に「通帳明細」ができました', b:'🪐 LIFEBOOK 宇宙銀行の「🏦 あなたの光の口座」に「📒 通帳明細を見る」ができました。いつ・いくら・だれから（なぜ）光が入ったり出たりしたかと、そのあとの残高が 1行ずつのります。毎日の光、友だちから届いた光、ありがとう返し、贈った光、夢・服・花束に使った光、森へ行った光が分かります。※ 今日より前の光は、だれからかを記録していなかったため、分かる分だけ「通帳をはじめる前の光」にのせています。' },
   { i:'v178-spacebank', d:Date.UTC(2026,10,19,8,10), t:'🪐 LIFEBOOK 宇宙銀行がオープンしました', b:'Life Home のいちばん上のボタンの下に「🪐 LIFEBOOK 宇宙銀行」ができました。宇宙を旅するお城の銀行が、LIFE BOOK の中だけの「光（ヒカリ）」を発行しています。毎日の光は、友だちが多いほど増えます。友だちに光を贈ると、半分が「ありがとう返し」でもどってきます。光は、うちのペットへの夢プレゼント・キラキラの服・花束にも使えます。7日間使わなかった光は、お城の中の「みんなの森」の木になります。' },
   { i:'v178-parkphoto', d:Date.UTC(2026,10,19,4,25), t:'📷 公園の写真がとれるようになりました', b:'公園の右下の「📷 写真」を押すと、その時に公園を走っているペットたちを写せます。服や帽子もそのまま写ります。写真は 📒 アルバムに入り、友だちの Higher Self にも送れます。' },
   { i:'v178-petrealestate', d:Date.UTC(2026,10,19,3,41), t:'🏢 ペットの家が大きくなり、不動産も始められます', b:'ペットのつながりの木の友だちのペットがふえると、ペットの家が2階建て・3階建て・4階建てに。101匹をこえると5階建てのビルになり、最上階で「（ペットの名前）不動産」を始めます。友だちの Higher Self から「部屋をかりたい」と申しこまれたら、一戸建てのペットハウスを1匹に1軒 貸せます。' },
@@ -26292,12 +26304,14 @@ function hkFrNext(n){ if(n>=300){ const k=300+(Math.floor((n-300)/100)+1)*100; r
 function hkRank(g){ let r=HK_RK[0]; for(const x of HK_RK) if(g>=x[1]) r=x; return r; }
 function hkDaily(s){ const n=hkFriends(), rk=hkRank(s.given); return { n, fr:hkFrLight(n), rk, total:hkFrLight(n)+rk[2] }; }
 // 7日たった光は、宇宙銀行にもどり、みんなの森の木になる
-function hkExpire(s){ const t=hkDay(); let moved=0; s.lots=s.lots.filter(l=>{ if(t-l[0]>=HK_LIFE){ moved+=l[1]|0; return false; } return (l[1]|0)>0; }); if(moved){ s.forest+=moved; } return moved; }
+function hkLog(s,a,k,w){ if(!a) return; if(!Array.isArray(s.log)) s.log=[]; s.log.push([Date.now(),a|0,k,String(w||'').slice(0,60),hkBal(s)]); if(s.log.length>300) s.log=s.log.slice(-300); }
+function hkBookInit(s){ if(Array.isArray(s.log)) return false; s.log=[]; if(s.lots.length||(s.got&&s.got.length)) s.old={ at:Date.now(), b:hkBal(s), lots:s.lots.map(l=>[l[0],l[1]|0]), got:(Array.isArray(s.got)?s.got:[]).slice(-20) }; return true; }
+function hkExpire(s){ const t=hkDay(); let moved=0; s.lots=s.lots.filter(l=>{ if(t-l[0]>=HK_LIFE){ moved+=l[1]|0; return false; } return (l[1]|0)>0; }); if(moved){ s.forest+=moved; hkLog(s,-moved,'forest','7日間 使わなかった光が みんなの森へ（木になりました）'); } return moved; }
 function hkBal(s){ return s.lots.reduce((a,l)=>a+(l[1]|0),0); }
 function hkSoon(s){ const t=hkDay(); let o=null; for(const l of s.lots){ const left=HK_LIFE-(t-l[0]); if(!o||left<o.left) o={ left, a:l[1] }; else if(left===o.left) o.a+=l[1]; } return o; }
-function hkState(){ const s=hkGet(); if(hkExpire(s)) hkPut(s); return s; }
+function hkState(){ const s=hkGet(); const i=hkBookInit(s); if(hkExpire(s)||i) hkPut(s); return s; }
 function hkCanClaim(s){ return s.claim!==hkDay(); }
-function hkClaim(){ const s=hkState(); if(!hkCanClaim(s)) return 0; const d=hkDaily(s); s.lots.push([hkDay(),d.total]); s.claim=hkDay(); hkPut(s); return d.total; }
+function hkClaim(){ const s=hkState(); if(!hkCanClaim(s)) return 0; const d=hkDaily(s); s.lots.push([hkDay(),d.total]); s.claim=hkDay(); hkLog(s,d.total,'day',`宇宙銀行から 毎日の光（🤝友だち${d.n}人 ${d.fr}光＋⭐ランク${d.rk[0]} ${d.rk[2]}光）`); hkPut(s); return d.total; }
 function hkLife(){ try{ return !!(typeof cur!=='undefined'&&cur&&cur.P); }catch(e){ return false; } }
 const fmt=n=>Number(n||0).toLocaleString('ja-JP');
 
@@ -26313,7 +26327,25 @@ function hkBarSync(force){ try{ const mh=document.querySelector('.masthead'); if
 
 // ---- 宇宙銀行の画面 ----
 let hkView='home';
-function hkTop(){ const s=hkState(); return `<div class="hk-top"><button type="button" class="hk-back" data-hk="${hkView==='home'?'close':hkView==='give'||hkView==='use'?'room':['dream','clothes','flower'].includes(hkView)?'use':'home'}">← 戻る</button><span class="hk-bal"><small>残高</small> ✨${fmt(hkBal(s))}${R}</span></div>`; }
+const HK_BK_IC={ day:'🪐', got:'💌', back:'🔁', give:'🎁', use:'🛍', forest:'🌳' };
+function hkBkDate(t){ const d=new Date(t); return `${d.getMonth()+1}月${d.getDate()}日（${'日月火水木金土'[d.getDay()]}）`; }
+function hkBkTime(t){ const d=new Date(t); return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
+function hkDayDate(n){ const d=new Date(n*864e5); return `${d.getUTCMonth()+1}月${d.getUTCDate()}日`; }
+function hkBookHTML(s){ const L=(s.log||[]).slice().reverse(); let h='', last='', inn=0, out=0; const t0=new Date(); t0.setHours(0,0,0,0);
+  for(const e of L){ if(e[0]>=t0.getTime()-6*864e5){ if(e[1]>0) inn+=e[1]; else out-=e[1]; } }
+  for(const e of L){ const dk=hkBkDate(e[0]); if(dk!==last){ h+=`<div class="hk-bk-d">${dk}</div>`; last=dk; }
+    h+=`<div class="hk-bk-r"><span class="hk-bk-ic" aria-hidden="true">${HK_BK_IC[e[2]]||'✨'}</span><span class="hk-bk-w"><small>${hkBkTime(e[0])}</small>${hkEsc(e[3])}</span><span class="hk-bk-a"><b class="${e[1]>0?'hk-in1':'hk-out1'}">${e[1]>0?'+':'−'}${fmt(Math.abs(e[1]))}</b><small>残高 ${fmt(e[4])}</small></span></div>`; }
+  const o=s.old; let old='';
+  if(o){ const lots=(o.lots||[]).filter(l=>l[1]>0).sort((a,b)=>b[0]-a[0]), got=(o.got||[]).slice().reverse();
+    old=`<div class="hk-card hk-bk-old"><h3>📁 通帳をはじめる前の光</h3>
+    <p>${hkBkDate(o.at)} ${hkBkTime(o.at)} に 通帳をはじめました。そのときの残高は <b>${fmt(o.b)}光</b>。</p>
+    <p class="hk-note">それより前は「だれから・なぜ」を記録していなかったため、1つずつの理由は分かりません。分かることだけ のせています。</p>
+    ${lots.length?`<p><b>入った日と、そのとき残っていた光</b></p>${lots.map(l=>`<div class="hk-bk-r"><span class="hk-bk-ic" aria-hidden="true">✨</span><span class="hk-bk-w">${hkDayDate(l[0])}に 入った光<small>毎日の光・友だちから・ありがとう返し のどれか</small></span><span class="hk-bk-a"><b class="hk-in1">${fmt(l[1])}</b></span></div>`).join('')}`:''}
+    ${got.length?`<p><b>💌 友だちから届いた光</b>（日付の記録はありません）</p>${got.map(g=>`<div class="hk-bk-r"><span class="hk-bk-ic" aria-hidden="true">💌</span><span class="hk-bk-w">${hkEsc(g.by)}さんから「${hkEsc(g.m)}」</span><span class="hk-bk-a"><b class="hk-in1">+${fmt(g.a|0)}</b></span></div>`).join('')}`:''}</div>`; }
+  return `<h2 class="hk-h">📒 通帳明細<small>あなたの光（ヒカリ）の口座</small></h2>
+    <div class="hk-card hk-bk-sum"><div><small>この7日間に 入った光</small><b class="hk-in1">+${fmt(inn)}</b></div><div><small>出た光</small><b class="hk-out1">−${fmt(out)}</b></div></div>
+    <div class="hk-card hk-bk">${h||`<p class="hk-note hk-c">まだ 記録はありません。これから 光が入ったり出たりすると、ここに のります。</p>`}</div>${old}`; }
+function hkTop(){ const s=hkState(); return `<div class="hk-top"><button type="button" class="hk-back" data-hk="${hkView==='home'?'close':hkView==='give'||hkView==='use'||hkView==='book'?'room':['dream','clothes','flower'].includes(hkView)?'use':'home'}">← 戻る</button><span class="hk-bal"><small>残高</small> ✨${fmt(hkBal(s))}${R}</span></div>`; }
 function hkFrTable(n){ let rows=''; for(let i=0;i<HK_FR.length;i++){ const [k,a]=HK_FR[i], nx=HK_FR[i+1]?HK_FR[i+1][0]:1e9, on=n!=null&&n>=k&&n<nx; rows+=`<tr${on?' class="on"':''}><td>🤝 ${k?k+'人〜':'0人'}${on?' ← 今ここ':''}</td><td>毎日 <b>${a}</b>光</td></tr>`; }
   return `<table class="hk-tb">${rows}<tr><td colspan="2" class="hk-note">そのあとも 100人ふえるごとに +100光</td></tr></table>`; }
 function hkRkTable(r){ return `<table class="hk-tb">${HK_RK.map(([k,g,b])=>`<tr${r===k?' class="on"':''}><td>${'⭐'.repeat(k)} ランク${k}${r===k?' ← 今ここ':''}</td><td>${fmt(g)}光 贈った</td><td>+${b}光</td></tr>`).join('')}</table>`; }
@@ -26326,8 +26358,10 @@ function hkViewHTML(){ const s=hkState(), d=hkDaily(s), b=hkBal(s);
     ${nx?`<p class="hk-note">あと${nx[0]-d.n}人で 友だちの光が 毎日${nx[1]}光</p>`:''}
     ${so&&so.a?`<p class="hk-note">⏳ ${so.left<=1?'あした':so.left+'日後に'} ${fmt(so.a)}光が 森へ</p>`:''}</div>
     <button type="button" class="hk-btn" data-hk="give">💌 友だちに光を贈る</button>
+    <button type="button" class="hk-btn hk-sub hk-bookb" data-hk="book">📒 通帳明細を見る <small>いつ・いくら・だれから</small></button>
     ${hkGotHTML(s)}
     <button type="button" class="hk-btn hk-use" data-hk="use">🌙 光を使う <small>夢プレゼント・キラキラの服・花束</small></button>`; }
+  if(hkView==='book') return hkTop()+hkBookHTML(s);
   if(hkView==='give') return hkTop()+hkGiveHTML(s);
   if(hkView==='use'||hkView==='dream'||hkView==='clothes'||hkView==='flower') return hkTop()+hkUseHTML(s);
   if(hkView==='rules') return hkTop()+`<h2 class="hk-h">📖 光のルール</h2><div class="hk-card">
@@ -26375,7 +26409,7 @@ async function hkSend(){ if(hkBusy) return; const s=hkState(), a=hkAmt, m=HK_MSG
   hkBusy=true; const btn=document.querySelector('[data-hk="send"]'); if(btn){ btn.disabled=true; btn.textContent='おくっています…'; }
   const me=String(myId()), by=String((typeof store!=='undefined'&&store.get(KEY_ME,''))||'').slice(0,20)||'友だち', id=me+'_'+hkYmd()+'_'+(n+1);
   try{ await Promise.race([FB.D.setDoc(FB.D.doc(FB.db,'ids',to,'hk',id),{ from:me, by, a, m, t:Date.now() }), new Promise((_,rj)=>setTimeout(()=>rj({ code:'timeout' }),15000))]);
-    const s2=hkState(); hkSpend(s2,a); const back=Math.floor(a/2); s2.lots.push([hkDay(),back]); s2.given+=a; s2.sent=s2.sent||{}; const dk=hkYmd(); const keep={}; Object.keys(s2.sent).filter(k=>k.endsWith(dk)).forEach(k=>keep[k]=s2.sent[k]); keep[to+'|'+dk]=(keep[to+'|'+dk]|0)+1; s2.sent=keep; hkPut(s2);
+    const s2=hkState(); hkSpend(s2,a); hkLog(s2,-a,'give',`${f.by}さんに 贈った「${m}」`); const back=Math.floor(a/2); s2.lots.push([hkDay(),back]); hkLog(s2,back,'back',`ありがとう返し（${f.by}さんに贈ったお礼）`); s2.given+=a; s2.sent=s2.sent||{}; const dk=hkYmd(); const keep={}; Object.keys(s2.sent).filter(k=>k.endsWith(dk)).forEach(k=>keep[k]=s2.sent[k]); keep[to+'|'+dk]=(keep[to+'|'+dk]|0)+1; s2.sent=keep; hkPut(s2);
     hkToast(`${f.by}さんに ${a}光を贈りました。ありがとう返し +${back}光`);
   }catch(err){ const c=String(err&&(err.code||err.message)||err||''); try{ console.warn('[hikari]',c); }catch(_){}
     hkToast(c.includes('permission')?'まだ贈れません（サーバーの準備中です）':'うまく送れませんでした。少しあとで もう一度'); }
@@ -26385,7 +26419,7 @@ let hkL=false;
 function hkListen(){ if(hkL||!hkOn()) return; hkL=true; const { collection, onSnapshot, deleteDoc }=FB.D;
   onSnapshot(collection(FB.db,'ids',String(myId()),'hk'),snap=>{ const got=[]; snap.forEach(d=>{ const x=d.data()||{}; const a=x.a|0; if(HK_AMT.includes(a)) got.push({ id:d.id, by:String(x.by||'友だち').slice(0,20), a, m:String(x.m||'').slice(0,20) }); });
     if(!got.length) return; const s=hkState(); s.seen=Array.isArray(s.seen)?s.seen:[]; const nu=got.filter(g=>!s.seen.includes(g.id));
-    if(nu.length){ nu.forEach(g=>{ s.lots.push([hkDay(),g.a]); }); s.seen=s.seen.concat(nu.map(g=>g.id)).slice(-200); s.got=(Array.isArray(s.got)?s.got:[]).concat(nu.map(g=>({ by:g.by, a:g.a, m:g.m }))).slice(-20); hkPut(s);
+    if(nu.length){ nu.forEach(g=>{ s.lots.push([hkDay(),g.a]); hkLog(s,g.a,'got',`${g.by}さんから「${g.m}」`); }); s.seen=s.seen.concat(nu.map(g=>g.id)).slice(-200); s.got=(Array.isArray(s.got)?s.got:[]).concat(nu.map(g=>({ by:g.by, a:g.a, m:g.m }))).slice(-20); hkPut(s);
       const g=nu[nu.length-1]; hkToast(nu.length>1?`💌 ${nu.length}人から 光が届きました`:`💌 ${g.by}さんから ${g.a}光が届きました「${g.m}」`); hkBarSync(true); const M=document.getElementById('hkM'); if(M&&!M.hidden) hkRender(); }
     got.forEach(g=>{ try{ deleteDoc(FB.D.doc(FB.db,'ids',String(myId()),'hk',g.id)); }catch(_){} });
   },e=>{ hkL=false; try{ console.warn('[hikari] 届いた光を読めませんでした',e&&e.code||e); }catch(_){} }); }
@@ -26481,11 +26515,11 @@ function hkUseMine(s){ const p=hkPet(), b=hkBal(s);
     <button type="button" class="hk-btn hk-sub hk-mt" data-hk="house">🏠 ${hkEsc(p.name)}の家を見る（📒 保存で写真に）</button>`; }
 function hkBuy(c){ if(hkTgt){ hkUBuy(c); return; } const s=hkState(), p=hkPet(); if(!p) return; let cost=0, done='';
   if(c.startsWith('d:')){ const D=HK_DREAMS.find(x=>x[0]===c.slice(2)); if(!D||(p.hkd||[]).some(x=>x.k===D[0])) return; cost=D[3]; if(cost>hkBal(s)){ hkToast('光が たりません'); return; }
-    hkSpend(s,cost); hkPut(s); p.hkd=(p.hkd||[]).concat([{ k:D[0], t:Date.now(), cl:p.cl?hkClKey(p.cl):'' }]); try{ mpLog(p,`🌙 夢がかなった：${D[2]}。${D[4]}`,'dream'); }catch(e){} mpSet(p); done=`🌙 ${p.name}の夢「${D[2]}」が かないました`; }
-  else if(c==='c'||c==='cw'){ const k=hkClKey(hkCl), own=hkOwn(s); if(c==='c'&&!own.includes(k)){ cost=HK_CLP; if(cost>hkBal(s)){ hkToast('光が たりません'); return; } hkSpend(s,cost); s.own=own.concat([k]); hkPut(s); }
+    hkSpend(s,cost); hkLog(s,-cost,'use',`🌙 ${p.name}の夢「${D[2]}」`); hkPut(s); p.hkd=(p.hkd||[]).concat([{ k:D[0], t:Date.now(), cl:p.cl?hkClKey(p.cl):'' }]); try{ mpLog(p,`🌙 夢がかなった：${D[2]}。${D[4]}`,'dream'); }catch(e){} mpSet(p); done=`🌙 ${p.name}の夢「${D[2]}」が かないました`; }
+  else if(c==='c'||c==='cw'){ const k=hkClKey(hkCl), own=hkOwn(s); if(c==='c'&&!own.includes(k)){ cost=HK_CLP; if(cost>hkBal(s)){ hkToast('光が たりません'); return; } hkSpend(s,cost); hkLog(s,-cost,'use',`✨ キラキラの服「${pgClName(hkCl)}」`); s.own=own.concat([k]); hkPut(s); }
     else if(!own.includes(k)) return; try{ pgClSave(Object.assign({},hkCl)); }catch(e){} done=`✨ ${pgClName(hkCl)}を 着せました`; }
   else if(c.startsWith('f:')){ const B=HK_BQ.find(x=>x[0]===+c.slice(2)); if(!B) return; cost=B[1]; if(cost>hkBal(s)){ hkToast('光が たりません'); return; }
-    hkSpend(s,cost); hkPut(s); p.hkf=(Array.isArray(p.hkf)?p.hkf:[]).concat([{ n:B[0], t:Date.now() }]).slice(-30); try{ mpLog(p,`💐 Higher Self から 花束${B[0]}本が とどいた。`,'flower'); }catch(e){} mpSet(p); done=`💐 花束${B[0]}本を 贈りました。家のまわりに うかんでいます`; }
+    hkSpend(s,cost); hkLog(s,-cost,'use',`💐 ${p.name}の家に 花束${B[0]}本`); hkPut(s); p.hkf=(Array.isArray(p.hkf)?p.hkf:[]).concat([{ n:B[0], t:Date.now() }]).slice(-30); try{ mpLog(p,`💐 Higher Self から 花束${B[0]}本が とどいた。`,'flower'); }catch(e){} mpSet(p); done=`💐 花束${B[0]}本を 贈りました。家のまわりに うかんでいます`; }
   if(cost){ const s2=hkState(); s2.spent=(s2.spent|0)+cost; hkPut(s2); }
   try{ if(typeof fbPush==='function') setTimeout(()=>fbPush(),300); }catch(e){}
   if(done) hkToast(done); hkBarSync(true); hkRender(); }
@@ -26526,7 +26560,7 @@ async function hkUBuy(c){ if(hkUBusy) return; const x=hkTgtPet(); if(!x) return;
   if(!hkOn()){ hkToast('いまは つながっていません。少しあとで もう一度'); return; }
   hkUBusy=true; const me=String(myId()), by=String((typeof store!=='undefined'&&store.get(KEY_ME,''))||'').slice(0,20)||'友だち', id=me+'_'+hkYmd()+'_'+(n+1);
   try{ await Promise.race([FB.D.setDoc(FB.D.doc(FB.db,'ids',x.oid,'hku',id),{ from:me, by, k, v, pn:x.n, t:Date.now() }), new Promise((_,rj)=>setTimeout(()=>rj({ code:'timeout' }),15000))]);
-    const s2=hkState(); hkSpend(s2,cost); s2.given+=cost; s2.spent=(s2.spent|0)+cost; const dk=hkYmd(), u={}; Object.keys(s2.usent||{}).filter(q=>q.endsWith(dk)).forEach(q=>u[q]=s2.usent[q]); u[x.oid+'|'+dk]=(u[x.oid+'|'+dk]|0)+1; s2.usent=u;
+    const s2=hkState(); hkSpend(s2,cost); hkLog(s2,-cost,'give',`${x.hs}さんの ${x.n}に ${what}`); s2.given+=cost; s2.spent=(s2.spent|0)+cost; const dk=hkYmd(), u={}; Object.keys(s2.usent||{}).filter(q=>q.endsWith(dk)).forEach(q=>u[q]=s2.usent[q]); u[x.oid+'|'+dk]=(u[x.oid+'|'+dk]|0)+1; s2.usent=u;
     if(k==='d'){ s2.ulog=s2.ulog||{}; s2.ulog[x.oid+'|d'+v]=1; } hkPut(s2); hkToast(`💌 ${x.hs}さんの ${x.n}に ${what}を 贈りました`);
   }catch(err){ const e=String(err&&(err.code||err.message)||err||''); try{ console.warn('[hikari]',e); }catch(_){} hkToast(e.includes('permission')?'まだ贈れません（サーバーの準備中です）':'うまく送れませんでした。少しあとで もう一度'); }
   hkUBusy=false; hkBarSync(true); hkRender(); }
