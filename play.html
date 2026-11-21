@@ -48,7 +48,7 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
-<meta name="lifebook-version" content="v178.120">
+<meta name="lifebook-version" content="v178.121">
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "99eea3f91c524a44bc06e9484e68afdb"}'></script>
 <link rel="manifest" href="manifest.webmanifest"><meta property="og:type" content="website"><meta property="og:site_name" content="LIFE BOOK"><meta property="og:title" content="LIFE BOOK"><meta property="og:description" content="世界のどこかに生まれる、ひとつの人生を見守るゲーム。人生のヒントが、ここにある。"><meta property="og:url" content="https://lifebookworld.com/play.html"><meta property="og:image" content="https://lifebookworld.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FF8FAB"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LIFE BOOK"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
@@ -855,7 +855,7 @@ a.nav-b{ text-decoration:none; }
 <button class="devbtn" id="devbtn" type="button" hidden>制作用</button>
 <div class="dev" id="dev" hidden></div>
 <script>
-/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.120';
+/* LIFE BOOK game version: v178.83 (2026-11-19) */ var LB_VER='v178.121';
 // ===== データ1：国・名前 =====
 // 試作版の仮データ。出生数の比率（w）、5歳未満の死亡（u5, 1000人あたり）、成人の平均寿命の目安（life）、
 // 家庭の経済状況の割合（econ: 苦しい/中間/裕福）、宗教（葬儀の形）の割合、きょうだいの数の目安（tfr）、
@@ -26395,7 +26395,7 @@ function hkViewHTML(){ const s=hkState(), d=hkDaily(s), b=hkBal(s);
     <div class="hk-grid"><button type="button" class="hk-btn hk-sub" data-hk="rules">📖 光のルール</button><button type="button" class="hk-btn hk-sub" data-hk="purpose">📜 設立趣旨</button><button type="button" class="hk-btn hk-sub" data-hk="plan">🗺 間取り図</button><button type="button" class="hk-btn hk-sub" data-hk="forest">🌳 みんなの森</button></div>`; }
 
 // ---- v178.105 友だちに光を贈る（Firebase：ids/{相手}/hk/{自分_日付_1〜3}）----
-const HK_AMT=[10,30,50,100], HK_MSGS=['いつもありがとう','おめでとう！','元気でね！','大好き！','お疲れ様！','また会おうね'];
+const HK_AMT=[10,30,50,100], HK_MSGS=['いつもありがとう','おめでとう！','元気でね！','大好き！','お疲れ様！','また会おうね','豊かさが溢れますように♪','神の御加護を🩷','あなたの自由な人生に乾杯🗽','お近づきになりたいです♪','あなたを尊敬しています🫡','イェーイ❣','光あげるー♪♪♪'];
 let hkTo='', hkAmt=50, hkMsg=0, hkBusy=false, hkTos=null;
 const HK_MAXTO=20, HK_AMTMAX=1000000, HK_BACKMAX=Infinity;
 function hkBack(a){ return Math.min(Math.floor(a/2),HK_BACKMAX); }
