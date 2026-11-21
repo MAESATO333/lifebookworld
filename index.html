@@ -52,6 +52,12 @@
   if(document.body) ask(); else document.addEventListener('DOMContentLoaded',ask);
 })();
 </script>
+<script>/* 入り口：初めての人は、まず紹介と登録のページへ */
+(function(){ try{ if(location.hash||/[?&](gw|lbmove)=/.test(location.search)) return; var L=localStorage;
+  if(L.getItem('lb.welcomed')||L.getItem('lb.acIn')==='1') return;
+  var c=L.getItem('hitotsu.current'); if(c&&c!=='null') return; var a=L.getItem('hitotsu.archive'); if(a&&a!=='[]') return;
+  location.replace('welcome.html'+location.search); }catch(e){} })();
+</script>
 
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
 <title>LIFE BOOK 紹介サイト</title>
